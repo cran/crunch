@@ -1,0 +1,76 @@
+init.DatasetCatalog <- function (.Object, ...) {
+    .Object <- callNextMethod(.Object, ...)
+    .Object@index <- .Object@index[order(selectFrom("name", .Object@index))]
+    return(.Object)
+}
+setMethod("initialize", "DatasetCatalog", init.DatasetCatalog)
+
+setMethod("active", "DatasetCatalog", function (x) {
+    index(x) <- Filter(function (a) !isTRUE(a$archived), index(x))
+    ## Not implementing user check now. 
+    # me <- userURL()
+    # if (!is.null(me)) {
+    #     index(x) <- Filter(function (a) a$owner_id == me, index(x))
+    # }
+    return(x)
+})
+
+setMethod("archived", "DatasetCatalog", function (x) {
+    index(x) <- Filter(function (a) isTRUE(a$archived), index(x))
+    ## Not implementing user check now. 
+    # me <- userURL()
+    # if (!is.null(me)) {
+    #     index(x) <- Filter(function (a) a$owner_id == me, index(x))
+    # }
+    return(x)
+})
+
+##' Extract and modify subsets of Catalog-type objects
+##'
+##' @param x a Catalog object
+##' @param i which catalog elements to extract
+##' @param j Invalid
+##' @param drop Invalid
+##' @param ... additional arguments
+##' @param value For updating, an object of the appropriate class and size to 
+##' insert
+##' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
+##' @name catalog-extract
+NULL
+
+##' @rdname catalog-extract
+##' @export
+setMethod("[[", c("DatasetCatalog", "character"), function (x, i, ...) {
+    DatasetTuple(index_url=self(x), entity_url=i, body=index(x)[[i]])
+})
+##' @rdname catalog-extract
+##' @export
+setMethod("[[", c("DatasetCatalog", "ANY"), function (x, i, ...) {
+    DatasetTuple(index_url=self(x), entity_url=urls(x)[i],
+        body=index(x)[[i]])
+})
+
+##' Get and set names, aliases on Catalog-type objects
+##' 
+##' These methods let you get and set names and aliases for variables in a
+##' Dataset's catalog, or within \code{\link{Subvariables}} in an array 
+##' variable. They work like the base R names methods.
+##'
+##' Note that the \code{names} method on a Dataset returns the aliases of its
+##' variables by default. See the vignette on variables for more information.
+##'
+##' @param x a VariableCatalog, Subvariables, or similar object
+##' @param value For the setters, an appropriate-length character vector to
+##' assign
+##' @return Getters return the character object in the specified slot; setters
+##' return \code{x} duly modified.
+##' @aliases describe-catalog aliases aliases<- descriptions descriptions<-
+##' @seealso \code{\link{Subvariables}} \code{\link{Categories}} \code{\link[base]{names}} \code{vignette("variables", package="crunch")}
+##' @name describe-catalog
+NULL
+
+##' @rdname describe-catalog
+##' @export
+setMethod("names", "DatasetCatalog", function (x) {
+    vapply(index(x), function (a) a$name, character(1), USE.NAMES=FALSE)
+})

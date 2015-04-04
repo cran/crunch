@@ -1,0 +1,71 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/dataset1/variables.json",
+    "specification": "/api/specifications/variables/",
+    "description": "List of Variables of this dataset",
+    "index": {
+        "/api/datasets/dataset1/variables/gender.json": {
+            "name": "Gender",
+            "discarded": false,
+            "alias": "gender",
+            "type": "categorical",
+            "id": "gender",
+            "description": "Gender"
+        },
+        "/api/datasets/dataset1/variables/birthyr.json": {
+            "name": "Birth Year",
+            "discarded": false,
+            "alias": "birthyr",
+            "type": "numeric",
+            "id": "birthyr",
+            "description": null
+        },
+        "/api/datasets/dataset1/variables/starttime.json": {
+            "name": "starttime",
+            "discarded": false,
+            "alias": "starttime",
+            "type": "datetime",
+            "id": "starttime",
+            "description": "Interview Start Time"
+        },
+        "/api/datasets/dataset1/variables/mymrset.json": {
+            "name": "mymrset",
+            "discarded": false,
+            "alias": "mymrset", 
+            "type": "multiple_response",
+            "id": "mymrset",
+            "description": "Budějovický Budvar",
+            "subvariables": [
+                "/api/datasets/dataset1/variables/subvar2.json",
+                "/api/datasets/dataset1/variables/subvar1.json",
+                "/api/datasets/dataset1/variables/subvar3.json"
+            ],
+            "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables.json"
+        },
+        "/api/datasets/dataset1/variables/catarray.json": {
+            "name": "Cat Array",
+            "discarded": false,
+            "alias": "catarray", 
+            "type": "categorical_array",
+            "id": "qwert",
+            "description": "An array of cats",
+            "subvariables": [
+                "/api/datasets/dataset1/variables/subvar2.json",
+                "/api/datasets/dataset1/variables/subvar1.json",
+                "/api/datasets/dataset1/variables/subvar3.json"
+            ],
+            "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables.json"
+        },
+        "/api/datasets/dataset1/variables/textVar.json": {
+            "name": "Text variable ftw",
+            "discarded": false,
+            "alias": "textVar",
+            "type": "text",
+            "id": "text",
+            "description": "random hex characters"
+        }
+    },
+    "orders": {
+        "hier": "/api/datasets/dataset1/variables/hierarchical.json"
+    }
+}

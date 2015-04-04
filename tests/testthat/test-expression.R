@@ -1,0 +1,111 @@
+context("Expressions")
+
+with(fake.HTTP, {
+    ds <- loadDataset("test ds")
+    
+    test_that("Arithmetic generates expressions", {
+        e1 <- try(ds$birthyr + 5)
+        expect_true(inherits(e1, "CrunchExpr"))
+        zexp <- list(`function`="+",
+            args=list(
+                list(variable="birthyr"),
+                list(value=5, type=list(`function`="typeof",
+                    args=list(list(variable="birthyr"))))
+            )
+        )
+        expect_identical(zcl(e1), zexp)
+        e2 <- try(5 + ds$birthyr)
+        expect_true(inherits(e2, "CrunchExpr"))
+    })
+    
+    test_that("Logic generates expressions", {
+        e1 <- try(ds$birthyr < 0)
+        expect_true(inherits(e1, "CrunchLogicalExpr"))
+    })
+})
+
+if (run.integration.tests) {
+    with(test.authentication, {
+        with(test.dataset(df), {
+            test_that("Arithmetic expressions evaluate", {
+                e1 <- try(ds$v3 + 5)
+                expect_true(inherits(e1, "CrunchExpr"))
+                e2 <- try(5 + ds$v3)
+                expect_true(inherits(e2, "CrunchExpr"))
+                expect_identical(as.vector(e1), as.vector(ds$v3) + 5)
+                expect_identical(as.vector(e1), as.vector(e2))
+                expect_identical(as.vector(ds$v3 * ds$v3), df$v3^2)
+            })
+
+            test_that("Logical expressions evaluate", {
+                e1 <- try(ds$v3 < 10)
+                expect_true(inherits(e1, "CrunchLogicalExpr"))
+                skip(expect_identical(as.vector(e1), as.vector(ds$v3) < 10),
+                    "select with logical expression not supported")
+            })
+            
+            test_that("expressions on expresssions evaluate", {
+                e3 <- try(ds$v3 + ds$v3 + 10)
+                expect_true(inherits(e3, "CrunchExpr"))
+                expect_identical(as.vector(e3), 2*df$v3 + 10)
+                e4 <- try(ds$v3 + ds$v3 * 2)
+                expect_true(inherits(e4, "CrunchExpr"))
+                expect_identical(as.vector(e4), 3*df$v3)
+            })
+            
+            varnames <- names(df[-6])
+            test_that("Select values with Numeric inequality filter", {
+                e5 <- try(ds$v3[ds$v3 < 10])
+                expect_true(inherits(e5, "CrunchExpr"))
+                expect_identical(as.vector(e5), c(8, 9))
+                for (i in varnames) {
+                    expect_equivalent(as.vector(ds[[i]][ds$v3 < 10]),
+                        df[[i]][1:2], info=i)
+                }
+            })
+            test_that("Select values with %in% on Numeric", {
+                for (i in varnames) {
+                    expect_equivalent(as.vector(ds[[i]][ds$v3 %in% 10]),
+                        df[[i]][3], info=i)
+                }
+            })
+            test_that("Select values with %in% on Categorical", {
+                expect_identical(length(as.vector(ds$v3[ds$v4 %in% "B"])), 10L)
+                for (i in varnames) {
+                    expect_equivalent(as.vector(ds[[i]][ds$v4 %in% "B"]), 
+                        df[[i]][df$v4 %in% "B"], info=i)
+                }
+            })
+            test_that("Select values with &ed filter", {
+                expect_equivalent(as.vector(ds$v3[ds$v3 >= 10 & ds$v3 < 13]),
+                    10:12)
+                f <- ds$v3 >= 10 & ds$v3 < 13
+                expect_true(inherits(f, "CrunchLogicalExpr"))
+                for (i in varnames) {
+                    expect_equivalent(as.vector(ds[[i]][f]), 
+                        df[[i]][3:5], info=i)
+                }
+            })
+            test_that("Select values with negated filter", {
+                expect_equivalent(as.vector(ds$v3[!(ds$v4 %in% "B")]), 
+                    df$v3[df$v4 %in% "C"])
+                for (i in varnames) {
+                    expect_equivalent(as.vector(ds[[i]][!(ds$v4 %in% "B")]), 
+                        df[[i]][df$v4 %in% "C"], info=i)
+                }
+            })
+            
+            test_that("R numeric filter evaluates", {
+                expect_equivalent(as.vector(ds$v3[6]), df$v3[6])
+            })
+            test_that("R logical filter evaluates", {
+                expect_identical(as.vector(ds$v3[df$v3 < 10]), c(8, 9))
+            })
+            
+            test_that("filtered categorical returns factor", {
+                expect_equivalent(as.vector(ds$v4[ds$v4 == "B"]), 
+                    factor(rep("B", 10)))
+            })
+        })
+    })
+}

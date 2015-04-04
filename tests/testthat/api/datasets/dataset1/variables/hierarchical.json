@@ -1,0 +1,13 @@
+{
+    "element": "shoji:order",
+    "self": "/api/datasets/dataset1/variables/hierarchical.json",
+    "description": "Hierarchical ordering of dataset variables",
+    "graph": [
+        "/api/datasets/dataset1/variables/birthyr.json",
+        "/api/datasets/dataset1/variables/gender.json",
+        "/api/datasets/dataset1/variables/mymrset.json",
+        "/api/datasets/dataset1/variables/textVar.json",
+        "/api/datasets/dataset1/variables/starttime.json",
+        "/api/datasets/dataset1/variables/catarray.json"
+    ]
+}
