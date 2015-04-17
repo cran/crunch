@@ -3,6 +3,9 @@ Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
 
 set.seed(666)
 
+cacheOn()
+# startLog ("~/c/rcrunch/test.log")
+
 fromJSON <- jsonlite::fromJSON
 
 ## .onAttach stuff, for testthat to work right
@@ -13,6 +16,7 @@ options(crunch.api=getOption("test.api"),
         crunch.timeout=15,
         crunch.email=getOption("test.user"),
         crunch.pw=getOption("test.pw"))
+set_config(crunchConfig())
 
 is.tap.reporter <- grepl('reporter ?= ?"tap"', 
     paste(deparse(sys.calls()[[1]]), collapse=""))

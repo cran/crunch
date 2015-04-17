@@ -13,7 +13,8 @@
 crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(), status.handlers=list(), ...) {
     url ## force lazy eval of url before inserting in try() below
     if (isTRUE(getOption("crunch.debug"))) message(paste(http.verb, url))
-    FUN <- get(http.verb, envir=asNamespace("httr"))
+    FUN <- get(paste0("c", http.verb), envir=asNamespace("crunch"))
+    # FUN <- get(http.verb, envir=asNamespace("httr"))
     x <- try(FUN(url, ..., config=config), silent=TRUE)
     if (length(status.handlers)) {
         out <- response.handler(x, special.statuses=status.handlers)
@@ -116,6 +117,7 @@ handleAPIerror <- function (response) {
 crunchConfig <- function () {
     config(verbose=isTRUE(getOption("crunch.debug")),
         sslversion="SSLVERSION_TLSv1_2",
+        encoding="gzip", ## In httr default config, but to be sure
         httpheader=c(`user-agent`=crunchUserAgent()))
 }
 
@@ -133,17 +135,6 @@ crunchUserAgent <- function (x) {
     if (!missing(x)) ua <- paste(ua, x)
     return(ua)
 }
-
-# 
-# ## @importFrom jsonlite fromJSON
-# parseJSONResponse <- function (x, simplifyWithNames=FALSE, ...) {
-#     ## Investigate not doing this anymore with httr 0.4, which uses jsonlite
-#     ## Update: still would have to pass in `unicode=TRUE` somewhere, so won't
-#     ## just be able to use httr's json parser out of the box
-#     text.parser <- get("parse_text", envir=asNamespace("httr"))
-#     out <- text.parser(x, encoding = "UTF-8")
-#     fromJSON(out, simplifyVector=FALSE, ...)
-# }
 
 handleShoji <- function (x) {
     if (is.shoji.like(x)) {

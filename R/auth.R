@@ -22,6 +22,7 @@ logout <- function () {
 
 deleteSessionInfo <- function () {
     rm(list=setdiff(ls(envir=session_store), ".globals"), envir=session_store)
+    clearCache()
 }
 
 ##' Authenticate with the Crunch API
@@ -61,7 +62,6 @@ login <- function (email=getOption("crunch.email"),
     invisible()
 }
 
-##' @importFrom RJSONIO toJSON
 crunchAuth <- function (email, password=NULL, ...) {
     ##' Validate authentication inputs and then POST to the API
     ##' @param email character, see \code{\link{login}}
