@@ -27,6 +27,7 @@ setGeneric("aliases<-", function (x, value) standardGeneric("aliases<-"),
 setGeneric("descriptions", function (x) standardGeneric("descriptions"))
 setGeneric("descriptions<-", 
     function (x, value) standardGeneric("descriptions<-"), signature="x")
+setGeneric("emails", function (x) standardGeneric("emails"))
 
 setGeneric("type", function (x) standardGeneric("type"))
 setGeneric("type<-", function (x, value) standardGeneric("type<-"))
@@ -61,6 +62,8 @@ setGeneric("tuple", function (x) standardGeneric("tuple"))
 setGeneric("tuple<-", function (x, value) standardGeneric("tuple<-"))
 setGeneric("ordering", function (x) standardGeneric("ordering"))
 setGeneric("ordering<-", function (x, value) standardGeneric("ordering<-"))
+setGeneric("duplicates", function (x) standardGeneric("duplicates"))
+setGeneric("duplicates<-", function (x, value) standardGeneric("duplicates<-"))
 setGeneric("entity", function (x) standardGeneric("entity"))
 setGeneric("index", function (x) standardGeneric("index"))
 setGeneric("index<-", function (x, value) standardGeneric("index<-"))
@@ -69,6 +72,7 @@ setGeneric("hidden", function (x) standardGeneric("hidden"))
 setGeneric("archived", function (x) standardGeneric("archived"))
 setGeneric("imported", function (x) standardGeneric("imported"))
 setGeneric("pending", function (x) standardGeneric("pending"))
+setGeneric("permissions", function (x) standardGeneric("permissions"))
 
 setGeneric("dim")
 setGeneric("ncol")
@@ -85,6 +89,7 @@ setGeneric("dimnames")
 setGeneric("margin.table")
 
 setGeneric("prop.table")
+setGeneric("round")
 
 ##' Generic method for converting objects to Crunch representations
 ##'
@@ -111,7 +116,7 @@ setGeneric("absolute.zcl", function (x) standardGeneric("absolute.zcl"))
 ##' toJSON methods for Crunch objects
 ##'
 ##' \code{crunch} uses the \code{jsonlite} package for (de)serialization of
-##' JSON. Unlike \code{\link[RJSONIO]{toJSON}}, \code{\link[jsonlite]{toJSON}}
+##' JSON. Unlike \code{RJSONIO}'s \code{toJSON}, \code{\link[jsonlite]{toJSON}}
 ##' does not allow for defining S4 methods for other object types. So,
 ##' \code{crunch::toJSON} wraps \code{jsonprep}, which exists to translate 
 ##' objects to base R objects, which \code{jsonlite::toJSON} can handle. 

@@ -240,10 +240,10 @@ hr {
 </code></pre>
 
 <pre><code>##                    Count
-## Very Important        82
-## Somewhat Important    15
-## Unimportant            2
-## Not very Important     1
+## Very Important       805
+## Somewhat Important   164
+## Not very Important    20
+## Unimportant            6
 </code></pre>
 
 <p>All of these &ldquo;imiss&rdquo; categorical variables have the same structure. We can combine them into a categorical array variable with <code>makeArray</code>:</p>
@@ -312,10 +312,10 @@ ds$imiss
 </code></pre>
 
 <pre><code>##                    Count
-## Very Important        82
-## Somewhat Important    15
-## Unimportant            2
-## Not very Important     1
+## Very Important       805
+## Somewhat Important   164
+## Not very Important    20
+## Unimportant            6
 </code></pre>
 
 <h2>Manipulating subvariables</h2>
@@ -398,11 +398,11 @@ subvariables(ds$imiss)
 </code></pre>
 
 <pre><code>##                     Count
-## Somewhat approve       37
-## Strongly disapprove    25
-## Somewhat disapprove    18
-## No opinion             14
-## Strongly approve        6
+## Strongly disapprove   283
+## Somewhat approve      279
+## Somewhat disapprove   160
+## No opinion            157
+## Strongly approve      113
 </code></pre>
 
 <p>In the questionnaire that collected this data, &ldquo;boap&rdquo; appeared as a grid question, just as &ldquo;imiss&rdquo; did. But, for illustration purposes&mdash;and to show how you can convert between categorical array and multiple response&mdash;let&#39;s treat this as multiple response. </p>

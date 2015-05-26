@@ -8,7 +8,7 @@
 ##' @param ... additional arguments passed to \code{ \link{createDataset}}
 ##' @return If successful, an object of class CrunchDataset.
 ##' @export
-newDataset <- function (x, name=substitute(x),
+newDataset <- function (x, name=as.character(substitute(x)),
                                 useAlias=default.useAlias(), ...) {
 
     Call <- match.call()
@@ -42,7 +42,7 @@ newDataset <- function (x, name=substitute(x),
 ##' @return If successful, an object of class CrunchDataset.
 ##' @seealso \code{\link{newDataset}} \code{\link{newDatasetByCSV}}
 ##' @export
-newDatasetByColumn <- function (x, name=substitute(x),
+newDatasetByColumn <- function (x, name=as.character(substitute(x)),
                                 useAlias=default.useAlias(), ...) {
 
     ds <- createDataset(name=name, useAlias=useAlias, ...)
@@ -120,12 +120,15 @@ addSourceToDataset <- function (dataset, source_url, ...) {
         )
     )
     batch_url <- crPOST(batches_url, body=toJSON(body), ...)
-    status <- try(pollBatchStatus(batch_url, batches(dataset), until="ready"))
+    
+    status <- try(pollBatchStatus(batch_url, batches(dataset), until=c("ready", "imported")))
     if (is.error(status)) {
         halt("Error importing file")
+    } else if (status %in% "ready") {
+        crPATCH(batch_url, body=toJSON(list(status="importing")))
+        pollBatchStatus(batch_url, refresh(batches(dataset)))
     }
-    crPATCH(batch_url, body=toJSON(list(status="importing")))
-    pollBatchStatus(batch_url, refresh(batches(dataset)))
+    
     invisible(refresh(dataset))
 }
 
@@ -148,7 +151,7 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 ##' @return If successful, an object of class CrunchDataset.
 ##' @seealso \code{\link{newDataset}} \code{\link{newDatasetByColumn}}
 ##' @export
-newDatasetByCSV <- function (x, name=substitute(x),
+newDatasetByCSV <- function (x, name=as.character(substitute(x)),
                                 useAlias=default.useAlias(), ...) {
     
     ## Get all the things
@@ -203,7 +206,7 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     batch <- try(crPOST(batches_url,
         body=list(file=httr::upload_file(file))))
     if (is.error(batch)) {
-        delete(ds)
+        delete(ds, confirm=FALSE)
         rethrow(batch)
     }
     message("Done!")

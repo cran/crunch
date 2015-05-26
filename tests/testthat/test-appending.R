@@ -42,10 +42,10 @@ if (run.integration.tests) {
                     expect_true(out %in% urls(batches(part1)))
                 })
                 status <- pollBatchStatus(out, batches(part1),
-                    until="ready")
+                    until="imported")
                 test_that("batch status can be polled while we wait", {
                     expect_false(is.error(status))
-                    expect_identical(status, "ready")
+                    expect_identical(status, "imported")
                 })
             })
         })
@@ -93,47 +93,51 @@ if (run.integration.tests) {
         try({
             file1 <- newDatasetFromFile(testfile.csv, name=now())
             file2 <- newDatasetFromFile(testfile.csv, name=now())
-            v3.1 <- as.vector(file1$V3)
-            v3.2 <- as.vector(file2$V3)
-            
-            test_that("our assumptions about these two datasets from file", {
-                expect_true(is.numeric(v3.1))
-                expect_true(is.numeric(v3.2))
-                expect_equivalent(v3.1, testfile.df$V3)
-                expect_equivalent(v3.2, testfile.df$V3)
-                expect_identical(length(batches(file1)), 1L)
-                expect_identical(length(batches(file2)), 1L)
+        })
+        test_that("setup", {
+            expect_true(is.dataset(file1))
+            expect_true(is.dataset(file2))
+        })
+        with(test.dataset(file1), {
+            with(test.dataset(file2), {
+                v3.1 <- as.vector(file1$V3)
+                v3.2 <- as.vector(file2$V3)
+                test_that("our assumptions about these datasets from file", {
+                    expect_true(is.numeric(v3.1))
+                    expect_true(is.numeric(v3.2))
+                    expect_equivalent(v3.1, testfile.df$V3)
+                    expect_equivalent(v3.2, testfile.df$V3)
+                    expect_identical(length(batches(file1)), 1L)
+                    expect_identical(length(batches(file2)), 1L)
+                })
+                out <- suppressMessages(try(appendDataset(file1, file2)))
+                test_that("append handles two identical Datasets from file", {
+                    expect_false(is.error(out))
+                    expect_true(is.dataset(out))
+                    expect_identical(self(out), self(file1))
+                    expect_identical(length(batches(out)), 2L)
+                    expect_identical(dim(out),
+                        c(nrow(testfile.df)*2L, ncol(testfile.df)))
+                    expect_identical(getNrow(out), nrow(testfile.df)*2L)
+                    expect_identical(nrow(out), length(as.vector(out$V3)))
+                    expect_equivalent(as.vector(out$V3), rep(testfile.df$V3, 2))
+                    expect_identical(as.vector(out$V3), c(v3.1, v3.2))  
+                })
             })
-            out <- suppressMessages(try(appendDataset(file1, file2)))
-            test_that("append handles two identical Datasets from file", {
-                expect_false(is.error(out))
-                expect_true(is.dataset(out))
-                expect_identical(self(out), self(file1))
-                expect_identical(length(batches(out)), 2L)
-                expect_identical(dim(out),
-                    c(nrow(testfile.df)*2L, ncol(testfile.df)))
-                expect_identical(getNrow(out), nrow(testfile.df)*2L)
-                expect_identical(nrow(out), length(as.vector(out$V3)))
-                expect_equivalent(as.vector(out$V3), rep(testfile.df$V3, 2))
-                expect_identical(as.vector(out$V3), c(v3.1, v3.2))  
-            })
-
-            delete(file2)
-            delete(file1)
         })
         
         with(test.dataset(df[,2:5], "part1"), {
             cats <- categories(part1$v4)
             with(test.dataset(df[,1:3], "part2"), {
                 p1.batches <- batches(part1)
-                test_that("if I insist on confirmation, it fails if there are conflicts", {
-                    expect_true(inherits(p1.batches, "ShojiCatalog"))
-                    expect_identical(length(p1.batches), 1L)
-                    expect_error(suppressMessages(appendDataset(part1, part2,
-                        confirm=TRUE)),
-                        "Please manually resolve conflicts")
-                    expect_identical(length(batches(part1)), 1L)
-                })
+                # test_that("if I insist on confirmation, it fails if there are conflicts", {
+                #     expect_true(inherits(p1.batches, "ShojiCatalog"))
+                #     expect_identical(length(p1.batches), 1L)
+                #     expect_error(suppressMessages(appendDataset(part1, part2,
+                #         confirm=TRUE)),
+                #         "Please manually resolve conflicts")
+                #     expect_identical(length(batches(part1)), 1L)
+                # })
                 out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append handles missing variables from each", {
                     expect_false(is.error(out))

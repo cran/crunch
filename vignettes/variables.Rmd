@@ -11,7 +11,6 @@
 ## We'll then reference saved objects in that as if we had just retrieved them
 ## from the server
 library(crunch)
-load("economist.RData")
 load("variables.RData")
 ```
 
@@ -41,8 +40,11 @@ When dealing with variables within a dataset, the alias is used to identify vari
 
 Because the `names` attribute is used for indexing elements in R, if we want to extract variables based on alias, it means that the `names` attribute of dataset must actually expose aliases. This may be dissonant, but it has some nice properties. For one, comparing our Crunch dataset with the `data.frame` from which it was created, their `names` attribute have the same contents:
 
-```{r}
+```{r, eval=FALSE}
 identical(names(ds), names(df))
+```
+```
+## [1] TRUE
 ```
 
 You can reference and extract variables from a dataset as if it were a `data.frame`, using the `$`, `[`, and `[[` methods. 
@@ -50,7 +52,6 @@ You can reference and extract variables from a dataset as if it were a `data.fra
 ```{r, eval=FALSE}
 track.var <- ds$track
 ```
-<!-- GET TRACK VAR -->
 ```{r}
 track.var
 ```
