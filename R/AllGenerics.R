@@ -28,6 +28,7 @@ setGeneric("descriptions", function (x) standardGeneric("descriptions"))
 setGeneric("descriptions<-", 
     function (x, value) standardGeneric("descriptions<-"), signature="x")
 setGeneric("emails", function (x) standardGeneric("emails"))
+setGeneric("types", function (x) standardGeneric("types"))
 
 setGeneric("type", function (x) standardGeneric("type"))
 setGeneric("type<-", function (x, value) standardGeneric("type<-"))
@@ -73,6 +74,8 @@ setGeneric("archived", function (x) standardGeneric("archived"))
 setGeneric("imported", function (x) standardGeneric("imported"))
 setGeneric("pending", function (x) standardGeneric("pending"))
 setGeneric("permissions", function (x) standardGeneric("permissions"))
+setGeneric("members", function (x) standardGeneric("members"))
+setGeneric("members<-", function (x, value) standardGeneric("members<-"))
 
 setGeneric("dim")
 setGeneric("ncol")

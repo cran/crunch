@@ -3,3 +3,39 @@ userURL <- function () rootURL("user")
 getUser <- function (x=userURL()) {
     ShojiObject(crGET(x))
 }
+
+getAccount <- function (x=rootURL("account", getUser())) {
+    ShojiObject(crGET(x))
+}
+
+##' Find all users on your account
+##'
+##' @param x URL of the user catalog. Default is the right thing; you shouldn't
+##' specify one
+##' @return a \code{UserCatalog}
+##' @export
+getAccountUserCatalog <- function (x=rootURL("users", getAccount())) {
+    UserCatalog(crGET(x))
+}
+
+##' @rdname describe-catalog
+##' @export
+setMethod("names", "UserCatalog", function (x) getIndexSlot(x, "full_name"))
+
+##' @rdname describe-catalog
+##' @export
+setMethod("emails", "UserCatalog", function (x) getIndexSlot(x, "email"))
+
+invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash", ...) {
+    ## TODO: Add permissions
+    payload <- list(email=email, send_invite=notify, id_method=id_method, ...)
+    if (nchar(name)) {
+        payload$first_name <- name
+    }
+    if (id_method == "pwhash") {
+        payload$url_base <- "/password/change/${token}/"
+    }
+    
+    url <- rootURL("users", getAccount())
+    return(crPOST(url, body=toJSON(list(element="shoji:entity", body=payload))))
+}
