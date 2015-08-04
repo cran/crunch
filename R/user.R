@@ -20,16 +20,23 @@ getAccountUserCatalog <- function (x=rootURL("users", getAccount())) {
 
 ##' @rdname describe-catalog
 ##' @export
-setMethod("names", "UserCatalog", function (x) getIndexSlot(x, "full_name"))
+setMethod("names", "UserCatalog", function (x) getIndexSlot(x, "name"))
 
 ##' @rdname describe-catalog
 ##' @export
 setMethod("emails", "UserCatalog", function (x) getIndexSlot(x, "email"))
 
-invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash", ...) {
-    ## TODO: Add permissions
-    payload <- list(email=email, send_invite=notify, id_method=id_method, ...)
-    if (nchar(name)) {
+invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash", 
+                    advanced=FALSE, admin=FALSE, ...) {
+    payload <- list(
+        email=email, 
+        send_invite=notify, 
+        id_method=id_method, 
+        account_permissions=list(
+            alter_users=isTRUE(admin),
+            create_datasets=isTRUE(advanced)),
+        ...)
+    if (!is.null(name)) {
         payload$first_name <- name
     }
     if (id_method == "pwhash") {

@@ -68,6 +68,18 @@ with(fake.HTTP, {
     test_that("refresh", {
         expect_identical(ds$gender, refresh(ds$gender))
     })
+    
+    test_that("show methods", {
+        expect_identical(getShowContent(ds$gender), c(
+                "Gender (categorical)",
+                "Gender",
+                "",
+                "       Count",
+                "Female   534",
+                "Male     466"
+            ))
+        ## TODO: add other types
+    })
 })
 
 if (run.integration.tests) {
@@ -76,7 +88,7 @@ if (run.integration.tests) {
             test_that("can delete variables", {
                 expect_true("v1" %in% names(ds))
                 d <- try(delete(ds$v1))
-                expect_false(is.error(d))
+                expect_that(d, is_not_an_error())
                 expect_false("v1" %in% names(refresh(ds)))
             })
         })

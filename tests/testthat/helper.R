@@ -15,13 +15,13 @@ cacheOn()
 fromJSON <- jsonlite::fromJSON
 
 ## .onAttach stuff, for testthat to work right
-options(crunch.api=getOption("test.api"), 
+options(crunch.api=getOption("test.api") %||% Sys.getenv("R_TEST_API"), 
         warn=1,
         crunch.debug=FALSE,
         digits.secs=3,
         crunch.timeout=15,
-        crunch.email=getOption("test.user"),
-        crunch.pw=getOption("test.pw"))
+        crunch.email=getOption("test.user") %||% Sys.getenv("R_TEST_USER"),
+        crunch.pw=getOption("test.pw") %||% Sys.getenv("R_TEST_PW"))
 set_config(crunchConfig())
 
 ## Test serialize and deserialize
@@ -39,7 +39,10 @@ with.SUTD <- function (data, expr, ...) {
     env <- parent.frame()
     on.exit(data$teardown())
     assign(data$obj.name, data$setup(), envir=env) ## rm this after running?
-    try(eval(substitute(expr), envir=parent.frame()))
+    tryCatch(eval(substitute(expr), envir=parent.frame()),
+        error=function (e) {
+            expect_that(stop(e$message), does_not_throw_error())
+        })
 }
 
 ## note that this works because testthat evals within package namespace
@@ -51,9 +54,7 @@ addFakeHTTPVerbs <- function () {
         url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params
         url <- sub("\\/$", ".json", url)
         url <- sub("^\\/", "", url) ## relative to cwd
-        # print(url)
         out <- handleShoji(fromJSON(url, simplifyVector=FALSE))
-        # print(out)
         return(out)
     }
     http_verbs$PUT <- function (url, body, ...) {
@@ -158,7 +159,7 @@ test.dataset <- function (df=NULL, obj.name="ds", ...) {
 uniqueEmail <- function () paste0("test+", as.numeric(Sys.time()), "@crunch.io")
 users_to_purge <- c()
 new.user.with.setup <- function (email=uniqueEmail(), name=email, ...) {
-    u.url <- invite(email, name=name, notify=FALSE)
+    u.url <- invite(email, name=name, notify=FALSE, ...)
     users_to_purge <<- c(users_to_purge, u.url)
     return(u.url)
 }
@@ -167,8 +168,7 @@ purge.user <- function () {
     len <- length(users_to_purge)
     if (len) {
         u.url <- users_to_purge[len]
-        deurl <- try(index(getAccountUserCatalog())[[u.url]]$membership_url)
-        try(crDELETE(deurl))
+        try(crDELETE(u.url))
         users_to_purge <<- users_to_purge[-len]
     }
 }
@@ -205,7 +205,22 @@ does_not_throw_error <- function () {
     function (expr) {
         res <- try(force(expr), TRUE)
         error <- inherits(res, "try-error")
-        expectation(!error, "threw an error", "no error thrown")
+        failure.msg <- "threw an error"
+        if (error) {
+            ## Append the error message
+            failure.msg <- paste0(failure.msg, ": ", 
+                attr(res, "condition")$message)
+        }
+        expectation(!error, failure.msg, "no error thrown")
+    }
+}
+
+is_not_an_error <- function () {
+    ## Like does_not_throw_error, but for an error already caught
+    function (expr) {
+        expectation(!is.error(expr), 
+            paste("is an error:", attr(expr, "condition")$message), 
+            "no error thrown")
     }
 }
 
@@ -240,3 +255,31 @@ mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
     }
     return(refresh(dataset))
 }
+
+validImport <- function (ds) {
+    ## Pull out common tests that "df" was imported correctly
+    expect_true(is.dataset(ds))
+    expect_identical(names(df), names(ds))
+    expect_identical(dim(ds), dim(df))
+    expect_true(is.Numeric(ds[["v1"]]))
+    expect_true(is.Text(ds[["v2"]]))
+    expect_identical(name(ds$v2), "v2")
+    expect_true(is.Numeric(ds[["v3"]]))
+    expect_identical(description(ds$v3), "")
+    expect_equivalent(as.array(crtabs(mean(v3) ~ v4, data=ds)),
+        tapply(df$v3, df$v4, mean, na.rm=TRUE))
+    expect_true(is.Categorical(ds[["v4"]]))
+    expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
+        array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
+    expect_true(all(levels(df$v4) %in% names(categories(ds$v4))))
+    expect_identical(categories(ds$v4), categories(refresh(ds$v4)))
+    expect_identical(ds$v4, refresh(ds$v4))
+    expect_true(is.Datetime(ds$v5))
+    expect_true(is.Categorical(ds$v6))
+    expect_identical(showVariableOrder(ordering(ds)), names(variables(ds)))
+}
+
+## Global teardown proof of concept
+# bye <- new.env()
+# reg.finalizer(bye, function (x) print("Cleaning..."), 
+#     onexit=TRUE)

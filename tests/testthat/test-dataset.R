@@ -86,13 +86,16 @@ with(fake.HTTP, {
     })
     
     test_that("show method", {
-        expect_identical(describeDatasetVariables(test.ds), 
-            c("$birthyr: Birth Year (numeric) \n",
-            "$gender: Gender (categorical) \n",
-            "$mymrset: mymrset (multiple_response) \n",
-            "$textVar: Text variable ftw (text) \n",
-            "$starttime: starttime (datetime) \n",
-            "$catarray: Cat Array (categorical_array) \n"
+        expect_identical(getShowContent(test.ds), 
+            c(paste("Dataset", dQuote("test ds")),
+            "",
+            "Contains 25 rows of 6 variables:",
+            "$birthyr: Birth Year (numeric)",
+            "$gender: Gender (categorical)",
+            "$mymrset: mymrset (multiple_response)",
+            "$textVar: Text variable ftw (text)",
+            "$starttime: starttime (datetime)",
+            "$catarray: Cat Array (categorical_array)"
         ))
     })
     
@@ -172,7 +175,7 @@ if (run.integration.tests) {
                 expect_error(delete(ds.sub), 
                     "Must confirm deleting dataset")
                 ## Then can delete
-                expect_false(is.error(delete(ds.sub, confirm=FALSE)))
+                expect_that(delete(ds.sub, confirm=FALSE), is_not_an_error())
             })
         })
     })

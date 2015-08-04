@@ -28,7 +28,7 @@ if (run.integration.tests) {
     with(test.authentication, {
         test_that("User can be fetched", {
             user <- try(getUser())
-            expect_false(is.error(user))
+            expect_that(user, is_not_an_error())
             expect_true(inherits(user, "ShojiObject"))
         })
         
@@ -38,7 +38,7 @@ if (run.integration.tests) {
 
         test_that("User can be invited", {
             skip_on_jenkins("Jenkins user needs more permissions")
-            expect_false(is.error(u.url))
+            expect_that(u.url, is_not_an_error())
             usercat <- getAccountUserCatalog()
             expect_true(u.url %in% urls(usercat))
             expect_true(u.email %in% emails(usercat))
@@ -47,8 +47,7 @@ if (run.integration.tests) {
         
         test_that("User can be deleted", {
             skip_on_jenkins("Jenkins user needs more permissions")
-            deurl <- try(index(getAccountUserCatalog())[[u.url]]$membership_url)
-            try(crDELETE(deurl))
+            try(crDELETE(u.url))
             usercat <- refresh(getAccountUserCatalog())
             expect_false(u.url %in% urls(usercat))
             expect_false(u.email %in% emails(usercat))
@@ -66,10 +65,32 @@ if (run.integration.tests) {
                 usercat <- refresh(usercat)
                 expect_true(u.email %in% emails(usercat))
                 expect_true(u.name %in% sub(" +$", "", names(usercat)))
+                user <- index(usercat)[[u]]
+                expect_false(user$account_permissions$create_datasets)
+                expect_false(user$account_permissions$alter_users)
             })
             usercat <- refresh(usercat)
             expect_false(u.email %in% emails(usercat))
             expect_false(u.name %in% sub(" +$", "", names(usercat)))
+        })
+        
+        test_that("User with permissions", {
+            skip_on_jenkins("Jenkins user needs more permissions")
+            with(test.user(advanced=TRUE), {
+                user <- index(getAccountUserCatalog())[[u]]
+                expect_true(user$account_permissions$create_datasets)
+                expect_false(user$account_permissions$alter_users)
+            })
+            with(test.user(admin=TRUE), {
+                user <- index(getAccountUserCatalog())[[u]]
+                expect_false(user$account_permissions$create_datasets)
+                expect_true(user$account_permissions$alter_users)
+            })
+            with(test.user(admin=TRUE, advanced=TRUE), {
+                user <- index(getAccountUserCatalog())[[u]]
+                expect_true(user$account_permissions$create_datasets)
+                expect_true(user$account_permissions$alter_users)
+            })
         })
     })
 

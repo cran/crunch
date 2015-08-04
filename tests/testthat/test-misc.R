@@ -1,11 +1,16 @@
 context("Various helper functions")
 
 test_that("is.error", {
-    expect_true(is.error(try(halt(""), silent=TRUE)))
+    e <- try(halt("error in a box"), silent=TRUE)
+    expect_true(is.error(e))
     expect_false(is.error("not an error"))
     expect_false(is.error(NULL))
     expect_false(is.error(NA))
+    expect_that("not an error", is_not_an_error())
+    expect_that(NULL, is_not_an_error())
+    expect_that(NA, is_not_an_error())
     expect_that("not an error", does_not_throw_error())
+    # expect_that(e, is_not_an_error()) ## Should fail: confirm fail message
 })
 
 test_that("update list", {
@@ -42,14 +47,17 @@ test_that("SUTD", {
     })
     expect_true(a)
     
-    a <- NULL
-    expect_true(is.null(a))
-    with(tester, {
-        expect_false(is.null(a))
-        expect_false(a)
-        halt("Testing error handling, please ignore")
-    })
-    expect_true(a)
+    ## Test that even if the code in the with block throws an error, (1) the
+    ## teardown is run, and (2) it doesn't fail silently but turns into a
+    ## failed test expectation.
+    # a <- NULL
+    # expect_true(is.null(a))
+    # with(tester, {
+    #     expect_false(is.null(a))
+    #     expect_false(a)
+    #     halt("Testing error handling, please ignore")
+    # })
+    # expect_true(a)
 })
 
 test_that("rethrow a caught error", {

@@ -15,15 +15,6 @@ getSummary <- function (x) {
     return(out)
 }
 
-getFrequencies <- function (x) {
-    url <- shojiURL(x, "views", "frequencies")
-    if (is.null(url)) {
-        halt("No frequencies available")
-    }
-    url <- crGET(url)
-    return(url)
-}
-
 makeCategoricalTable <- function (frequencies, add.na=FALSE) {
     freqs <- .na.omit.categories(frequencies)
     counts <- selectFrom("count", freqs)
@@ -109,9 +100,7 @@ summary.CategoricalVariable <- function (object, ...) {
 
 ##' @export
 print.CategoricalVariableSummary <- function (x, ...) {
-    # class(x) <- class(x)[-1] ## uh, call next method
-    # attr(x, "varname") <- NULL
-    print(data.frame(Count=x))
+    print(data.frame(Count=as.numeric(x), row.names=names(x)))
 }
 
 ##' @rdname crunch-summary

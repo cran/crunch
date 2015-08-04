@@ -51,11 +51,7 @@ login <- function (email=getOption("crunch.email"),
     logout()
     auth <- crunchAuth(email=email, password=password, ...)
     
-    ## Save stuff in the session cache
-    saveToken(auth$cookies)
-    session_store$root <- getAPIroot()
-    # session_store$user <- getUser()
-    updateDatasetList()
+    warmSessionCache()
     
     message("Logged into crunch.io as ", email)
     options(prompt = paste("[crunch]", session_store$.globals$prompt)) 
@@ -89,18 +85,17 @@ crunchAuth <- function (email, password=NULL, ...) {
         }
     }
     
-    crPOST(file.path(getOption("crunch.api"), "public/login/"), 
+    crPOST(absoluteURL("public/login/", getOption("crunch.api")),
         body=toJSON(list(email=email, password=password, ...)), 
         status.handlers=list(`401`=function (response, user=email) {
             halt(paste("Unable to authenticate", user))
         }))
 }
 
-##' @importFrom httr set_cookies
-saveToken <- function (cookie) {
-    session_store$cookie <- do.call("set_cookies", cookie)
+warmSessionCache <- function () {
+    session_store$root <- getAPIroot()
+    # session_store$user <- getUser()
+    updateDatasetList()
 }
 
-getToken <- function () session_store$cookie
-
-is.authenticated <- function () !is.null(getToken())
+is.authenticated <- function () !is.null(session_store$root)
