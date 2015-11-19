@@ -44,7 +44,7 @@ showCategories <- function (x) vapply(x, showCategory, character(1))
 showCrunchVariableTitle <- function (x) {
     out <- paste(getNameAndType(x), collapse=" ")
     desc <- description(x)
-    if (!is.null(desc)) out <- c(out, desc)
+    if (!is.null(desc) && nchar(desc)) out <- c(out, desc)
     return(out)
 }
 
@@ -57,7 +57,7 @@ getNameAndType <- function (x) {
 ##' @importFrom utils capture.output
 showCrunchVariable <- function (x) {
     out <- showCrunchVariableTitle(x)
-    try(out <- c(out, "", capture.output(print(summary(x)))), silent=TRUE)
+    try(out <- c(out, "", capture.output(print(summary(x)))))
     invisible(out)
 }
 
@@ -148,7 +148,8 @@ setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
 setMethod("getShowContent", "VariableOrder", showVariableOrder)
 setMethod("getShowContent", "VersionCatalog", showVersionCatalog)
-
+setMethod("getShowContent", "ShojiCatalog", function (x) capture.output(print(x@index)))
+setMethod("getShowContent", "ShojiObject", function (x) capture.output(print(x@body)))
 
 ##' @rdname show-crunch
 ##' @export

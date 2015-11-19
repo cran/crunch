@@ -11,12 +11,10 @@ load("variables.RData")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  track.var <- ds$track
-
-## ------------------------------------------------------------------------
-track.var
+#  track.var
 
 ## ---- echo=FALSE---------------------------------------------------------
-print(summary.track.var)
+cat(summary.track.var, sep="\n")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  name(track.var) <- "Direction of country"
@@ -103,4 +101,11 @@ track.cats[c(1,3,2)]
 ## ----unhide, eval=FALSE--------------------------------------------------
 #  ds <- unhideVariables(ds, "pid7others")
 #  hiddenVariables(ds)
+
+## ---- eval=FALSE---------------------------------------------------------
+#  ds$votereg_old <- NULL
+
+## ---- eval=FALSE---------------------------------------------------------
+#  with(consent(), ds$votereg_old <- NULL)
+#  "votereg_old" %in% names(ds)
 

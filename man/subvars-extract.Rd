@@ -4,16 +4,19 @@
 \name{subvars-extract}
 \alias{$,CategoricalArrayVariable-method}
 \alias{$,Subvariables-method}
-\alias{[,CategoricalArrayVariable,ANY-method}
-\alias{[,CategoricalArrayVariable,logical-method}
-\alias{[,CategoricalArrayVariable,numeric-method}
-\alias{[,Subvariables,character-method}
+\alias{$<-,CategoricalArrayVariable-method}
+\alias{$<-,Subvariables-method}
+\alias{[,CategoricalArrayVariable,ANY,ANY-method}
+\alias{[,CategoricalArrayVariable,logical,ANY-method}
+\alias{[,CategoricalArrayVariable,numeric,ANY-method}
+\alias{[,Subvariables,character,ANY-method}
 \alias{[<-,Subvariables,ANY,missing,ANY-method}
 \alias{[<-,Subvariables,ANY,missing,Subvariables-method}
 \alias{[<-,Subvariables,character,missing,Subvariables-method}
 \alias{[[,CategoricalArrayVariable,ANY-method}
 \alias{[[,Subvariables,ANY-method}
 \alias{[[,Subvariables,character-method}
+\alias{[[<-,CategoricalArrayVariable,ANY,missing,ANY-method}
 \alias{[[<-,Subvariables,ANY,missing,ANY-method}
 \alias{[[<-,Subvariables,ANY,missing,CrunchVariable-method}
 \alias{[[<-,Subvariables,ANY,missing,NULL-method}
@@ -27,7 +30,7 @@
 
 \S4method{$}{Subvariables}(x, name)
 
-\S4method{[}{Subvariables,character}(x, i, j, ..., drop = TRUE)
+\S4method{[}{Subvariables,character,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{Subvariables,character,missing,CrunchVariable}(x, i) <- value
 
@@ -37,21 +40,27 @@
 
 \S4method{[[}{Subvariables,ANY,missing,ANY}(x, i) <- value
 
+\S4method{$}{Subvariables}(x, name) <- value
+
 \S4method{[}{Subvariables,character,missing,Subvariables}(x, i) <- value
 
 \S4method{[}{Subvariables,ANY,missing,Subvariables}(x, i) <- value
 
 \S4method{[}{Subvariables,ANY,missing,ANY}(x, i) <- value
 
-\S4method{[}{CategoricalArrayVariable,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CategoricalArrayVariable,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CategoricalArrayVariable,numeric}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CategoricalArrayVariable,numeric,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CategoricalArrayVariable,logical}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CategoricalArrayVariable,logical,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{CategoricalArrayVariable,ANY}(x, i, j, ...)
 
 \S4method{$}{CategoricalArrayVariable}(x, name)
+
+\S4method{[[}{CategoricalArrayVariable,ANY,missing,ANY}(x, i) <- value
+
+\S4method{$}{CategoricalArrayVariable}(x, name) <- value
 }
 \arguments{
 \item{x}{Subvariables or an array Variable (which contains subvariables)}

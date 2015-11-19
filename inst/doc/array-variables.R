@@ -12,28 +12,26 @@ grep("^imiss_", names(start), value=TRUE)
 #  ds$imiss_b
 
 ## ---- echo=FALSE---------------------------------------------------------
-cat(show_imiss_b, "\n")
-print(summary_imiss_b)
+cat(show_imiss_b, sep="\n")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  ds$imiss <- makeArray(pattern="^imiss_", dataset=ds, name="Issue importance")
 #  ds$imiss
 
 ## ---- echo=FALSE---------------------------------------------------------
-cat(show_imiss)
+cat(show_imiss, sep="\n")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  subvariables(ds$imiss)
 
 ## ---- echo=FALSE---------------------------------------------------------
-cat(show_imiss_subvars)
+cat(show_imiss_subvars, sep="\n")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  ds$imiss$imiss_b
 
 ## ---- echo=FALSE---------------------------------------------------------
-cat(show_imiss_b, "\n")
-print(summary_imiss_b)
+cat(show_imiss_b, sep="\n")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  names(subvariables(ds$imiss))
@@ -49,7 +47,7 @@ names_imiss_subvars
 #  subvariables(ds$imiss)
 
 ## ---- echo=FALSE---------------------------------------------------------
-cat(show_imiss_subvars2)
+cat(show_imiss_subvars2, sep="\n")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  sorting <- order(names(subvariables(ds$imiss)))
@@ -57,14 +55,13 @@ cat(show_imiss_subvars2)
 #  subvariables(ds$imiss)
 
 ## ---- echo=FALSE---------------------------------------------------------
-cat(show_imiss_subvars3)
+cat(show_imiss_subvars3, sep="\n")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  ds$boap_4
 
 ## ---- echo=FALSE---------------------------------------------------------
-cat(show_boap_4, "\n")
-print(summary_boap_4)
+cat(show_boap_4, sep="\n")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  ds$boap <- makeMR(pattern="^boap_[0-9]+", dataset=ds,
@@ -73,21 +70,21 @@ print(summary_boap_4)
 #  ds$boap
 
 ## ---- echo=FALSE---------------------------------------------------------
-cat(show_boap)
+cat(show_boap, sep="\n")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  ds$boap <- undichotomize(ds$boap)
 #  ds$boap
 
 ## ---- echo=FALSE---------------------------------------------------------
-cat(show_boap2)
+cat(show_boap2, sep="\n")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  ds$boap <- dichotomize(ds$boap, "Strongly approve")
 #  ds$boap
 
 ## ---- echo=FALSE---------------------------------------------------------
-cat(show_boap3)
+cat(show_boap3, sep="\n")
 
 ## ------------------------------------------------------------------------
 grep("boap", names(ds), value=TRUE)

@@ -206,7 +206,7 @@ hr {
 %\VignetteIndexEntry{Variables: cleaning and defining metadata}
 -->
 
-<p><a href="datasets.html">Previous: create and load datasets</a></p>
+<p><a href="datasets.md">Previous: create and load datasets</a></p>
 
 <h1>Manipulating variables within datasets</h1>
 
@@ -222,7 +222,7 @@ hr {
 
 <p>So, Crunch stores two user-settable identifiers for variables. What you may have thought of as a variable &ldquo;label&rdquo;, Crunch elevates to the status of &ldquo;name&rdquo;. What you may be used to thinking of as a variable &ldquo;name&rdquo;, Crunch calls &ldquo;alias&rdquo;.</p>
 
-<p>Aliases and names have slightly different validation constraints. Aliases must be unique across the entire dataset, including among array <a href="array-variables.html">subvariables</a>. &ldquo;Names&rdquo;, however, only must be unique within <a href="variable-order.html">variable order groups</a>. Any string is valid for either alias or name, though you may want more machine-friendly strings as aliases. In most cases, you probably won&#39;t even set aliases, though: they&#39;ll be set when you import your dataset and will be whatever the names were in your source data.</p>
+<p>Aliases and names have slightly different validation constraints. Aliases must be unique across the entire dataset, including among array <a href="array-variables.md">subvariables</a>. &ldquo;Names&rdquo;, however, only must be unique within <a href="variable-order.md">variable order groups</a>. Any string is valid for either alias or name, though you may want more machine-friendly strings as aliases. In most cases, you probably won&#39;t even set aliases, though: they&#39;ll be set when you import your dataset and will be whatever the names were in your source data.</p>
 
 <p>In sum, name is crunch alias, label is crunch name.</p>
 
@@ -243,15 +243,12 @@ hr {
 <p>You can reference and extract variables from a dataset as if it were a <code>data.frame</code>, using the <code>$</code>, <code>[</code>, and <code>[[</code> methods. </p>
 
 <pre><code class="r">track.var &lt;- ds$track
-</code></pre>
-
-<pre><code class="r">track.var
+track.var
 </code></pre>
 
 <pre><code>## track (categorical)
-</code></pre>
-
-<pre><code>##                                         Count
+## 
+##                                         Count
 ## Off on the wrong track                    576
 ## Generally headed in the right direction   285
 ## Not sure                                  139
@@ -425,8 +422,6 @@ categories(track.var)
 ## [ 0 ]  Not sure
 </code></pre>
 
-<!-- MAKE THAT -->
-
 <pre><code class="r">ids(categories(track.var)) &lt;- sample(ids(categories(track.var)), replace=FALSE)
 </code></pre>
 
@@ -479,7 +474,30 @@ hiddenVariables(ds)
 <pre><code>## [1] &quot;comments&quot;
 </code></pre>
 
-<p><a href="array-variables.html">Next: create and manipulate array variables</a></p>
+<h2>Deleting variables</h2>
+
+<p>Sometimes you do want to delete variables permanently. Doing so is easy, but we have some protections in place to keep you from accidentally deleting things from a dataset that may be shared with many people on the server.</p>
+
+<p>To delete, you can assign <code>NULL</code> in to the dataset for that variable, just like you were removing a column from a <code>data.frame</code>. In our example dataset, we have two copies of a voter-registration variable, &ldquo;votereg_new&rdquo; and &ldquo;votereg_old&rdquo;. Let&#39;s kill the old one:</p>
+
+<pre><code class="r">ds$votereg_old &lt;- NULL
+</code></pre>
+
+<pre><code>## Really delete &quot;votereg_old&quot;?
+</code></pre>
+
+<p>The delete function requires confirmation when you&#39;re running from an interactive session, just to make sure you aren&#39;t accidentally assigning something in that is NULL and deleting your variable. If you know that you want to delete the variable, you can give your approval in advance by wrapping it in a <code>with</code> statement, using the <code>consent</code> context manager:</p>
+
+<pre><code class="r">with(consent(), ds$votereg_old &lt;- NULL)
+&quot;votereg_old&quot; %in% names(ds)
+</code></pre>
+
+<pre><code>## [1] FALSE
+</code></pre>
+
+<p>The <code>with(consent(), ...)</code> pattern works everywhere in <code>crunch</code> that requires confirmation to do an action, such as deleting datasets.</p>
+
+<p><a href="array-variables.md">Next: create and manipulate array variables</a></p>
 
 </body>
 

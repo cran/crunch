@@ -19,8 +19,8 @@ if (run.integration.tests) {
     with(test.authentication, {
         ## New dataset by file upload method
         test_that("Source file can be uploaded if logged in", {
-            expect_true(createSource(testfile.csv, 
-                response.handler=function (response) response$status_code==201))
+            expect_true(isTRUE(createSource(testfile.csv, 
+                status.handlers=list(`201`=function (response) TRUE))))
         })
         test_that("Dataset container object can be created if logged in", {
             with(test.dataset(), {
@@ -96,9 +96,43 @@ if (run.integration.tests) {
             test_that("newDataset via CSV + JSON", validImport(ds))
         })
         
+        test_that("createWithMetadataAndFile using docs example", {
+            with(test.dataset(newDatasetFromFixture("apidocs")), {
+                expect_true(is.dataset(ds))
+                expect_identical(name(ds), "Example dataset")
+                expect_identical(names(categories(ds$q1)),
+                    c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+            })
+        })
+        
+        m <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
+            simplifyVector=FALSE)
+        
+        test_that("Can create dataset with data in S3", {
+            ds <- try(createWithMetadataAndFile(m, 
+                file="s3://public.testing.crunch.io/example-dataset.csv"))
+            expect_true(is.dataset(ds))
+            with(test.dataset(newDatasetFromFixture("apidocs")), as="ds2", {
+                ## Compare to dataset imported from local file upload
+                expect_identical(dim(ds), dim(ds2))
+                expect_identical(as.vector(ds$q1), as.vector(ds2$q1))
+                ## Could add more assertions
+            })
+            delete(ds)
+        })
+        
+        test_that("Duplicate subvariables are forbidden", {
+            m2 <- m
+            ## Add a duplicate subvariable
+            m2$body$table$metadata$allpets$subvariables[[4]] <- list(name="Another", alias="allpets_1")
+            expect_error(createWithMetadataAndFile(m2,
+                file.path("dataset-fixtures", "apidocs.csv")))
+        })
+        
         dsz <- try(suppressMessages(newDataset(df)))
         test_that("newDataset without specifying name grabs object name", {
             expect_true(is.dataset(dsz))
+            expect_identical(name(dsz), "df")
             with(test.dataset(dsz), validImport(dsz))
         })
         
@@ -106,8 +140,8 @@ if (run.integration.tests) {
             dsname <- uniqueDatasetName()
             testdf <- suppressMessages(newDataset(df, name=dsname))
             expect_true(dsname %in% listDatasets())
-            expect_true(crDELETE(self(testdf), 
-                response.handler=function (response) response$status_code==204))
+            expect_true(isTRUE(crDELETE(self(testdf), 
+                status.handlers=list(`204`=function (response) TRUE))))
             expect_false(dsname %in% listDatasets(refresh=TRUE))
         })
         test_that("Datasets can be deleted by S4 method", {

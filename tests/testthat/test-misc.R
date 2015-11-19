@@ -97,4 +97,27 @@ test_that("joinPath", {
         "a/b/c/e/h/")
     expect_identical(joinPath("/api/datasets/", "/variables/"),
         "/variables/")
+    expect_identical(joinPath("/api/datasets/", "/"),
+        "/")
+    expect_identical(joinPath("/api/datasets/", "./id/"),
+        "/api/datasets/id/")
+})
+
+test_that("absoluteURL", {
+    base.url <- "https://fake.crunch.io/api/datasets/"
+    expect_identical(absoluteURL("../variables/", base.url),
+        "https://fake.crunch.io/api/variables/")
+    expect_identical(absoluteURL("4412es.json", base.url),
+        "https://fake.crunch.io/api/datasets/4412es.json")
+    expect_identical(absoluteURL("g/../../h/",
+        "https://fake.crunch.io/a/b/c/d/../e/f/"),
+        "https://fake.crunch.io/a/b/c/e/h/")
+    expect_identical(absoluteURL("/variables/", base.url),
+        "https://fake.crunch.io/variables/")
+    expect_identical(absoluteURL("/", base.url),
+        "https://fake.crunch.io/")
+})
+
+test_that("emptyObject JSONifies correctly", {
+    expect_equivalent(unclass(toJSON(emptyObject())), "{}")
 })

@@ -7,6 +7,12 @@ skip_on_jenkins <- function (...) {
     }
 }
 
+skip_locally <- function (...) {
+    if (nchar(Sys.getenv("JENKINS_HOME")) == 0) {
+        skip(...)
+    }
+}
+
 set.seed(666)
 
 cacheOn()
@@ -14,14 +20,28 @@ cacheOn()
 
 fromJSON <- jsonlite::fromJSON
 
+envOrOption <- function (opt) {
+    ## .Rprofile options are like "test.api", while env vars are "R_TEST_API"
+    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
+    envvar <- Sys.getenv(envvar.name)
+    if (nchar(envvar)) {
+        ## Let environment variable override .Rprofile, if defined
+        return(envvar)
+    } else {
+        return(getOption(opt))
+    }
+}
+
 ## .onAttach stuff, for testthat to work right
-options(crunch.api=getOption("test.api") %||% Sys.getenv("R_TEST_API"), 
-        warn=1,
-        crunch.debug=FALSE,
-        digits.secs=3,
-        crunch.timeout=15,
-        crunch.email=getOption("test.user") %||% Sys.getenv("R_TEST_USER"),
-        crunch.pw=getOption("test.pw") %||% Sys.getenv("R_TEST_PW"))
+options(
+    crunch.api=envOrOption("test.api"), 
+    warn=1,
+    crunch.debug=FALSE,
+    digits.secs=3,
+    crunch.timeout=15,
+    crunch.email=envOrOption("test.user"),
+    crunch.pw=envOrOption("test.pw")
+)
 set_config(crunchConfig())
 
 ## Test serialize and deserialize
@@ -30,19 +50,9 @@ cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
 #####################
 ## Test decorators ##
 #####################
-setup.and.teardown <- function (setup, teardown, obj.name=".setup") {
-    structure(list(setup=setup, teardown=teardown, obj.name=obj.name),
-        class="SUTD")
-}
-
-with.SUTD <- function (data, expr, ...) {
-    env <- parent.frame()
-    on.exit(data$teardown())
-    assign(data$obj.name, data$setup(), envir=env) ## rm this after running?
-    tryCatch(eval(substitute(expr), envir=parent.frame()),
-        error=function (e) {
-            expect_that(stop(e$message), does_not_throw_error())
-        })
+setup.and.teardown <- function (setup, teardown, obj.name=NULL) {
+    ContextManager(enter=setup, exit=teardown, as=obj.name,
+        error=function (e) expect_that(stop(e$message), does_not_throw_error()))
 }
 
 ## note that this works because testthat evals within package namespace
@@ -69,13 +79,47 @@ addFakeHTTPVerbs <- function () {
     http_verbs$DELETE <- function (...) function (url, ...) {
         stop("DELETE ", url, call.=FALSE)
     }
-    session_store$root <- getAPIroot("/api/root.json")
-    session_store$cookie <- 12345 ## so it thinks we're authenticated
-    try(updateDatasetList())
+    options(crunch.api="/api/root.json", crunch.api.tmp=getOption("crunch.api"))
+    try(warmSessionCache())
+}
+
+## note that this works because testthat evals within package namespace
+addNullHTTPVerbs <- function () {
+    http_verbs$GET <- function (url, ...) {
+        stop("GET ", url, " ", body, call.=FALSE)
+    }
+    http_verbs$PUT <- function (url, body, ...) {
+        stop("PUT ", url, " ", body, call.=FALSE)
+    }
+    http_verbs$PATCH <- function (url, body, ...) {
+        stop("PATCH ", url, " ", body, call.=FALSE)
+    }
+    http_verbs$POST <- function (url, body, ...) {
+        stop("POST ", url, " ", body, call.=FALSE)
+    }
+    http_verbs$DELETE <- function (...) function (url, ...) {
+        stop("DELETE ", url, call.=FALSE)
+    }
+    options(crunch.api="/api/root.json", crunch.api.tmp=getOption("crunch.api"))
 }
 
 ## Mock backend
-fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, addRealHTTPVerbs)
+fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, 
+    function () {
+        logout()
+        addRealHTTPVerbs()
+        options(crunch.api=getOption("crunch.api.tmp"),
+            crunch.api.tmp=NULL)
+    })
+
+## Mock backend for no connectivity
+no.internet <- setup.and.teardown(addNullHTTPVerbs, 
+    function () {
+        logout()
+        addRealHTTPVerbs()
+        options(crunch.api=getOption("crunch.api.tmp"),
+            crunch.api.tmp=NULL)
+    })
 
 timingTracer <- function (filename=tempfile(), append=FALSE) {
     return(function () {
@@ -153,6 +197,23 @@ test.dataset <- function (df=NULL, obj.name="ds", ...) {
         function () new.dataset.with.setup(df, ...),
         purge.dataset,
         obj.name
+    ))
+}
+
+newDatasetFromFixture <- function (filename) {
+    ## Grab csv and json from "dataset-fixtures" and make a dataset
+    m <- fromJSON(file.path("dataset-fixtures", paste0(filename, ".json")),
+        simplifyVector=FALSE)
+    return(suppressMessages(createWithMetadataAndFile(m, 
+        file.path("dataset-fixtures", paste0(filename, ".csv")))))
+}
+
+reset.option <- function (opts) {
+    ## Don't set any options in the setup, but reset specified options after
+    old <- sapply(opts, getOption, simplify=FALSE)
+    return(setup.and.teardown(
+        function () NULL,
+        function () do.call(options, old)
     ))
 }
 
@@ -248,12 +309,13 @@ mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
     dataset[cast.these] <- lapply(dataset[cast.these],
         castVariable, "categorical")
     if (is.null(selections)) {
-        var <- makeArray(pattern=pattern, dataset=dataset, name=name)
+        dataset[[name]] <- makeArray(pattern=pattern, dataset=dataset,
+            name=name)
     } else {
-        var <- makeMR(pattern=pattern, dataset=dataset, name=name,
+        dataset[[name]] <- makeMR(pattern=pattern, dataset=dataset, name=name,
             selections=selections)
     }
-    return(refresh(dataset))
+    return(dataset)
 }
 
 validImport <- function (ds) {
@@ -274,9 +336,19 @@ validImport <- function (ds) {
     expect_true(all(levels(df$v4) %in% names(categories(ds$v4))))
     expect_identical(categories(ds$v4), categories(refresh(ds$v4)))
     expect_identical(ds$v4, refresh(ds$v4))
+    expect_equivalent(as.vector(ds$v4), df$v4)
     expect_true(is.Datetime(ds$v5))
     expect_true(is.Categorical(ds$v6))
     expect_identical(showVariableOrder(ordering(ds)), names(variables(ds)))
+}
+
+validApidocsImport <- function (ds) {
+    expect_true(is.dataset(ds))
+    expect_identical(dim(ds), c(20L, 9L))
+    expect_identical(names(ds), 
+        c("allpets", "q1", "petloc", "ndogs", "ndogs_a", "ndogs_b", "q3",
+        "country", "wave"))
+    
 }
 
 ## Global teardown proof of concept

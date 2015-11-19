@@ -206,7 +206,7 @@ hr {
 %\VignetteIndexEntry{Analyzing data with crunch}
 -->
 
-<p><a href="derive.html">Previous: transform and derive</a></p>
+<p><a href="derive.md">Previous: transform and derive</a></p>
 
 <h1>Computing with R and Crunch</h1>
 
@@ -340,7 +340,7 @@ tab2
 
 <h3>Complex data types</h3>
 
-<p><code>crtabs</code> also comfortably handles the more complex data types that Crunch supports, including categorical array and multiple response variables. In the <a href="array-variables.html">array variables vignette</a>, we created a categorical array, &ldquo;imiss&rdquo;, for &ldquo;Important issues&rdquo;. We can crosstab with arrays just as we do non-arrays.</p>
+<p><code>crtabs</code> also comfortably handles the more complex data types that Crunch supports, including categorical array and multiple response variables. In the <a href="array-variables.md">array variables vignette</a>, we created a categorical array, &ldquo;imiss&rdquo;, for &ldquo;Important issues&rdquo;. We can crosstab with arrays just as we do non-arrays.</p>
 
 <pre><code class="r">tab3 &lt;- crtabs(~ imiss + gender, data=ds)
 tab3
@@ -445,7 +445,22 @@ tab3mr
 ##   The war in Afghanistan   64     78
 </code></pre>
 
-<p>Finally, it&#39;s worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:</p>
+<p>Finally, just as we saw in the <a href="array-variables.md">array variables</a> vignette, we can grab individual subvariables and crosstab with them:</p>
+
+<pre><code class="r">crtabs(~ imiss$Education + gender, data=ds)
+</code></pre>
+
+<pre><code>##                     gender
+## imiss_h                   Male    Female
+##   Very Important     249.27835 311.70813
+##   Somewhat Important 149.97589 150.47036
+##   Not very Important  49.29305  29.86234
+##   Unimportant         35.96718  15.59800
+</code></pre>
+
+<h3>N-way tables</h3>
+
+<p>It&#39;s worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:</p>
 
 <pre><code class="r">round(crtabs(~ imiss + educ + gender, data=ds))
 </code></pre>
@@ -496,7 +511,7 @@ tab3mr
 
 <h3>Numeric aggregations</h3>
 
-<p><code>crtabs</code> can also compute quantities other than counts. Using the left-hand side of the formula, we can specify other aggregations to put in the cells of the table. For example, in the <a href="derive.html">deriving variables vignette</a>, we created an &ldquo;age&rdquo; variable. We can easily compute the average age by gender and education:</p>
+<p><code>crtabs</code> can also compute quantities other than counts. Using the left-hand side of the formula, we can specify other aggregations to put in the cells of the table. For example, in the <a href="derive.md">deriving variables vignette</a>, we created an &ldquo;age&rdquo; variable. We can easily compute the average age by gender and education:</p>
 
 <pre><code class="r">crtabs(mean(age) ~ educ + gender, data=ds)
 </code></pre>
@@ -526,7 +541,15 @@ tab3mr
 ##   Post-grad              26     27
 </code></pre>
 
-<p>Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the <a href="variables.html">variables vignette</a>, we worked with the &ldquo;On the right track&rdquo; question and set some numeric values:</p>
+<p>We can get unconditional (univariate) statistics by making the right-hand side of your formula be just the number <code>1</code>:</p>
+
+<pre><code class="r">crtabs(min(age) ~ 1, data=ds)
+</code></pre>
+
+<pre><code>## [1] 21
+</code></pre>
+
+<p>Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the <a href="variables.md">variables vignette</a>, we worked with the &ldquo;On the right track&rdquo; question and set some numeric values:</p>
 
 <pre><code class="r">categories(ds$track)
 </code></pre>
@@ -553,6 +576,25 @@ tab3mr
 
 <p>Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for those with higher levels of education.</p>
 
+<h3>Subsetting data</h3>
+
+<p>We can also specify a subset of <code>ds</code> to analyze, just as if it were a data.frame. Let&#39;s do the same calculation for Democrats only:</p>
+
+<pre><code class="r">round(crtabs(mean(track) ~ educ + gender, data=ds[ds$pid3 == &quot;Democrat&quot;,]), 2)
+</code></pre>
+
+<pre><code>##                       gender
+## educ                    Male Female
+##   No HS                -0.90   1.00
+##   High school graduate  0.22  -0.03
+##   Some college          0.55   0.20
+##   2-year               -0.35   0.32
+##   4-year                0.36   0.07
+##   Post-grad             0.42   0.02
+</code></pre>
+
+<p>Not surprisingly, Democrats were less pessimistic about the direction of the country than the general population.</p>
+
 <p>A few final observations about <code>crtabs</code>. First, all of these calculations have been weighted by the weight variable we set above. We set it and could then forget about it&ndash;we didn&#39;t have to litter all of our expressions with <code>ds$weight</code> and extra arithmetic to do the weighting. Crunch handles this for us.</p>
 
 <p>Second, none of these aggregations required pulling case-level data to your computer. <code>crtabs</code> sends Crunch expressions to the server and receives in return an <code>n</code>-D array of results. The only computations happening locally are the margin tables and sweeping in <code>prop.table</code>, computing on the aggregate results. Your computer would work exactly as hard with this example dataset of 1000 rows as it would with a dataset of 100 million rows.  </p>
@@ -567,14 +609,13 @@ tab3mr
 </code></pre>
 
 <pre><code>## snowdenleakapp (categorical)
-</code></pre>
-
-<pre><code>##                     Count
-## Strongly disapprove   288
-## Somewhat approve      220
-## Not sure              200
-## Strongly approve      159
-## Somewhat disapprove   131
+## 
+##                        Count
+## Strongly disapprove 288.3561
+## Somewhat approve    220.3593
+## Not sure            200.1591
+## Strongly approve    159.1486
+## Somewhat disapprove 131.4862
 </code></pre>
 
 <p>We can use <code>lm</code> to fit our model. Let&#39;s explore the relationship between approval of Snowden&#39;s leak and respondents&#39; interest in current events, party identification, gender, and age.</p>
@@ -659,7 +700,7 @@ summary(logit1)
 
 <p>As before, not a particularly interesting result, but this is just the beginning of the analysis process. Using <code>crunch</code>, you can keep exploring the data and perhaps find a better fit.</p>
 
-<p>Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and because of the <code>crunch</code> package&#39;s query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them. </p>
+<p>Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and if you specify a subset of the dataset to regress on (as we did above with <code>crtabs</code> when we looked at just Democrats), only those rows are retrieved. This helps minimize the time spent shipping data across the network. Moreover, because of the <code>crunch</code> package&#39;s query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them. </p>
 
 </body>
 

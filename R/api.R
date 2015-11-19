@@ -1,29 +1,22 @@
 ##' Main Crunch API handling function
-##' @param http.verb character in GET, PUT, POST
+##' @param http.verb character in GET, PUT, POST, PATCH, DELETE
 ##' @param url character URL to do the verb on
-##' @param ... additional arguments passed to \code{GET}, \code{PUT}, or
-##' \code{POST}
-##' @param response.handler function that takes a http response object and does
-##' something with it
+##' @param ... additional arguments passed to \code{GET}, \code{PUT},
+##' \code{POST}, \code{PATCH}, or \code{DELETE}
 ##' @param config list of config parameters. See httr documentation.
 ##' @param status.handlers named list of specific HTTP statuses and a response
 ##' function to call in the case where that status is returned. Passed to the
-##' \code{response.handler} function.
+##' \code{\link{handleAPIresponse}} function.
 ##' @keywords internal
-crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(), status.handlers=list(), ...) {
+crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ...) {
     url ## force lazy eval of url before inserting in try() below
     if (isTRUE(getOption("crunch.debug"))) {
-        message(paste(http.verb, url))
+        ## TODO: work this into crunch.log
         try(cat("\n", list(...)$body, "\n"), silent=TRUE)
     }
     FUN <- get(paste0("c", http.verb), envir=asNamespace("crunch"))
-    # FUN <- get(http.verb, envir=asNamespace("httr"))
     x <- try(FUN(url, ..., config=config), silent=TRUE)
-    if (length(status.handlers)) {
-        out <- response.handler(x, special.statuses=status.handlers)
-    } else {
-        out <- response.handler(x)
-    }
+    out <- handleAPIresponse(x, special.statuses=status.handlers)
     return(out)
 }
 
@@ -65,16 +58,17 @@ crPOST <- function (...) http_verbs$POST(...)
 ##' @export
 crDELETE <- function (...) http_verbs$DELETE(...)
 
+##' Do the right thing with the HTTP response
+##' @param response an httr response object
+##' @param special.statuses an optional named list of functions by status code.
+##' @return The full HTTP response object, just the content, or any other
+##' status-specific action
 ##' @importFrom httr content http_status
+##' @keywords internal
 handleAPIresponse <- function (response, special.statuses=list()) {
-    ##' Do the right thing with the HTTP response
-    ##' @param response an httr response object
-    ##' @param special.statuses an optional named list of functions by status code.
-    ##' @return The full HTTP response object, just the content, or any other
-    ##' status-specific action 
     response <- handleAPIerror(response)
+    logMessage(responseStatusLog(response))
     code <- response$status_code
-    if (isTRUE(getOption("crunch.debug"))) message(code)
     handler <- special.statuses[[as.character(code)]]
     if (is.function(handler)) {
         invisible(handler(response))
@@ -87,7 +81,9 @@ handleAPIresponse <- function (response, special.statuses=list()) {
             return(handleShoji(content(response)))            
         }
     } else {
-        if (code == 410) {
+        if (code == 401) {
+            halt("You are not authenticated. Please `login()` and try again.")
+        } else if (code == 410) {
             halt("The API resource at ",
                 response$url, 
                 " has moved permanently. Please upgrade crunch to the ",
@@ -98,6 +94,9 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         if (!is.error(msg2)) {
             msg <- paste(msg, msg2, sep=": ")
         }
+        if (code == 409 && grepl("current editor", msg)) {
+            halt("You are not the current editor of this dataset. `unlock()` it and try again.")
+        }
         halt(msg)
     }
 }
@@ -107,13 +106,22 @@ handleAPIerror <- function (response) {
         if (attr(response, "condition")$message == "Empty reply from server"){
             halt("Server did not respond. Please check your local ",
                 "configuration and try again later.")
-        } else if (crunchIsDown(response)) {
-            halt("Cannot connect to Crunch API")
         } else {
             rethrow(response)
         }
     }
     return(response)    
+}
+
+responseStatusLog <- function (response) {
+    req <- response$request
+    return(paste("HTTP",
+        req$method, 
+        req$url, 
+        response$status_code,
+        # req$headers[["content-length"]] %||% 0,
+        # response$headers[["content-length"]] %||% 0,
+        response$times["total"]))
 }
 
 ##' @importFrom httr config add_headers
@@ -169,13 +177,4 @@ rootURL <- function (x, obj=session_store$root) {
     } else {
         return(NULL)
     }
-}
-
-crunchAPIcanBeReached <- function () {
-    testing <- try(getAPIroot(), silent=TRUE)
-    return(!crunchIsDown(testing))
-}
-
-crunchIsDown <- function (response) {
-    is.error(response) && "COULDNT_CONNECT" %in% class(attr(response, "condition"))
 }
