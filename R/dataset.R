@@ -15,8 +15,9 @@ getDatasetVariables <- function (x) {
 }
 
 getNrow <- function (dataset, filtered=TRUE) {
+    ## Filtered is the UI "applied_filter". We don't usually want that in R.
+    ## TODO: change the default to FALSE
     which.count <- ifelse(isTRUE(filtered), "filtered", "total")
-    ## use filtered by default because every other request will take the applied filter
     
     u <- summaryURL(dataset)
     f <- filterSyntax(activeFilter(dataset))
@@ -112,8 +113,7 @@ weight <- function (x) {
     stopifnot(is.dataset(x))
     w <- x@body$weight
     if (!is.null(w)) {
-        w <- entity(allVariables(x)[[w]])
-        activeFilter(w) <- activeFilter(x)
+        w <- CrunchVariable(allVariables(x)[[w]], filter=activeFilter(x))
     }
     return(w)
 }
@@ -127,7 +127,7 @@ weight <- function (x) {
     } else if (!is.null(value)) {
         halt("Weight must be a Variable or NULL")
     }
-    x <- setCrunchSlot(x, "weight", value)
+    x <- setEntitySlot(x, "weight", value)
     return(x)
 }
 

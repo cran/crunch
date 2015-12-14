@@ -71,8 +71,7 @@ setMethod("subset", "CrunchDataset", function (x, ...) {
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     out <- variables(x)[[i]]
     if (!is.null(out)) {
-        out <- entity(out)
-        activeFilter(out) <- activeFilter(x)
+        out <- CrunchVariable(out, filter=activeFilter(x))
     }
     return(out)
 })
@@ -92,8 +91,7 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
             ## If so, return it with a warning
             out <- hidden(x)[[n]]
             if (!is.null(out)) {
-                out <- entity(out)
-                activeFilter(out) <- activeFilter(x)
+                out <- CrunchVariable(out, filter=activeFilter(x))
             }
             warning("Variable ", i, " is hidden", call.=FALSE)
             return(out)
@@ -111,6 +109,7 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .addVariableSetter <- function (x, i, value) {
     if (i %in% names(x)) {
+        ## We're not adding, we're updating.
         return(.updateValues(x, i, value))
     } else {
         if (inherits(value, "VariableDefinition")) {
@@ -119,10 +118,10 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
             ## But also check to make sure it has a name, and use `i` if not
             value$name <- value$name %||% i
         } else {
-            ## Create a VarDef, and use `i` as name and alias
+            ## Create a VarDef and use `i` as name and alias
             value <- VariableDefinition(value, name=i, alias=i)
         }
-        addVariable(x, value)
+        addVariables(x, value)
     }
 }
 
@@ -162,14 +161,6 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
     return(x)
 }
 
-.deriveVariableSetter <- function (x, i, value) {
-    if (i %in% names(x)) {
-        return(.updateValues(x, i, value))
-    } else {
-        return(deriveVariable(x, value, name=i, alias=i))
-    }
-}
-
 ##' Update a variable or variables in a dataset
 ##'
 ##' @param x a CrunchDataset
@@ -201,11 +192,6 @@ setMethod("[[<-",
 setMethod("[[<-", 
     c("CrunchDataset", "character", "missing", "ANY"),
     .addVariableSetter)
-##' @rdname dataset-update
-##' @export
-setMethod("[[<-", 
-    c("CrunchDataset", "character", "missing", "CrunchExpr"), 
-    .deriveVariableSetter)
 ##' @rdname dataset-update
 ##' @export
 setMethod("[[<-", 

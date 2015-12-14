@@ -6,7 +6,9 @@ halt <- function (...) {
     stop(..., call.=FALSE)
 }
 
-rethrow <- function (x) halt(attr(x, "condition")$message)
+rethrow <- function (x) halt(errorMessage(x))
+
+errorMessage <- function (e) attr(e, "condition")$message
 
 updateList <- function (x, y) {
     x[names(y)] <- y
@@ -41,34 +43,6 @@ selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
     	    }, simplify=simplify)
     }
     return(y)
-}
-
-selectFromWhere <- function (where=TRUE, xlist, key=NULL, ifnot=NA,
-                            simplify=TRUE) {
-    ##' Extract list element(s) conditionally
-    ##'
-    ##' @param where an expression to be evaluated in each element in \code{xlist}.
-    ##' This determines which list objects to keep. The expression must return a
-    ##' logical.
-    ##' @param key character naming the key(s) to extract. Default is \code{NULL},
-    ##' meaning that the entire list element is to be kept.
-    ##' @param xlist list containing other lists from which you want to extract.
-    ##' Passed to \code{\link{selectFrom}}.
-    ##' @param ifnot what to return if the key is not found in a given xlist
-    ##' element. Passed to \code{\link{selectFrom}}.
-    ##' @param simplify logical, passed to \code{\link{selectFrom}}.
-    where <- substitute(where)
-    selectthese <- vapply(xlist, function (x) try(eval(where, x)), logical(1))
-
-    if (!any(selectthese)) return(list())
-    xlist <- xlist[selectthese]
-    if (simplify && is.null(key) && length(xlist)==1) {
-        return(xlist[[1]])
-    } else if (!is.null(key)) {
-        return(selectFrom(key, xlist, ifnot, simplify))
-    } else {
-        return(xlist)
-    }
 }
 
 serialPaste <- function (x, collapse="and") {

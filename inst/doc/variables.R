@@ -63,13 +63,36 @@ head2
 
 ## ------------------------------------------------------------------------
 is.Categorical(track.var)
-categories(track.var)
 
-## ------------------------------------------------------------------------
-names(categories(track.var))
-values(categories(track.var))
-ids(categories(track.var))
-is.na(categories(track.var))
+## ---- eval=FALSE---------------------------------------------------------
+#  categories(track.var)
+
+## ---- echo=FALSE---------------------------------------------------------
+track.cats.before
+
+## ---- eval=FALSE---------------------------------------------------------
+#  names(categories(track.var))
+
+## ---- echo=FALSE---------------------------------------------------------
+names(track.cats.before)
+
+## ---- eval=FALSE---------------------------------------------------------
+#  values(categories(track.var))
+
+## ---- echo=FALSE---------------------------------------------------------
+values(track.cats.before)
+
+## ---- eval=FALSE---------------------------------------------------------
+#  ids(categories(track.var))
+
+## ---- echo=FALSE---------------------------------------------------------
+ids(track.cats.before)
+
+## ---- eval=FALSE---------------------------------------------------------
+#  is.na(categories(track.var))
+
+## ---- echo=FALSE---------------------------------------------------------
+is.na(track.cats.before)
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  names(categories(track.var))[1:2] <- c("Right track", "Wrong track")
