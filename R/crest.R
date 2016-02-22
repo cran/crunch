@@ -16,6 +16,11 @@ clearCache <- function () {
     rm(list=ls(all.names=TRUE, envir=cache), envir=cache)
 }
 
+no.cache <- function () {
+    ## Context manager to temporarily turn cache off if it is on
+    temp.option(crest.cache=FALSE)
+}
+
 ## deal with query params?
 dropCache <- function (x) {
     ## Drop x and anything below it in the tree
@@ -27,7 +32,7 @@ dropOnly <- function (x) {
 }
 dropBelow <- function (x) {
     ## Don't drop x, just those below it in the tree. hence ".+"
-    dropPattern(paste0("^", regexEscape(popQuery(x)), ".+")) 
+    dropPattern(paste0("^", regexEscape(popQuery(x)), ".+"))
 }
 dropPattern <- function (x, escape=TRUE) {
     logMessage("CACHE DROP", x)
@@ -46,13 +51,15 @@ popQuery <- function (x) {
 }
 
 ##' @importFrom httr GET
+##' @importFrom digest digest
 cGET <- function (url, ...) {
     # Always check cache. Just don't write to cache if cache is off
-    
+
     Call <- match.call(expand.dots = TRUE)
     cache.url <- url
     if (!is.null(Call[["query"]])) {
-        cache.url <- paste0(url, "?", toQuery(eval.parent(Call$query)))
+        cache.url <- paste0(url, "?HASHED_QUERY=",
+            digest(eval.parent(Call$query)))
     }
     if (exists(cache.url, envir=cache)) {
         logMessage("CACHE HIT", cache.url)
@@ -93,14 +100,3 @@ cDELETE <- function (url, ..., drop=dropCache(url)) {
     force(drop)
     return(x)
 }
-
-##' @importFrom curl curl_escape
-toQuery <- function (query) {
-    if (is.list(query)) {
-        names <- curl_escape(names(query))
-        values <- curl_escape(query)
-        query <- paste0(names, "=", values, collapse = "&")
-    }
-    return(query)
-}
-

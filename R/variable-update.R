@@ -1,6 +1,6 @@
 .updateVariable <- function (variable, value, filter=NULL) {
     ## Construct a ZCL update payload, then POST it
-    payload <- list(command="update", 
+    payload <- list(command="update",
         variables=.updatePayload(variable, value))
     payload[["filter"]] <- zcl(filter)
     dref <- datasetReference(variable)
@@ -13,15 +13,20 @@
 .updatePayload <- function (variable, value) {
     ## Construct the "variables" key of a ZCL update payload
     if (is.Array(variable)) {
-        subvars <- index(subvariables(variable))
-        subids <- unlist(lapply(subvars, function (x) x$id))
-        out <- lapply(subids, function (x) zcl(typeof(value, structure(zfunc("typeof", structure(list(variable=x), class="zcl")), class="zcl"))))
-        names(out) <- subids
+        # subvars <- index(subvariables(variable))
+        # subids <- unlist(lapply(subvars, function (x) x$id))
+        out <- sapply(urls(subvariables(variable)), function (x) {
+            zcl(typeof(value,
+                structure(zfunc("typeof",
+                structure(list(variable=x), class="zcl")),
+                    class="zcl")))
+            }, simplify=FALSE)
+        # names(out) <- subids
     } else {
         out <- structure(list(zcl(typeof(value, variable))),
-            .Names=tuple(variable)$id)
+            .Names=self(variable))
     }
-    
+
     ## Check for missingness and replace the NAs with special values
     out <- lapply(out, function (x) {
         if ("column" %in% names(x)) {
@@ -44,9 +49,8 @@
     }
     if (is.numeric(f)) {
         ## Validate
-        
-        fun <- ifelse(length(f) == 1, "==", "in")
-        f <- zfunc(fun, zfunc("row"), f - 1)  ## 1-base to 0-base counting
+
+        f <- .seqCrunch(zfunc("row"), f - 1)
     }
     return(f)
 }
@@ -68,7 +72,7 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"), .backstopUpdate)
 
 ##' @rdname variable-update
 ##' @export
-setMethod("[<-", c("CrunchVariable", "ANY", "missing", "NULL"), 
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "NULL"),
     function (x, i, j, value) return(NULL))
 
 .var.updater <- function (x, i, j, value) {
@@ -188,7 +192,7 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
             ## halt()
             .backstopUpdate(x, i, j, value)
         }
-        
+
         ## Datetime not yet supported, apparently
         if (is.Datetime(x)) {
             .backstopUpdate(x, i, j, value)
@@ -217,7 +221,7 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
 setMethod("is.na<-", "CrunchVariable", function (x, value) {
     ## Temporarily kill this method until API supports correctly
     halt("is.na<- not yet supported for CrunchVariables")
-    
+
     lab <- gsub('"', "", deparse(substitute(value)))
     value <- zcl(.dispatchFilter(value))
     payload <- structure(list(value), .Names=lab)

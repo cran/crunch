@@ -22,6 +22,16 @@ setMethod("show", "ShojiObject", .showIt)
 
 ##' @rdname show-crunch
 ##' @export
+setMethod("show", "ShojiCatalog", function (object) {
+    ## Catalog show content is a data.frame unless otherwise indicated.
+    ## Print it, but capture the output so we can return the character output.
+    out <- capture.output(print(getShowContent(object)))
+    cat(out, sep="\n")
+    invisible(out)
+})
+
+##' @rdname show-crunch
+##' @export
 setMethod("show", "CrunchVariable", .showIt)
 
 ##' @rdname show-crunch
@@ -65,9 +75,9 @@ showCrunchDataset <- function (x) {
     if (!is.null(d) && nchar(d)) {
         out <- c(out, d)
     }
-    
-    out <- c(out, 
-            "", 
+
+    out <- c(out,
+            "",
             paste("Contains", nrow(x), "rows of", ncol(x), "variables:"),
             describeDatasetVariables(x))
     return(out)
@@ -111,9 +121,6 @@ showVariableGroup <- function (x, index) {
     return(out)
 }
 
-showVersionCatalog <- function (x, from=Sys.time()) {
-    capture.output(print(formatVersionCatalog(x, from)))
-}
 formatVersionCatalog <- function (x, from=Sys.time()) {
     ts <- timestamps(x)
     if (!is.null(from)) {
@@ -145,9 +152,25 @@ setMethod("getShowContent", "CategoricalArrayVariable",
 setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
 setMethod("getShowContent", "VariableOrder", showVariableOrder)
-setMethod("getShowContent", "VersionCatalog", showVersionCatalog)
-setMethod("getShowContent", "ShojiCatalog", function (x) capture.output(print(x@index)))
-setMethod("getShowContent", "ShojiObject", function (x) capture.output(print(x@body)))
+setMethod("getShowContent", "ShojiCatalog",
+    function (x) catalogToDataFrame(x, TRUE))
+setMethod("getShowContent", "BatchCatalog",
+    function (x) catalogToDataFrame(x, c("id", "status"), rownames=NULL))
+setMethod("getShowContent", "VariableCatalog",
+    function (x) catalogToDataFrame(x, c("alias", "name", "type"), rownames=NULL))
+setMethod("getShowContent", "FilterCatalog",
+    function (x) catalogToDataFrame(x, c("name", "id", "is_public"), rownames=NULL))
+setMethod("getShowContent", "VersionCatalog", formatVersionCatalog)
+setMethod("getShowContent", "ShojiObject",
+    function (x) capture.output(print(x@body)))
+setMethod("getShowContent", "CrunchFilter",
+    function (x) {
+        ## TODO: remove this when server sends URLs instead of ids
+        e <- idsToURLs(x@body$expression,
+            absoluteURL("../../variables/", self(x)))
+        return(c(paste("Crunch filter", dQuote(name(x))),
+        paste("Expression:", formatExpression(e))))
+    })
 
 ##' @rdname show-crunch
 ##' @export

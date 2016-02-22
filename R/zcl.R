@@ -5,19 +5,19 @@ r2zcl <- function (x) {
     ## Called inside the zcl() method.
     v <- toVariable(x)
     attributes(v$values) <- NULL
-    
+
     ## Grab any "typeof" attribute that's been attached. This is so we can
-    ## assert that the type we're sending matches the type of some other 
+    ## assert that the type we're sending matches the type of some other
     ## variable, usually another variable in our CrunchExpr
     zztype <- attr(x, "typeof")
-    
+
     ## If there is a single value, call it "value". Else it is a "column" array
     if (length(x) == 1) {
         out <- list(value=v$values)
     } else {
         out <- list(column=v$values)
     }
-    
+
     ## Add type information since we have it, so that ZZ9 doesn't have to guess
     if (!is.null(zztype)) {
         out$type <- zztype
@@ -29,8 +29,8 @@ r2zcl <- function (x) {
 
 ## Methods to convert various objects to ZCL
 setMethod("zcl", "CrunchExpr", function (x) x@expression)
-setMethod("zcl", "CrunchVariable", function (x) zcl(tuple(x)))
-setMethod("zcl", "VariableTuple", function (x) list(variable=x$id))
+setMethod("zcl", "CrunchVariable", function (x) list(variable=self(x)))
+setMethod("zcl", "VariableTuple", function (x) list(variable=self(x)))
 setMethod("zcl", "numeric", r2zcl)
 setMethod("zcl", "character", r2zcl)
 setMethod("zcl", "Date", r2zcl)
@@ -38,7 +38,6 @@ setMethod("zcl", "POSIXt", r2zcl)
 setMethod("zcl", "logical", function (x) {
     x[is.na(x)] <- FALSE
     out <- list(column=I(x), type=list(class="boolean"))
-    cat(toJSON(out))
     return(out)
 })
 setMethod("zcl", "NULL", function (x) NULL)
@@ -46,9 +45,6 @@ setOldClass("zcl")
 setMethod("zcl", "zcl", function (x) x)
 setMethod("zcl", "list", function (x) x) ## is this a good idea?
 setMethod("zcl", "CrunchFilter", function (x) x@body$expression)
-
-setMethod("absolute.zcl", "ANY", function (x) zcl(x))
-setMethod("absolute.zcl", "CrunchVariable", function (x) list(variable=self(x)))
 
 typeof <- function (x, variable) {
     ## Add ZCL metadata asserting that x is the same type as variable
