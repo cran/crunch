@@ -11,29 +11,14 @@
 crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ...) {
     url ## force lazy eval of url before inserting in try() below
     if (isTRUE(getOption("crunch.debug"))) {
-        ## TODO: work this into crunch.log
+        ## TODO: work this into httpcache.log
         try(cat("\n", list(...)$body, "\n"), silent=TRUE)
     }
-    FUN <- get(paste0("c", http.verb), envir=asNamespace("crunch"))
-    x <- try(FUN(url, ..., config=config), silent=TRUE)
+    FUN <- get(http.verb, envir=asNamespace("httpcache"))
+    x <- FUN(url, ..., config=config)
     out <- handleAPIresponse(x, special.statuses=status.handlers)
     return(out)
 }
-
-## So that we can swap them out for testing
-http_verbs <- NULL
-makeHTTPStore <- function () {
-    http_verbs <<- new.env(hash = TRUE, parent = emptyenv())
-}
-addRealHTTPVerbs <- function () {
-    http_verbs$GET <- function (...) crunchAPI("GET", ...)
-    http_verbs$PUT <- function (...) crunchAPI("PUT", ...)
-    http_verbs$PATCH <- function (...) crunchAPI("PATCH", ...)
-    http_verbs$POST <- function (...) crunchAPI("POST", ...)
-    http_verbs$DELETE <- function (...) crunchAPI("DELETE", ...)
-}
-makeHTTPStore()
-addRealHTTPVerbs()
 
 ##' HTTP methods for communicating with the Crunch API
 ##'
@@ -42,21 +27,22 @@ addRealHTTPVerbs()
 ##' PATCH, and POST.
 ##' @return Depends on the response status of the HTTP request and any custom
 ##' handlers.
+##' @importFrom httpcache GET PUT PATCH POST DELETE
 ##' @name http-methods
 ##' @export
-crGET <- function (...) http_verbs$GET(...)
+crGET <- function (...) crunchAPI("GET", ...)
 ##' @rdname http-methods
 ##' @export
-crPUT <- function (...) http_verbs$PUT(...)
+crPUT <- function (...) crunchAPI("PUT", ...)
 ##' @rdname http-methods
 ##' @export
-crPATCH <- function (...) http_verbs$PATCH(...)
+crPATCH <- function (...) crunchAPI("PATCH", ...)
 ##' @rdname http-methods
 ##' @export
-crPOST <- function (...) http_verbs$POST(...)
+crPOST <- function (...) crunchAPI("POST", ...)
 ##' @rdname http-methods
 ##' @export
-crDELETE <- function (...) http_verbs$DELETE(...)
+crDELETE <- function (...) crunchAPI("DELETE", ...)
 
 ##' Do the right thing with the HTTP response
 ##' @param response an httr response object
@@ -66,8 +52,6 @@ crDELETE <- function (...) http_verbs$DELETE(...)
 ##' @importFrom httr content http_status
 ##' @keywords internal
 handleAPIresponse <- function (response, special.statuses=list()) {
-    response <- handleAPIerror(response)
-    logMessage(responseStatusLog(response))
     code <- response$status_code
     handler <- special.statuses[[as.character(code)]]
     if (is.function(handler)) {
@@ -99,29 +83,6 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         }
         halt(msg)
     }
-}
-
-handleAPIerror <- function (response) {
-    if (is.error(response)) {
-        if (attr(response, "condition")$message == "Empty reply from server"){
-            halt("Server did not respond. Please check your local ",
-                "configuration and try again later.")
-        } else {
-            rethrow(response)
-        }
-    }
-    return(response)
-}
-
-responseStatusLog <- function (response) {
-    req <- response$request
-    return(paste("HTTP",
-        req$method,
-        req$url,
-        response$status_code,
-        # req$headers[["content-length"]] %||% 0,
-        # response$headers[["content-length"]] %||% 0,
-        response$times["total"]))
 }
 
 ##' @importFrom httr config add_headers

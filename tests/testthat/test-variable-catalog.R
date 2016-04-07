@@ -1,6 +1,6 @@
 context("Variable catalog")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     variables.catalog.url <- "/api/datasets/dataset1/variables.json"
     varblob <- crGET(variables.catalog.url)
 
@@ -52,10 +52,13 @@ with(fake.HTTP, {
         expect_identical(varcat[[gender.url]]@body,
             index(varcat)[[gender.url]])
         expect_identical(index(varcat[2:3]), index(varcat)[2:3])
-        expect_error(varcat[[999]], "subscript out of bounds")
-        skip("Not implemented")
-        expect_error(varcat[["asdf"]], "subscript out of bounds")
-        expect_error(varcat[999:1000], "subscript out of bounds")
+    })
+
+    test_that("Extract methods: invalid input", {
+        expect_error(varcat[[999]], "subscript out of bounds") ## base R
+        expect_error(varcat[["asdf"]], "Subscript out of bounds: asdf")
+        expect_error(varcat[[NA]], "Subscript out of bounds: NA")
+        expect_error(varcat[999:1000], "Subscript out of bounds: 999:1000")
     })
 
     test_that("Extract methods: VariableOrder/Group", {
@@ -95,11 +98,15 @@ with(fake.HTTP, {
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            test_that("Can set descriptions", {
-                expect_identical(descriptions(variables(ds)), rep("", ncol(ds)))
-                descriptions(variables(ds))[2:3] <- c("Des 1", "Des 2")
-                expect_identical(descriptions(variables(ds))[1:4],
-                    c("", "Des 1", "Des 2", ""))
+            test_that("Can set descriptions (and doing so doesn't PUT order)", {
+                with(temp.options(httpcache.log=""), {
+                    expect_identical(descriptions(variables(ds)),
+                        rep("", ncol(ds)))
+                    logs <- capture.output(descriptions(variables(ds))[2:3] <- c("Des 1", "Des 2"))
+                    expect_identical(descriptions(variables(ds))[1:4],
+                        c("", "Des 1", "Des 2", ""))
+                })
+                expect_identical(length(logs), 2L) ## PATCH, DROP
             })
             test_that("Can set names and aliases", {
                 n <- names(df)

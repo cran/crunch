@@ -13,11 +13,19 @@ setGeneric("undichotomize", function (x) standardGeneric("undichotomize"))
 setGeneric("value", function (x) standardGeneric("value"))
 setGeneric("value<-", function (x, value) standardGeneric("value<-"))
 setGeneric("name", function (x) standardGeneric("name"))
-setGeneric("name<-", function (x, value) standardGeneric("name<-"),
+setGeneric("name<-", function (x, value) standardGeneric("name<-"))
+setGeneric("expr", function (x) standardGeneric("expr"))
+setGeneric("expr<-", function (x, value) standardGeneric("expr<-"),
     signature="x")
 setGeneric("description", function (x) standardGeneric("description"))
 setGeneric("description<-",
     function (x, value) standardGeneric("description<-"), signature="x")
+setGeneric("startDate", function (x) standardGeneric("startDate"))
+setGeneric("startDate<-",
+function (x, value) standardGeneric("startDate<-"), signature="x")
+setGeneric("endDate", function (x) standardGeneric("endDate"))
+setGeneric("endDate<-",
+    function (x, value) standardGeneric("endDate<-"), signature="x")
 setGeneric("alias")
 setGeneric("alias<-", function (x, value) standardGeneric("alias<-"),
     signature="x")

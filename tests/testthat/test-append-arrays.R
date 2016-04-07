@@ -25,7 +25,6 @@ if (run.integration.tests) {
                 test_that("identical datasets with arrays can append", {
                     expect_message(out <- appendDataset(part1, part2),
                         "No conflicts")
-                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
@@ -80,7 +79,6 @@ if (run.integration.tests) {
                     expect_identical(refresh(part2), part2)
                 })
                 test_that("unbound subvariables get lined up", {
-                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
@@ -136,7 +134,6 @@ if (run.integration.tests) {
                 test_that("unbound subvars with not identical cats", {
                     expect_message(out <- appendDataset(part1, part2),
                         "No conflicts")
-                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
@@ -179,7 +176,6 @@ if (run.integration.tests) {
                 })
                 out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("arrays with different subvariables can append", {
-                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
@@ -240,7 +236,6 @@ if (run.integration.tests) {
                 test_that("alias and name matching on appending arrays", {
                     expect_message(out <- appendDataset(part1, part2),
                         "No conflicts")
-                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
@@ -261,8 +256,7 @@ if (run.integration.tests) {
             })
 
             ## Release and re-lease
-            .releaseDataset(part1)
-            part1 <- refresh(part1)
+            part1 <- releaseAndReload(part1)
 
             test_that("Check again", {
                 expect_true(name(part1$allpets) == "Some of my pets")
@@ -276,8 +270,7 @@ if (run.integration.tests) {
                 })
 
                 ## Release and re-lease
-                .releaseDataset(out)
-                out <- refresh(out)
+                out <- releaseAndReload(out)
 
                 test_that("Metadata sticks after releasing", {
                     expect_false(name(out$allpets) == "All pets owned")
@@ -286,10 +279,8 @@ if (run.integration.tests) {
 
                 ## Change the name and release again
                 name(out$allpets) <- "Apple"
-                .releaseDataset(out)
-                out <- refresh(out)
+                out <- releaseAndReload(out)
                 test_that("Metadata sticks after releasing and not appending", {
-                    skip("Sometimes it doesn't. See https://www.pivotaltracker.com/story/show/108354126")
                     expect_true(name(out$allpets) == "Apple")
                 })
             })

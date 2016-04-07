@@ -4,19 +4,14 @@
 \alias{loadDataset}
 \title{Load a Crunch Dataset}
 \usage{
-loadDataset(dataset.name, kind = c("active", "all", "archived"),
-  useAlias = default.useAlias())
+loadDataset(dataset, kind = c("active", "all", "archived"))
 }
 \arguments{
-\item{dataset.name}{character, the name of a Crunch dataset you have access
-to.}
+\item{dataset}{character, the name of a Crunch dataset you have access
+to. Or, a \code{DatasetTuple}.}
 
 \item{kind}{character specifying whether to look in active, archived, or all
 datasets.}
-
-\item{useAlias}{logical whether variable alias or name should be used as R
-variable names when the dataset is returned. Default is TRUE, meaning alias.
-They're more computer friendly.}
 }
 \value{
 An object of class \code{CrunchDataset}

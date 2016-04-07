@@ -1,11 +1,5 @@
 is.error <- function (x) inherits(x, "try-error")
 
-halt <- function (...) {
-    msg <- gsub("\n", " ", ..1)
-    logMessage("ERROR", msg)
-    stop(..., call.=FALSE)
-}
-
 rethrow <- function (x) halt(errorMessage(x))
 
 errorMessage <- function (e) attr(e, "condition")$message
@@ -44,6 +38,13 @@ selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
     	    }, simplify=simplify)
     }
     return(y)
+}
+
+vget <- function (name) {
+    ## Return a function you can lapply/vapply to select an attribute
+    ## Usage: lapply(list.of.stuff, vget("name"))
+    ## instead of: lapply(list.of.stuff, function (x) x$name)
+    return(function (x) x[[name]])
 }
 
 ##' Make a prose list
@@ -141,11 +142,3 @@ emptyObject <- function () {
 
 ## Borrowed from Hadley
 "%||%" <- function (a, b) if (!is.null(a)) a else b
-
-## No longer used:
-# safeGet <- function (x, ..., ifnot=NULL) {
-#     ## "get" with a default
-#     out <- try(get(x, ...), silent=TRUE)
-#     if (is.error(out)) out <- ifnot
-#     return(out)
-# }

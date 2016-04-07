@@ -1,12 +1,12 @@
 ## ---- results='hide', echo=FALSE, message=FALSE--------------------------
 library(crunch)
-load("array-variables.RData")
+load("vignettes.RData")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  grep("^imiss_", names(ds), value=TRUE)
 
 ## ---- echo=FALSE---------------------------------------------------------
-grep("^imiss_", names(start), value=TRUE)
+grep("^imiss_", names(start_make_array), value=TRUE)
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  ds$imiss_b
@@ -94,7 +94,7 @@ grep("boap", names(ds), value=TRUE)
 #  ds <- refresh(ds)
 
 ## ---- results='hide', echo=FALSE, message=FALSE--------------------------
-ds <- start
+ds <- start_make_array
 
 ## ------------------------------------------------------------------------
 grep("boap", names(ds), value=TRUE)

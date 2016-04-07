@@ -33,6 +33,7 @@ test_that("ShojiCatalog", {
     expect_identical(index(sho), fo$index)
     expect_true(is.shojiCatalog(sho[1]))
     expect_error(sho[2:3], "Subscript out of bounds: 3")
+    expect_error(sho[2:10], "Subscript out of bounds: 3:10")
     expect_true(is.shojiCatalog(sho[c(TRUE, FALSE)]))
     expect_error(sho[c(TRUE, FALSE, TRUE)],
         "Subscript out of bounds: got 3 logicals, need 2")
@@ -41,7 +42,7 @@ test_that("ShojiCatalog", {
     expect_error(sho[c("/a", "c")], "Undefined elements selected: c")
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     full.urls <- DatasetCatalog(crGET("/api/datasets.json"))
     rel.urls <- DatasetCatalog(crGET("/api/datasets-relative-urls.json"))
     test_that("urls() method returns absolute URLs", {

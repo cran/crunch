@@ -6,11 +6,7 @@ test_that("is.error", {
     expect_false(is.error("not an error"))
     expect_false(is.error(NULL))
     expect_false(is.error(NA))
-    expect_that("not an error", is_not_an_error())
-    expect_that(NULL, is_not_an_error())
-    expect_that(NA, is_not_an_error())
-    expect_that("not an error", does_not_throw_error())
-    # expect_that(e, is_not_an_error()) ## Should fail: confirm fail message
+    expect_error("not an error", NA)
 })
 
 test_that("update list", {
@@ -31,33 +27,6 @@ test_that("selectFrom selects what it should", {
     l2[[2]] <- 4
     expect_identical(selectFrom("b", l2), c(2, NA))
     expect_error(selectFrom("b", 5), "xlist must be a list object")
-})
-
-test_that("SUTD", {
-    a <- NULL
-    tester <- setup.and.teardown(function () a <<- FALSE,
-        function () a <<- TRUE)
-
-    expect_true(is.null(a))
-    with(tester, {
-        expect_false(is.null(a))
-        expect_false(a)
-        ## Test that assertion failures are raised
-        # expect_false(TRUE)
-    })
-    expect_true(a)
-
-    ## Test that even if the code in the with block throws an error, (1) the
-    ## teardown is run, and (2) it doesn't fail silently but turns into a
-    ## failed test expectation.
-    # a <- NULL
-    # expect_true(is.null(a))
-    # with(tester, {
-    #     expect_false(is.null(a))
-    #     expect_false(a)
-    #     halt("Testing error handling, please ignore")
-    # })
-    # expect_true(a)
 })
 
 test_that("rethrow a caught error", {
@@ -120,4 +89,16 @@ test_that("absoluteURL", {
 
 test_that("emptyObject JSONifies correctly", {
     expect_equivalent(unclass(toJSON(emptyObject())), "{}")
+})
+
+test_that("setIfNotAlready", {
+    with(temp.options(crunch.test.opt1="previous",
+                      crunch.test.opt2=NULL,
+                      crunch.test.opt3=4), {
+
+        old <- setIfNotAlready(crunch.test.opt1="value", crunch.test.opt2=5)
+        expect_identical(getOption("crunch.test.opt1"), "previous")
+        expect_identical(getOption("crunch.test.opt2"), 5)
+        expect_identical(getOption("crunch.test.opt3"), 4)
+    })
 })

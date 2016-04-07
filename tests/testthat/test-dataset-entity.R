@@ -1,9 +1,11 @@
 context("Dataset object and methods")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test.ds <- loadDataset("test ds")
+    test.ds2 <- loadDataset("ECON.sav")
+    today <- "2016-02-11"
 
-    test_that("Dataset can be created", {
+    test_that("Dataset can be loaded", {
         expect_true(is.dataset(test.ds))
     })
 
@@ -11,6 +13,35 @@ with(fake.HTTP, {
         expect_identical(name(test.ds), "test ds")
         expect_identical(description(test.ds), "")
         expect_identical(id(test.ds), "511a7c49778030653aab5963")
+        expect_identical(startDate(test.ds), "2016-01-01")
+        expect_identical(endDate(test.ds), "2016-01-01")
+        expect_identical(startDate(test.ds2), NULL)
+        expect_identical(endDate(test.ds2), NULL)
+    })
+
+    test_that("startDate<- makes correct request", {
+        expect_error(startDate(test.ds2) <- today,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"start_date":"2016-02-11"}}'),
+            fixed=TRUE
+        )
+        expect_error(startDate(test.ds) <- NULL,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
+                    '{"start_date":null}}'),
+            fixed=TRUE
+        )
+    })
+    test_that("endDate<- makes correct request", {
+        expect_error(endDate(test.ds2) <- today,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"end_date":"2016-02-11"}}'),
+            fixed=TRUE
+        )
+        expect_error(endDate(test.ds) <- NULL,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
+                    '{"end_date":null}}'),
+            fixed=TRUE
+        )
     })
 
     test_that("Dataset webURL", {
@@ -20,14 +51,22 @@ with(fake.HTTP, {
         })
     })
 
-    test_that("Dataset VariableCatalog index is sorted", {
-        expect_identical(urls(allVariables(test.ds)),
+    test_that("Dataset VariableCatalog index is ordered", {
+        expect_identical(urls(variables(test.ds)),
+            c("/api/datasets/dataset1/variables/birthyr.json",
+            "/api/datasets/dataset1/variables/gender.json",
+            "/api/datasets/dataset1/variables/mymrset.json",
+            "/api/datasets/dataset1/variables/textVar.json",
+            "/api/datasets/dataset1/variables/starttime.json",
+            "/api/datasets/dataset1/variables/catarray.json"))
+        ## But allVariables isn't ordered
+        expect_true(setequal(urls(allVariables(test.ds)),
             c("/api/datasets/dataset1/variables/birthyr.json",
             "/api/datasets/dataset1/variables/catarray.json",
             "/api/datasets/dataset1/variables/gender.json",
             "/api/datasets/dataset1/variables/mymrset.json",
             "/api/datasets/dataset1/variables/starttime.json",
-            "/api/datasets/dataset1/variables/textVar.json"))
+            "/api/datasets/dataset1/variables/textVar.json")))
     })
 
     test_that("findVariables", {
@@ -37,29 +76,29 @@ with(fake.HTTP, {
             value=TRUE), "birthyr")
     })
 
-    test_that("useAlias exists and affects names()", {
-        thisds <- test.ds
-        expect_true(thisds@useAlias)
-        expect_identical(names(thisds),
-            findVariables(thisds, key="alias", value=TRUE))
-        thisds@useAlias <- FALSE
-        expect_false(thisds@useAlias)
-        expect_identical(names(thisds),
-            findVariables(thisds, key="name", value=TRUE))
+    test_that("namekey function exists and affects names()", {
+        expect_identical(getOption("crunch.namekey.dataset"), "alias")
+        expect_identical(names(test.ds),
+            findVariables(test.ds, key="alias", value=TRUE))
+        with(temp.option(crunch.namekey.dataset="name"), {
+            expect_identical(names(test.ds),
+                findVariables(test.ds, key="name", value=TRUE))
+        })
     })
 
-    test_that("useAlias is an argument to as.dataset", {
-        expect_equal(as.dataset(crGET("/api/datasets/dataset1.json"),
-            tuple=datasetCatalog()[["/api/datasets/dataset1.json"]])@useAlias,
-            default.useAlias())
-        expect_false(as.dataset(crGET("/api/datasets/dataset1.json"),
-            tuple=datasetCatalog()[["/api/datasets/dataset1.json"]],
-            useAlias=FALSE)@useAlias)
+    test_that("Dataset ncol doesn't make any requests", {
+        with(temp.options(httpcache.log=""), {
+            logs <- capture.output(nc <- ncol(test.ds))
+        })
+        expect_identical(logs, character(0))
+        expect_identical(nc, 6L)
+        expect_identical(dim(test.ds), c(25L, 6L))
     })
 
     test_that("Dataset has names() and extract methods work", {
         expect_false(is.null(names(test.ds)))
-        expect_identical(names(test.ds), c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
+        expect_identical(names(test.ds),
+            c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
         expect_true(is.variable(test.ds[[1]]))
         expect_true("birthyr" %in% names(test.ds))
         expect_true(is.variable(test.ds$birthyr))
@@ -72,6 +111,19 @@ with(fake.HTTP, {
         expect_identical(test.ds$not.a.var.name, NULL)
         expect_error(test.ds[[999]], "subscript out of bounds")
     })
+
+    ## This is a start on a test that getting variables doesn't hit server.
+    ## It doesn't now, but if variable catalogs are lazily fetched, assert that
+    ## we're hitting cache
+    # with(temp.option(httpcache.log=""), {
+    #     dlog <- capture.output({
+    #         v1 <- test.ds$birthyr
+    #         d2 <- test.ds[names(test.ds)=="gender"]
+    #     })
+    # })
+    # print(dlog)
+    # logdf <- loadLogfile(textConnection(dlog))
+    # print(logdf)
 
     test_that("Dataset extract error handling", {
         expect_error(test.ds[[999]], "subscript out of bounds")
@@ -110,6 +162,7 @@ with(fake.HTTP, {
             c(paste("Dataset", dQuote("test ds")),
             "",
             "Contains 25 rows of 6 variables:",
+            "",
             "$birthyr: Birth Year (numeric)",
             "$gender: Gender (categorical)",
             "$mymrset: mymrset (multiple_response)",
@@ -134,6 +187,37 @@ if (run.integration.tests) {
                 expect_identical(name(refresh(d2)), name(ds))
             })
 
+            test_that("Can set (and unset) startDate", {
+                startDate(ds) <- "1985-11-05"
+                expect_identical(startDate(ds), "1985-11-05")
+                expect_identical(startDate(refresh(ds)), "1985-11-05")
+                startDate(ds) <- NULL
+                expect_identical(startDate(ds), NULL)
+                expect_identical(startDate(refresh(ds)), NULL)
+            })
+            test_that("Can set (and unset) endDate", {
+                endDate(ds) <- "1985-11-05"
+                expect_identical(endDate(ds), "1985-11-05")
+                expect_identical(endDate(refresh(ds)), "1985-11-05")
+                endDate(ds) <- NULL
+                expect_identical(endDate(ds), NULL)
+                expect_identical(endDate(refresh(ds)), NULL)
+            })
+
+            test_that("Sending invalid dataset metadata errors usefully", {
+                expect_error(endDate(ds) <- list(foo=4),
+                    "must be a string")
+                expect_error(name(ds) <- 3.14,
+                    'Names must be of class "character"')
+                expect_error(startDate(ds) <- 1985,
+                    "must be a string")
+                expect_error(name(ds) <- NULL,
+                    'Names must be of class "character"')
+                skip("Improve server-side validation")
+                expect_error(startDate(ds) <- "a string",
+                    "Useful error message here")
+            })
+
             test_that("A variable named/aliased 'name' can be accessed", {
                 ds$name <- 1
                 expect_true("name" %in% aliases(variables(ds)))
@@ -147,14 +231,6 @@ if (run.integration.tests) {
                 expect_identical(dim(ds), dim(df))
                 expect_identical(nrow(ds), nrow(df))
                 expect_identical(ncol(ds), ncol(df))
-            })
-
-            test_that("refresh keeps useAlias setting", {
-                expect_true(ds@useAlias)
-                expect_true(refresh(ds)@useAlias)
-                ds@useAlias <- FALSE
-                expect_false(ds@useAlias)
-                expect_false(refresh(ds)@useAlias)
             })
 
             test_that("Dataset [[<-", {
@@ -199,14 +275,16 @@ if (run.integration.tests) {
                 expect_error(delete(ds.sub),
                     "Must confirm deleting dataset")
                 ## Then can delete
-                expect_that(delete(ds.sub, confirm=FALSE), is_not_an_error())
+                expect_error(delete(ds.sub, confirm=FALSE),
+                    NA)
             })
         })
 
         test_that("Can give consent to delete", {
             with(test.dataset(df), {
                 with(consent(), {
-                    expect_that(delete(ds, confirm=TRUE), is_not_an_error())
+                    expect_error(delete(ds, confirm=TRUE),
+                        NA)
                 })
             })
         })

@@ -14,3 +14,7 @@ setMethod("pending", "BatchCatalog", function (x) {
     index(x) <- Filter(function (a) !isTRUE(a$status == "imported"), index(x))
     return(x)
 })
+
+##' @rdname describe-catalog
+##' @export
+setMethod("names", "BatchCatalog", function (x) urls(x))

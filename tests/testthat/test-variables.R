@@ -1,6 +1,6 @@
 context("Variables")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
 
     test_that("Variable init, as, is", {
@@ -47,8 +47,8 @@ with(fake.HTTP, {
     })
 
     test_that("Variable setters don't hit server if data not changed", {
-        expect_that(name(ds$gender) <- "Gender",
-            does_not_throw_error())
+        expect_error(name(ds$gender) <- "Gender",
+            NA)
     })
 
     test_that("refresh", {

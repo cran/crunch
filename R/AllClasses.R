@@ -39,8 +39,10 @@ IndexTuple <- setClass("IndexTuple",
     ))
 VariableTuple <- setClass("VariableTuple", contains="IndexTuple")
 DatasetTuple <- setClass("DatasetTuple", contains="IndexTuple")
+CrunchProject <- setClass("CrunchProject", contains="IndexTuple")
 
 VariableEntity <- setClass("VariableEntity", contains="ShojiObject")
+ProjectEntity <- setClass("ProjectEntity", contains="ShojiObject")
 
 CrunchExpr <- setClass("CrunchExpr",
     representation=representation(
@@ -181,15 +183,11 @@ BatchCatalog <- setClass("BatchCatalog", contains="ShojiCatalog")
 PermissionCatalog <- setClass("PermissionCatalog", contains="ShojiCatalog")
 UserCatalog <- setClass("UserCatalog", contains="ShojiCatalog")
 TeamCatalog <- setClass("TeamCatalog", contains="ShojiCatalog")
+ProjectCatalog <- setClass("ProjectCatalog", contains="ShojiCatalog")
 MemberCatalog <- setClass("MemberCatalog", contains="ShojiCatalog")
 VersionCatalog <- setClass("VersionCatalog", contains="ShojiCatalog")
 FilterCatalog <- setClass("FilterCatalog", contains="ShojiCatalog")
 ForkCatalog <- setClass("ForkCatalog", contains="ShojiCatalog")
-
-default.useAlias <- function () {
-    opt <- getOption("crunch.useAlias")
-    return(is.null(opt) || isTRUE(opt))
-}
 
 ##' Crunch Datasets
 ##'
@@ -197,13 +195,11 @@ default.useAlias <- function () {
 ##' @export
 CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
     representation=representation(
-        useAlias="logical",
         variables="VariableCatalog",
         filter="CrunchLogicalExpr",
         tuple="DatasetTuple"
     ),
     prototype=prototype(
-        useAlias=default.useAlias(),
         variables=VariableCatalog(),
         filter=CrunchLogicalExpr(),
         tuple=DatasetTuple()))
@@ -266,7 +262,7 @@ Category <- function (..., data=NULL) {
 
 ##' @rdname Subvariables
 ##' @export
-Subvariables <- setClass("Subvariables", contains="ShojiCatalog",
+Subvariables <- setClass("Subvariables", contains="VariableCatalog",
     representation=representation(
         filter="CrunchLogicalExpr"
     ),

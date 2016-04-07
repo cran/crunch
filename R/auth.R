@@ -20,6 +20,7 @@ logout <- function () {
     options(prompt = session_store$.globals$prompt)
 }
 
+##' @importFrom httpcache clearCache
 deleteSessionInfo <- function () {
     rm(list=setdiff(ls(envir=session_store), ".globals"), envir=session_store)
     clearCache()
@@ -55,7 +56,16 @@ login <- function (email=getOption("crunch.email"),
 
     message("Logged into crunch.io as ", email)
     options(prompt = paste("[crunch]", session_store$.globals$prompt))
-    invisible()
+    ## Return a Session object
+    invisible(session())
+}
+
+##' Get various catalogs for your Crunch session
+##' @return a list.
+##' @export
+session <- function () {
+    list(datasets=datasetCatalog(),
+        projects=ProjectCatalog(crGET(sessionURL("projects"))))
 }
 
 crunchAuth <- function (email, password=NULL, ...) {

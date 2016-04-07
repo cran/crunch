@@ -1,6 +1,6 @@
 ## ---- results='hide', echo=FALSE, message=FALSE-----------------------------------------------------------------------
 library(crunch)
-load("analyze.RData")
+load("vignettes.RData")
 options(width=120)
 
 ## ---- eval=FALSE------------------------------------------------------------------------------------------------------

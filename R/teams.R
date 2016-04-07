@@ -35,10 +35,6 @@ getTeams <- function () {
     TeamCatalog(crGET(sessionURL("teams")))
 }
 
-##' @rdname describe-catalog
-##' @export
-setMethod("names", "TeamCatalog", function (x) getIndexSlot(x, "name"))
-
 ##' @rdname catalog-extract
 ##' @export
 setMethod("[[", c("TeamCatalog", "character"), function (x, i, ...) {
@@ -86,10 +82,6 @@ setMethod("[[<-", c("TeamCatalog", "character", "missing", "CrunchTeam"),
         return(x)
     })
 
-##' @rdname catalog-extract
-##' @export
-setMethod("$", "TeamCatalog", function (x, name) x[[name]])
-
 ##' @rdname describe
 ##' @export
 setMethod("name", "CrunchTeam", function (x) x@body$name)
@@ -98,49 +90,6 @@ setMethod("name", "CrunchTeam", function (x) x@body$name)
 ##' @export
 setMethod("members", "CrunchTeam", function (x) {
     MemberCatalog(crGET(shojiURL(x, "catalogs", "members")))
-})
-
-##' @rdname describe-catalog
-##' @export
-setMethod("names", "MemberCatalog", function (x) getIndexSlot(x, "name"))
-
-
-.backstopUpdate <- function (x, i, j, value) {
-    ## Backstop error so you don't get "Object of class S4 is not subsettable"
-    halt(paste("Cannot update", class(x), "with type", class(value)))
-}
-
-##' @rdname catalog-extract
-##' @export
-setMethod("[[<-", c("MemberCatalog", "ANY", "missing", "ANY"), .backstopUpdate)
-
-##' @rdname catalog-extract
-##' @export
-setMethod("[[<-", c("MemberCatalog", "character", "missing", "NULL"),
-    function (x, i, j, value) {
-        ## Remove the specified user from the catalog
-        payload <- sapply(i, function (z) NULL, simplify=FALSE)
-        crPATCH(self(x), body=toJSON(payload))
-        return(refresh(x))
-    })
-
-##' @rdname teams
-##' @export
-setMethod("members<-", c("CrunchTeam", "MemberCatalog"), function (x, value) {
-    ## TODO: something
-    ## For now, assume action already done in other methods, like NULL
-    ## assignment above.
-    return(x)
-})
-
-##' @rdname teams
-##' @export
-setMethod("members<-", c("CrunchTeam", "character"), function (x, value) {
-    payload <- sapply(value,
-        function (z) emptyObject(),
-        simplify=FALSE)
-    crPATCH(self(members(x)), body=toJSON(payload))
-    return(refresh(x))
 })
 
 ##' @rdname delete

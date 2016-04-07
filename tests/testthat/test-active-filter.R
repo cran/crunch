@@ -1,6 +1,6 @@
 context("Filtering datasets and variables in the R session")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     ds2 <- ds[ds$gender == "Male", ]
     ds3 <- ds2[ds$birthyr > 1981, ]
@@ -55,18 +55,22 @@ with(fake.HTTP, {
         expect_identical(activeFilter(weight(ds4)), ds$gender == "Male")
     })
 
-    test_that("activeFilter from CrunchExpr and CrunchVariable", {
+    test_that("activeFilter from filtered CrunchVariable", {
+        expect_identical(activeFilter(ds$birthyr), NULL)
         expect_identical(activeFilter(ds2$birthyr),
             activeFilter(ds$birthyr[ds$gender == "Male"]))
         expect_identical(activeFilter(ds$birthyr[ds$gender == "Male"]),
             ds$gender == "Male")
     })
 
-    test_that("activeFilter from more complex CrunchExprs", {
+    test_that("activeFilter from CrunchExpr", {
+        ## Need the @expression here because CrunchExpr@filter is list
+        expect_identical(activeFilter((ds$birthyr - ds$starttime)[ds$gender == "Male"]),
+            (ds$gender == "Male")@expression)
+    })
+    test_that("activeFilter passes across operations among vars/exprs", {
         skip("TODO: filtered variables/exprs should pass their filters along")
         expect_identical(activeFilter(ds$birthyr[ds$gender == "Male"] - ds$starttime[ds$gender == "Male"]),
-            ds$gender == "Male")
-        expect_identical(activeFilter((ds$birthyr - ds$starttime)[ds$gender == "Male"]),
             ds$gender == "Male")
     })
 })
@@ -86,6 +90,12 @@ if (run.integration.tests) {
                 expect_identical(dim(ds4), c(5L, 6L))
             })
 
+            test_that("activeFilter appears in print method for dataset", {
+                expect_output(ds3, "Filtered by v3 > 11")
+                expect_false(any(grepl("Filtered by",
+                    capture.output(print(ds)))))
+            })
+
             test_that("Filtered variables return filtered values from as.vector", {
                 expect_identical(as.vector(ds2$v3),
                     c(9, 11, 13, 15, 17, 19, 21, 23, 25, 27))
@@ -95,6 +105,10 @@ if (run.integration.tests) {
                     as.numeric(12:27))
                 expect_identical(as.vector(ds4$v3),
                     as.numeric(8:12))
+            })
+
+            test_that("activeFilter appears in print method for variables", {
+                expect_output(ds3$v3, "Filtered by v3 > 11")
             })
 
             test_that("as.data.frame when filtered", {
