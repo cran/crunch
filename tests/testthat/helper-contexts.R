@@ -1,8 +1,23 @@
-
-
 setup.and.teardown <- function (setup, teardown, obj.name=NULL) {
     ContextManager(enter=setup, exit=teardown, as=obj.name,
         error=function (e) expect_error(stop(e$message), "NO ERRORS HERE!"))
+}
+
+fakeResponse <- function (url="", status_code=200, headers=list(), json=NULL) {
+    ## Return something that looks enough like an httr 'response'
+    if (!is.null(json)) {
+        cont <- charToRaw(toJSON(json))
+    } else {
+        cont <- readBin(url, "raw", 4096)
+    }
+    structure(list(
+        url=url,
+        status_code=status_code,
+        times=structure(nchar(url), .Names="total"),
+        request=list(method="GET", url=url),
+        headers=modifyList(list(`Content-Type`="application/json"), headers),
+        content=cont
+    ), class="response")
 }
 
 with_mock_HTTP <- function (expr) {
@@ -15,16 +30,7 @@ with_mock_HTTP <- function (expr) {
                 url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params
                 url <- sub("\\/$", ".json", url)
                 url <- sub("^\\/", "", url) ## relative to cwd
-                out <- handleShoji(fromJSON(url, simplifyVector=FALSE))
-                return(list(
-                    status_code=200,
-                    times=structure(nchar(url), .Names="total"),
-                    request=list(method="GET", url=url),
-                    response=out
-                ))
-            },
-            `crunch::handleAPIresponse`=function (response, special.statuses=list()) {
-                return(response$response)
+                return(fakeResponse(url))
             },
             `httr::PUT`=function (url, body, ...) halt("PUT ", url, " ", body),
             `httr::PATCH`=function (url, body, ...) halt("PATCH ", url, " ", body),
@@ -48,12 +54,23 @@ without_internet <- function (expr) {
     )
 }
 
+with_silent_progress <- function (expr) {
+    with_mock(
+        `utils::txtProgressBar`=function (...) invisible(NULL),
+        `utils::setTxtProgressBar`=function (...) invisible(NULL),
+        eval.parent(expr)
+    )
+}
+
 silencer <- temp.option(show.error.messages=FALSE)
 
-## Auth setup-teardown
-test.authentication <- setup.and.teardown(
-    function () suppressMessages(login()),
-    logout)
+with_test_authentication <- function (expr) {
+    if (run.integration.tests) {
+        suppressMessages(login())
+        on.exit(logout())
+        eval.parent(with_silent_progress(expr))
+    }
+}
 
 uniqueDatasetName <- now
 
@@ -94,28 +111,15 @@ reset.option <- function (opts) {
     ## Don't set any options in the setup, but reset specified options after
     old <- sapply(opts, getOption, simplify=FALSE)
     return(setup.and.teardown(
-        function () NULL,
+        null,
         function () do.call(options, old)
     ))
 }
 
 uniqueEmail <- function () paste0("test+", as.numeric(Sys.time()), "@crunch.io")
-testUser <- function (email=uniqueEmail(), name=email, ...) {
+testUser <- function (email=uniqueEmail(), name=paste("Ms.", email, "User"), ...) {
     u.url <- invite(email, name=name, notify=FALSE, ...)
-    return(ShojiObject(crGET(u.url)))
-}
-new.user.with.setup <- function (email=uniqueEmail(), name=email, ...) {
-    u.url <- invite(email, name=name, notify=FALSE, ...)
-    objects_to_purge <<- c(objects_to_purge, u.url)
-    return(u.url)
-}
-
-test.user <- function (email=uniqueEmail(), name=email, obj.name="u", ...) {
-    return(setup.and.teardown(
-        function () new.user.with.setup(email, name, ...),
-        purge.object,
-        obj.name
-    ))
+    return(UserEntity(crGET(u.url)))
 }
 
 markForCleanup <- function (x) {

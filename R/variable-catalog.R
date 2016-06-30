@@ -1,4 +1,4 @@
-init.VariableCatalog <- function (.Object, ...) {
+setMethod("initialize", "VariableCatalog", function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     h_url <- .Object@orders$hier
     if (!is.null(h_url)) {
@@ -6,8 +6,7 @@ init.VariableCatalog <- function (.Object, ...) {
         .Object@order <- VariableOrder(o)
     }
     return(.Object)
-}
-setMethod("initialize", "VariableCatalog", init.VariableCatalog)
+})
 
 .discardedTuple <- function (x) isTRUE(x[["discarded"]])
 
@@ -39,7 +38,7 @@ setMethod("[[", c("VariableCatalog", "ANY"), function (x, i, ...) {
         halt("Subscript out of bounds: ", i)
     }
     return(VariableTuple(index_url=self(x), entity_url=urls(x)[i],
-        body=index(x)[[i]]))
+        body=tup))
 })
 ##' @rdname catalog-extract
 ##' @export
@@ -68,15 +67,7 @@ setMethod("[", c("VariableCatalog", "VariableGroup"), function (x, i, ...) {
     index(x) <- index(x)[urls(i)]
     return(x)
 })
-##' @rdname catalog-extract
-##' @export
-setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog"),
-    function (x, i, j, value) {
-        ## Validate!
-        index(x)[i] <- index(value)[i]
-        ## No save, I don't think. PATCH outside this fn?
-        return(x)
-    })
+
 ##' @rdname catalog-extract
 ##' @export
 setMethod("[<-", c("VariableCatalog", "VariableOrder", "missing", "VariableCatalog"),
@@ -116,3 +107,28 @@ setMethod("descriptions<-", "VariableCatalog", function (x, value) {
 setMethod("types", "VariableCatalog", function (x) getIndexSlot(x, "type"))
 
 ## No setter for types<-
+
+
+##' Get all variable metadata for a dataset
+##'
+##' @param dataset CrunchDataset
+##' @return A VariableCatalog that has things like categories embedded in each
+##' categorical variable, and all subvariables are represented
+##' @export
+variableMetadata <- function (dataset) {
+    varcat <- allVariables(dataset)
+    index(varcat) <- lapply(index(varcat), function (x) {
+        if ("subvariables" %in% names(x)) {
+            x$subvariables <- absoluteURL(unlist(x$subvariables), self(varcat))
+        }
+        return(x)
+    })
+    extra <- crGET(shojiURL(dataset, "fragments", "table"))$metadata
+    extra <- mapply(function (x, i) {
+            x$id <- i
+            return(x)
+        }, x=extra, i=names(extra), SIMPLIFY=FALSE)
+    names(extra) <- absoluteURL(paste0(names(extra), "/"), self(varcat))
+    index(varcat) <- modifyList(extra, index(varcat))
+    return(varcat)
+}

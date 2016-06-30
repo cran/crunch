@@ -4,8 +4,9 @@ me <- "fake.user@example.com"
 
 with_mock_HTTP({
     ds <- loadDataset("test ds")
+    ds2 <- loadDataset("ECON.sav")
     test_that("Dataset has permissions catalog", {
-        expect_true(inherits(permissions(ds), "PermissionCatalog"))
+        expect_is(permissions(ds), "PermissionCatalog")
         expect_identical(urls(permissions(ds)),
             c("/api/users/user1.json", "/api/users/user2.json"))
         expect_identical(emails(permissions(ds)),
@@ -15,11 +16,16 @@ with_mock_HTTP({
         expect_identical(is.editor(permissions(ds)),
             structure(c(TRUE, FALSE),
             .Names=c("fake.user@example.com", "nobody@crunch.io")))
-        expect_true(userCanEdit(me, ds))
-        expect_false(userCanEdit("nobody@crunch.io", ds))
-        expect_true(userCanView("nobody@crunch.io", ds))
-        expect_false(userCanView("not.a.user@hotmail.com", ds))
-        expect_true(iCanEdit(ds))
+        expect_true(is.editor(permissions(ds)[me]))
+        expect_true(is.editor(permissions(ds)[[me]]))
+        expect_false(is.editor(permissions(ds)["nobody@crunch.io"]))
+    })
+    test_that("Permissions with dataset shared with team", {
+        expect_identical(emails(permissions(ds2)),
+            c(NA_character_, "dos@example.io", "tres@example.com"))
+        expect_identical(is.editor(permissions(ds2)),
+            structure(c(TRUE, TRUE, TRUE),
+            .Names=c(NA_character_, "dos@example.io", "tres@example.com")))
     })
 
     with(temp.options(crunch.api="https://fake.crunch.io/api/v2/"), {
@@ -47,10 +53,10 @@ with_mock_HTTP({
 me <- getOption("crunch.email")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("PermissionsCatalog from real dataset", {
-                expect_true(inherits(permissions(ds), "PermissionCatalog"))
+                expect_is(permissions(ds), "PermissionCatalog")
                 expect_identical(urls(permissions(ds)),
                     userURL())
                 expect_identical(emails(permissions(ds)),
@@ -59,10 +65,12 @@ if (run.integration.tests) {
                     structure(TRUE, .Names=me))
             })
 
-            test_that("share method for dataset", {
-                try(share(ds, "foo@crunch.io", notify=FALSE))
+            test_that("share and unshare methods for dataset", {
+                ds <- share(ds, "foo@crunch.io", notify=FALSE)
                 expect_true(setequal(emails(permissions(ds)),
                     c(me, "foo@crunch.io")))
+                ds <- unshare(ds, "foo@crunch.io")
+                expect_identical(emails(permissions(ds)), me)
             })
 
             test_that("re-sharing doesn't change the state", {
@@ -76,16 +84,15 @@ if (run.integration.tests) {
                 try(share(ds, c("a@crunch.io", "b@crunch.io"), notify=FALSE))
                 expect_true(setequal(emails(permissions(ds)),
                     c(me, others)))
-                expect_true(userCanEdit(me, ds))
+                expect_true(is.editor(permissions(ds)[[me]]))
                 for (user in others) {
-                    expect_false(userCanEdit(user, ds), info=user)
-                    expect_true(userCanView(user, ds), info=user)
+                    expect_false(is.editor(permissions(ds)[[user]]), info=user)
                 }
             })
 
             test_that("Cannot unmake myself editor without passing", {
                 try(share(ds, me, notify=FALSE, edit=TRUE))
-                expect_true(userCanEdit(me, ds))
+                expect_true(is.editor(permissions(ds)[[me]]))
                 expect_error(share(ds, me, notify=FALSE, edit=FALSE),
                     "Cannot remove editor from the dataset without specifying another")
             })
@@ -94,8 +101,8 @@ if (run.integration.tests) {
                 skip("TODO invite a and b as advanced users")
                 ds <- share(ds, c("a@crunch.io", "b@crunch.io"),
                     notify=FALSE, edit=TRUE)
-                expect_true(userCanEdit("a@crunch.io", ds))
-                expect_true(userCanEdit("b@crunch.io", ds))
+                expect_true(is.editor(permissions(ds)[["a@crunch.io"]]))
+                expect_true(is.editor(permissions(ds)[["b@crunch.io"]]))
             })
         })
     })

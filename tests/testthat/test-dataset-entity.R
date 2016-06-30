@@ -3,6 +3,9 @@ context("Dataset object and methods")
 with_mock_HTTP({
     test.ds <- loadDataset("test ds")
     test.ds2 <- loadDataset("ECON.sav")
+    test.ds3 <- loadDataset("an archived dataset")
+    ## But it's not archived apparently. Reach around
+    test.ds3@tuple@body$archived <- TRUE
     today <- "2016-02-11"
 
     test_that("Dataset can be loaded", {
@@ -13,10 +16,70 @@ with_mock_HTTP({
         expect_identical(name(test.ds), "test ds")
         expect_identical(description(test.ds), "")
         expect_identical(id(test.ds), "511a7c49778030653aab5963")
+    })
+
+    test_that("archived", {
+        expect_false(is.archived(test.ds))
+        expect_false(is.archived(test.ds2))
+        expect_true(is.archived(test.ds3))
+    })
+
+    test_that("archive setting", {
+        expect_error(is.archived(test.ds2) <- TRUE,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"archived":true}}'),
+            fixed=TRUE
+        )
+        expect_error(archive(test.ds2),
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"archived":true}}'),
+            fixed=TRUE
+        )
+    })
+
+    test_that("draft/published", {
+        expect_true(is.published(test.ds))
+        expect_false(is.published(test.ds2))
+        expect_false(is.draft(test.ds))
+        expect_true(is.draft(test.ds2))
+    })
+
+    test_that("draft/publish setting", {
+        expect_error(is.published(test.ds2) <- TRUE,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"is_published":true}}'),
+            fixed=TRUE
+        )
+        expect_error(is.published(test.ds) <- FALSE,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
+                    '{"is_published":false}}'),
+            fixed=TRUE
+        )
+        expect_error(is.draft(test.ds2) <- FALSE,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"is_published":true}}'),
+            fixed=TRUE
+        )
+        expect_error(is.draft(test.ds) <- TRUE,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
+                    '{"is_published":false}}'),
+            fixed=TRUE
+        )
+        expect_error(publish(test.ds2),
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"is_published":true}}'),
+            fixed=TRUE
+        )
+        expect_error(publish(test.ds), NA)
+        expect_error(is.draft(test.ds) <- FALSE, NA)
+        expect_error(is.published(test.ds) <- TRUE, NA)
+    })
+
+    test_that("start/endDate", {
         expect_identical(startDate(test.ds), "2016-01-01")
         expect_identical(endDate(test.ds), "2016-01-01")
-        expect_identical(startDate(test.ds2), NULL)
-        expect_identical(endDate(test.ds2), NULL)
+        expect_null(startDate(test.ds2))
+        expect_null(endDate(test.ds2))
     })
 
     test_that("startDate<- makes correct request", {
@@ -69,20 +132,11 @@ with_mock_HTTP({
             "/api/datasets/dataset1/variables/textVar.json")))
     })
 
-    test_that("findVariables", {
-        expect_identical(findVariables(test.ds, pattern="^gend", key="alias"),
-            2L)
-        expect_identical(findVariables(test.ds, pattern="^bir", key="alias",
-            value=TRUE), "birthyr")
-    })
-
     test_that("namekey function exists and affects names()", {
         expect_identical(getOption("crunch.namekey.dataset"), "alias")
-        expect_identical(names(test.ds),
-            findVariables(test.ds, key="alias", value=TRUE))
+        expect_identical(names(test.ds), aliases(variables(test.ds)))
         with(temp.option(crunch.namekey.dataset="name"), {
-            expect_identical(names(test.ds),
-                findVariables(test.ds, key="name", value=TRUE))
+            expect_identical(names(test.ds), names(variables(test.ds)))
         })
     })
 
@@ -108,7 +162,7 @@ with_mock_HTTP({
         expect_identical(test.ds[names(test.ds)=="gender"], test.ds[2])
         expect_identical(names(test.ds[2]), c("gender"))
         expect_identical(dim(test.ds[2]), c(25L, 1L))
-        expect_identical(test.ds$not.a.var.name, NULL)
+        expect_null(test.ds$not.a.var.name)
         expect_error(test.ds[[999]], "subscript out of bounds")
     })
 
@@ -129,7 +183,7 @@ with_mock_HTTP({
         expect_error(test.ds[[999]], "subscript out of bounds")
         expect_error(test.ds[c("gender", "NOTAVARIABLE")],
             "Undefined columns selected: NOTAVARIABLE")
-        expect_true(is.null(test.ds$name))
+        expect_null(test.ds$name)
     })
 
     test_that("Extract from dataset by VariableOrder/Group", {
@@ -179,7 +233,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("Name and description setters push to server", {
                 d2 <- ds
@@ -192,16 +246,40 @@ if (run.integration.tests) {
                 expect_identical(startDate(ds), "1985-11-05")
                 expect_identical(startDate(refresh(ds)), "1985-11-05")
                 startDate(ds) <- NULL
-                expect_identical(startDate(ds), NULL)
-                expect_identical(startDate(refresh(ds)), NULL)
+                expect_null(startDate(ds))
+                expect_null(startDate(refresh(ds)))
             })
             test_that("Can set (and unset) endDate", {
                 endDate(ds) <- "1985-11-05"
                 expect_identical(endDate(ds), "1985-11-05")
                 expect_identical(endDate(refresh(ds)), "1985-11-05")
                 endDate(ds) <- NULL
-                expect_identical(endDate(ds), NULL)
-                expect_identical(endDate(refresh(ds)), NULL)
+                expect_null(endDate(ds))
+                expect_null(endDate(refresh(ds)))
+            })
+
+            test_that("Can publish/unpublish a dataset", {
+                expect_true(is.published(ds))
+                expect_false(is.draft(ds))
+                is.draft(ds) <- TRUE
+                expect_false(is.published(ds))
+                expect_true(is.draft(ds))
+                ds <- refresh(ds)
+                expect_false(is.published(ds))
+                expect_true(is.draft(ds))
+                is.published(ds) <- TRUE
+                expect_true(is.published(ds))
+                expect_false(is.draft(ds))
+            })
+
+            test_that("Can archive/unarchive", {
+                expect_false(is.archived(ds))
+                is.archived(ds) <- TRUE
+                expect_true(is.archived(ds))
+                ds <- refresh(ds)
+                expect_true(is.archived(ds))
+                is.archived(ds) <- FALSE
+                expect_false(is.archived(ds))
             })
 
             test_that("Sending invalid dataset metadata errors usefully", {

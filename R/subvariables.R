@@ -217,12 +217,7 @@ setMethod("[[<-",
     function (x, i, value) {
         halt("Can only assign Variables into an object of class Subvariables")
     })
-##' @rdname subvars-extract
-##' @export
-setMethod("$<-", c("Subvariables"), function (x, name, value) {
-    x[[name]] <- value
-    return(x)
-})
+
 ##' @rdname subvars-extract
 ##' @export
 setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"),
@@ -259,7 +254,7 @@ as.list.Subvariables <- function (x, ...) lapply(names(x), function (i) x[[i]])
 ##' @rdname describe-catalog
 ##' @export
 setMethod("names", "CategoricalArrayVariable", function (x) {
-    findVariables(subvariables(x), key=namekey(x), value=TRUE)
+    getIndexSlot(subvariables(x), namekey(x))
 })
 
 ##' @rdname subvars-extract

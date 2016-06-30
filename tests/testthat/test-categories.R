@@ -5,11 +5,11 @@ with_mock_HTTP({
     cats <- categories(ds$gender)
 
     test_that("category init", {
-        expect_true(inherits(cats[[1]], "Category"))
+        expect_is(cats[[1]], "Category")
         expect_true(is.category(cats[[1]]))
-        expect_true(inherits(cats, "Categories"))
+        expect_is(cats, "Categories")
         expect_true(is.categories(cats))
-        expect_identical(length(cats), 3L)
+        expect_length(cats, 3)
     })
 
     test_that("Categories validation", {
@@ -160,8 +160,8 @@ with_mock_HTTP({
     })
 
     test_that("na.omit", {
-        expect_identical(length(cats), 3L)
-        expect_identical(length(na.omit(cats)), 2L)
+        expect_length(cats, 3)
+        expect_length(na.omit(cats), 2)
         expect_true(is.categories(na.omit(cats)))
         expect_true(all(vapply(na.omit(cats), is.category, logical(1))))
     })
@@ -195,7 +195,7 @@ with_mock_HTTP({
 
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("categories setters persist to the server", {
                 expect_equal(names(categories(ds$v4)), c("B", "C", "No Data"))
@@ -218,6 +218,14 @@ if (run.integration.tests) {
                     paste("`categories(x) <- value` only accepts Categories,",
                         "not character. Did you mean",
                         "`names(categories(x)) <- value`?"),
+                    fixed=TRUE)
+                expect_error(categories(ds$v4)[1] <- c("A", "B", "C"),
+                    paste("Invalid categories: 3 elements are not Crunch",
+                        "category objects"),
+                    fixed=TRUE)
+                expect_error(categories(ds$v4)[1] <- list("A", "B", "C"),
+                    paste("Invalid categories: 3 elements are not Crunch",
+                        "category objects"),
                     fixed=TRUE)
                 expect_error(categories(ds$v4) <- list(),
                     "`categories(x) <- value` only accepts Categories, not list.",

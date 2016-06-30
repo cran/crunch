@@ -4,7 +4,13 @@ CrunchDataFrame <- function (dataset) {
     stopifnot(is.dataset(dataset))
     out <- new.env()
     out$.crunchDataset <- dataset
-    with(out, for (v in aliases(allVariables(dataset))) eval(parse(text=paste0("delayedAssign('", v, "', as.vector(.crunchDataset[['", v, "']]))"))))
+    with(out, {
+        ## Note the difference from as.environment: wrapped in as.vector
+        for (a in aliases(allVariables(dataset))) {
+            eval(substitute(delayedAssign(v, as.vector(.crunchDataset[[v]])),
+                list(v=a)))
+        }
+    })
     class(out) <- "CrunchDataFrame"
     return(out)
 }

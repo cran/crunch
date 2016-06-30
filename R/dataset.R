@@ -8,8 +8,7 @@ setMethod("initialize", "CrunchDataset", init.CrunchDataset)
 getDatasetVariables <- function (x) {
     varcat_url <- variableCatalogURL(x)
     ## Add query params
-    return(VariableCatalog(crGET(varcat_url,
-        query=list(nosubvars=1, relative="on"))))
+    return(VariableCatalog(crGET(varcat_url, query=list(relative="on"))))
 }
 
 getNrow <- function (dataset, filtered=TRUE) {
@@ -87,10 +86,7 @@ setMethod("id", "CrunchDataset", function (x) tuple(x)$id)
 
 trimISODate <- function (x) {
     ## Drop time from datestring if it's only a date
-    if (is.character(x) &&
-        nchar(x) > 10 &&
-        substr(x, 11, nchar(x)) == "T00:00:00+00:00") {
-
+    if (is.character(x) && nchar(x) > 10 && endsWith(x, "T00:00:00+00:00")) {
         x <- substr(x, 1, 10)
     }
     return(x)
@@ -132,7 +128,7 @@ namekey <- function (x) {
 ##' @rdname describe-catalog
 ##' @export
 setMethod("names", "CrunchDataset", function (x) {
-    findVariables(x, key=namekey(x), value=TRUE)
+    getIndexSlot(variables(x), namekey(x))
 })
 
 ##' Dataset weights
@@ -304,11 +300,101 @@ webURL <- function (x) {
 setMethod("as.environment", "CrunchDataset", function (x) {
     out <- new.env()
     out$.crunchDataset <- x
-    with(out, for (v in aliases(allVariables(x))) eval(parse(text=paste0("delayedAssign('", v, "', .crunchDataset[['", v, "']])"))))
+    with(out, {
+        ## Note the difference from as.data.frame: not as.vector here
+        for (a in aliases(allVariables(x))) {
+            eval(substitute(delayedAssign(v, .crunchDataset[[v]]), list(v=a)))
+        }
+    })
     return(out)
 })
 
 .releaseDataset <- function (dataset) {
     release_url <- absoluteURL("release/", self(dataset))
-    crPOST(release_url)
+    crPOST(release_url, drop=dropCache(self(dataset)))
+}
+
+##' Change the owner of a dataset
+##'
+##' @param x CrunchDataset
+##' @param value For the setter, either a URL (character) or a Crunch object
+##' with a \code{self} method. Users and Projects are valid objects to assign
+##' as dataset owners.
+##' @return The dataset.
+##' @name dataset-owner
+##' @aliases owner owner<-
+NULL
+
+##' @rdname dataset-owner
+##' @export
+setMethod("owner", "CrunchDataset", function (x) x@body$owner) ## Or can get from catalog
+
+##' @rdname dataset-owner
+##' @export
+setMethod("owner<-", "CrunchDataset", function (x, value) {
+    if (!is.character(value)) {
+        ## Assume we have a User or Project. Get self()
+        ## Will error if self isn't defined, and if a different entity type is
+        ## given, the PATCH below will 400.
+        value <- self(value)
+    }
+    x <- setEntitySlot(x, "owner", value)
+    return(x)
+})
+
+
+##' Get and set "archived" and "published" status of a dataset
+##'
+##' "Archived" datasets are excluded from some views. "Draft" datasets are
+##' visible only to editors. "Published" is the inverse of "Draft", i.e.
+##' \code{is.draft(x)} entails \code{!is.published(x)}. These properties are
+##' accessed and set with the "is" methods. The verb functions \code{archive}
+##' and \code{publish} are alternate versions of the setters (at least in the
+##' \code{TRUE} direction).
+##'
+##' @param x CrunchDataset
+##' @param value logical
+##' @return For the getters, the logical value of whether the dataset is
+##' archived, in draft mode, or published, where draft and published are
+##' inverses. The setters return the dataset.
+##' @name archive-and-publish
+##' @aliases archive is.archived is.draft is.published is.archived<- is.draft<- is.published<- publish
+NULL
+
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.archived", "CrunchDataset", function (x) tuple(x)$archived)
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.draft", "CrunchDataset", function (x) !is.published(x))
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.published", "CrunchDataset", function (x) tuple(x)$is_published %||% TRUE)
+
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.archived<-", c("CrunchDataset", "logical"), function (x, value) {
+    setTupleSlot(x, "archived", value)
+})
+##' @rdname archive-and-publish
+##' @export
+archive <- function (x) {
+    is.archived(x) <- TRUE
+    return(x)
+}
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.draft<-", c("CrunchDataset", "logical"), function (x, value) {
+    setTupleSlot(x, "is_published", !value)
+})
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.published<-", c("CrunchDataset", "logical"), function (x, value) {
+    setTupleSlot(x, "is_published", value)
+})
+##' @rdname archive-and-publish
+##' @export
+publish <- function (x) {
+    is.published(x) <- TRUE
+    return(x)
 }

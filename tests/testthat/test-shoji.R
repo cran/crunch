@@ -22,19 +22,20 @@ test_that("ShojiObject init and is", {
 })
 
 test_that("ShojiCatalog", {
-    fo <- structure(list(element=1, self=2, description=3, index=list(`/a`=4, `/b`=5)),
+    fo <- structure(list(element=1, self=2, description=3,
+        index=list(`/a`=list(4), `/b`=list(5))),
         class="shoji")
     sho <- ShojiObject(fo)
-    expect_false(is.shojiCatalog(sho))
+    expect_false(is.catalog(sho))
     expect_error(index(sho))
     fo$element <- "shoji:catalog" ## TODO: implement ShojiObject subclassing
     sho <- ShojiCatalog(fo)
-    expect_true(is.shojiCatalog(sho))
+    expect_true(is.catalog(sho))
     expect_identical(index(sho), fo$index)
-    expect_true(is.shojiCatalog(sho[1]))
+    expect_true(is.catalog(sho[1]))
     expect_error(sho[2:3], "Subscript out of bounds: 3")
     expect_error(sho[2:10], "Subscript out of bounds: 3:10")
-    expect_true(is.shojiCatalog(sho[c(TRUE, FALSE)]))
+    expect_true(is.catalog(sho[c(TRUE, FALSE)]))
     expect_error(sho[c(TRUE, FALSE, TRUE)],
         "Subscript out of bounds: got 3 logicals, need 2")
     expect_identical(sho[TRUE], sho)
@@ -60,7 +61,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("refresh", {
                 expect_identical(ds, refresh(ds))

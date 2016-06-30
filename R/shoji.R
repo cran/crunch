@@ -27,7 +27,7 @@ init.Shoji <- function (.Object, ...) {
 setMethod("initialize", "ShojiObject", init.Shoji)
 
 is.shoji.like <- function (x) {
-    is.list(x) && "element" %in% names(x) && substr(as.character(x$element), 1, 5) == "shoji"
+    is.list(x) && "element" %in% names(x) && startsWith(as.character(x$element), "shoji")
 }
 
 ##' @rdname crunch-is
@@ -47,6 +47,10 @@ NULL
 ##' @rdname self
 ##' @export
 setMethod("self", "ShojiObject", function (x) x@self)
+
+##' @rdname describe
+##' @export
+setMethod("name", "ShojiObject", function (x) x@body$name)
 
 ##' @rdname refresh
 ##' @export
@@ -101,8 +105,8 @@ setMethod("readonly<-", "ShojiObject", setReadonly)
 ##' @export
 ##' @keywords internal
 ##' @importFrom httpcache logMessage
-shojiURL <- function (x, collection=c("catalogs", "views", "fragments"), key) {
-    if (is.variable(x) || inherits(x, "IndexTuple")) {
+shojiURL <- function (x, collection=c("catalogs", "views", "fragments", "orders"), key) {
+    if (is.variable(x) || inherits(x, "ShojiTuple")) {
         x <- entity(x) ## Get the *Entity (e.g. VariableEntity)
         logMessage("INFO", "GET entity in shojiURL")
     }

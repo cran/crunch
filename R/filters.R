@@ -18,10 +18,6 @@ setMethod("filters", "CrunchDataset", function (x) {
 ##' @export
 setMethod("filters<-", "CrunchDataset", function (x, value) x)
 
-##' @rdname describe
-##' @export
-setMethod("name", "CrunchFilter", function (x) x@body$name)
-
 ##' View and modify Filter entity attributes
 ##'
 ##' @param x a CrunchFilter
@@ -226,7 +222,7 @@ idsToURLs <- function (expr, base_url) {
     if (is.list(expr)) {
         if (length(expr) == 1 &&
             identical(names(expr), "variable") &&
-            substr(expr[["variable"]], nchar(expr[["variable"]]), nchar(expr[["variable"]])) != "/") {
+            !endsWith(expr[["variable"]], "/")) {
             ## This is a variable ref that is an id. Absolutize.
             expr[["variable"]] <- absoluteURL(paste0("./", expr, "/"),
                 base_url)

@@ -89,7 +89,7 @@ test_that("Complex conflicts are formatted", {
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(mrdf, "part1"), {
             part1 <- mrdf.setup(part1)
             with(test.dataset(mrdf[c("mr_3", "v4")], "part2"), {
@@ -97,24 +97,24 @@ if (run.integration.tests) {
                 name(part2$CA) <- "Bad var"
                 test_that("setup for append type mismatch", {
                     p1.batches <- batches(part1)
-                    expect_true(inherits(p1.batches, "ShojiCatalog"))
-                    expect_identical(length(p1.batches), 2L)
+                    expect_is(p1.batches, "ShojiCatalog")
+                    expect_length(p1.batches, 2)
                     expect_true("CA" %in% names(part1))
                     expect_true("CA" %in% names(part2))
                     expect_true(is.CA(part1$CA))
                     expect_true(is.Numeric(part2$CA))
                 })
                 test_that("append conflict on type mismatch", {
+                    skip("Need to update failure messages")
                     expect_message(try(appendDataset(part1, part2),
                         silent=TRUE),
                         paste("Critical conflict: Variable is not array variable on both frames;",
                         "1 variable:", dQuote("Bad var")))
                     expect_error(appendDataset(part1, part2),
                         "There are conflicts that cannot be resolved automatically.")
-                    expect_identical(length(batches(part1)), 2L)                })
+                    expect_length(batches(part1), 2) ## The prospective batch was deleted
+                })
             })
         })
-
-
     })
 }

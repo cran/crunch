@@ -49,13 +49,13 @@ if (run.integration.tests) {
             "You must authenticate before making this request")
     })
 
-    with(test.authentication, {
+    with_test_authentication({
         test_that("datasetCatalog gets what we expect", {
             col0 <- datasetCatalog()
-            expect_true(inherits(col0, "DatasetCatalog"))
+            expect_is(col0, "DatasetCatalog")
             with(test.dataset(df), {
                 col1 <- datasetCatalog()
-                expect_true(inherits(col1, "DatasetCatalog"))
+                expect_is(col1, "DatasetCatalog")
                 expect_equal(length(col1), length(col0) + 1)
             })
         })

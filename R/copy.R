@@ -27,13 +27,16 @@ copyVariable <- function (x, deep=FALSE, ...) {
     stopifnot(is.variable(x))
 
     newbody <- list(...)
-    oldbody <- updateList(copyVariableReferences(x), tuple(x)@body)
+    oldbody <- modifyList(copyVariableReferences(x), tuple(x)@body)
     oldbody$name <- paste0(oldbody$name, " (copy)")
     oldbody$alias <- paste0(oldbody$alias, "_copy")
 
-    body <- updateList(oldbody, newbody)
+    body <- modifyList(oldbody, newbody)
     body$id <- NULL
     if (deep) {
+        if (body$type %in% c("categorical_array", "multiple_response")) {
+            halt("Deep copying of array variables is not implemented.")
+        }
         body$values <- as.vector(x, mode="id")
         if (body$type %in% c("categorical", "categorical_array", "multiple_response")) {
             body$categories <- jsonprep(categories(x))
@@ -52,7 +55,6 @@ copyVariable <- function (x, deep=FALSE, ...) {
     }
 
     class(body) <- "VariableDefinition"
-    # print(str(body))
     return(body)
 }
 
@@ -65,7 +67,7 @@ copyVariableReferences <- function (x, fields=c("name", "alias",
                                     "view", "type")) {
 
     if (inherits(x, "CrunchVariable")) {
-        return(updateList(copyVariableReferences(tuple(x)),
+        return(modifyList(copyVariableReferences(tuple(x)),
             copyVariableReferences(entity(x))))
     } else {
         return(x@body[intersect(fields, names(x@body))])

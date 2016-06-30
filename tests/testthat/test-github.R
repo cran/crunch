@@ -20,7 +20,7 @@ with_mock_HTTP({
         expect_identical(checkForNewVersion("github-versions.json", "1.6.3"),
             NULL)
         ## Now that version is greater than 1.5.3:
-        expect_identical(checkForNewVersion("github-versions.json"), NULL)
+        expect_null(checkForNewVersion("github-versions.json"))
     })
 
     test_that("notifyIfNewVersion messages correctly", {
@@ -32,10 +32,7 @@ with_mock_HTTP({
 
 without_internet({
     test_that("notifyIfNewVersion doesn't hang if GitHub doesn't respond", {
-        expect_silent(notifyIfNewVersion("github-versions.json", "1.5.1"))
+        expect_message(uncached(notifyIfNewVersion("github-versions.json", "1.5.1")),
+            NA)
     })
 })
-
-if (run.integration.tests) {
-
-}

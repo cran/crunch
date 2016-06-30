@@ -111,15 +111,20 @@ showSubvariables <- function (x) {
     return(out)
 }
 
-showVariableOrder <- function (x, vars=x@vars) {
-    return(unlist(lapply(x, showVariableGroup, index=vars)))
+showShojiOrder <- function (x, catalog_url=x@catalog_url) {
+    if (nchar(catalog_url)) {
+        catalog <- index(ShojiCatalog(crGET(catalog_url)))
+    } else {
+        catalog <- list()
+    }
+    return(unlist(lapply(x, showOrderGroup, index=catalog)))
 }
 
-showVariableGroup <- function (x, index) {
-    if (inherits(x, "VariableGroup")) {
+showOrderGroup <- function (x, index) {
+    if (inherits(x, "OrderGroup")) {
         ents <- entities(x)
         if (length(ents)) {
-            group <- unlist(lapply(ents, showVariableGroup, index=index))
+            group <- unlist(lapply(ents, showOrderGroup, index=index))
         } else {
             group <- "(Empty group)"
         }
@@ -179,17 +184,6 @@ formatExpression <- function (expr) {
         return(crGET(expr[["variable"]])$body$alias)
     } else if (length(intersect(c("column", "value"), names(expr)))) {
         val <- expr$column %||% expr$value
-        if ("type" %in% names(expr) &&
-            "function" %in% names(expr$type) &&
-            expr$type[["function"]] == "typeof") {
-
-            ## GET variable, see if categorical
-            v <- crGET(expr$type$args[[1]]$variable)
-            if (v$body$type == "categorical") {
-                val <- i2n(val, categories(VariableEntity(v)))
-            }
-        }
-
         ## Else, iterate over, replace {?:-1} with NA
         return(capture.output(dput(val)))
     } else {
@@ -223,7 +217,7 @@ setMethod("getShowContent", "CategoricalArrayVariable",
     showCategoricalArrayVariable)
 setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
-setMethod("getShowContent", "VariableOrder", showVariableOrder)
+setMethod("getShowContent", "ShojiOrder", showShojiOrder)
 setMethod("getShowContent", "ShojiCatalog",
     function (x) catalogToDataFrame(x, TRUE))
 setMethod("getShowContent", "BatchCatalog",
@@ -233,6 +227,13 @@ setMethod("getShowContent", "VariableCatalog",
 setMethod("getShowContent", "FilterCatalog",
     function (x) catalogToDataFrame(x, c("name", "id", "is_public"), rownames=NULL))
 setMethod("getShowContent", "VersionCatalog", formatVersionCatalog)
+setMethod("getShowContent", "MemberCatalog",
+    function (x) {
+        data.frame(name=names(x),
+                   email=emails(x),
+                   is.editor=is.editor(x),
+                   stringsAsFactors=FALSE)
+        })
 setMethod("getShowContent", "ShojiObject",
     function (x) capture.output(print(x@body)))
 setMethod("getShowContent", "CrunchFilter",

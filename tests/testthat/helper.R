@@ -42,7 +42,6 @@ options(
     crunch.debug=FALSE,
     digits.secs=3,
     crunch.timeout=15,
-    httpcache.on=TRUE,
     # httpcache.log="",
     crunch.namekey.dataset="alias",
     crunch.namekey.array="name",
@@ -91,10 +90,9 @@ mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
     dataset[cast.these] <- lapply(dataset[cast.these],
         castVariable, "categorical")
     if (is.null(selections)) {
-        dataset[[name]] <- makeArray(pattern=pattern, dataset=dataset,
-            name=name)
+        dataset[[name]] <- makeArray(dataset[cast.these], name=name)
     } else {
-        dataset[[name]] <- makeMR(pattern=pattern, dataset=dataset, name=name,
+        dataset[[name]] <- makeMR(dataset[cast.these], name=name,
             selections=selections)
     }
     return(dataset)
@@ -123,7 +121,8 @@ validImport <- function (ds) {
     expect_equivalent(as.vector(ds$v4), df$v4)
     expect_true(is.Datetime(ds$v5))
     expect_true(is.Categorical(ds$v6))
-    expect_identical(showVariableOrder(ordering(ds)), names(variables(ds)))
+    expect_identical(showShojiOrder(ordering(ds)), names(variables(ds)))
+    expect_identical(names(versions(ds)), "initial import")
 }
 
 validApidocsImport <- function (ds) {
@@ -138,7 +137,7 @@ validApidocsImport <- function (ds) {
 ## Global teardown
 bye <- new.env()
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         datasets.start <- urls(datasetCatalog())
         users.start <- urls(getUserCatalog())
         projects.start <- urls(session()$projects)
@@ -147,7 +146,7 @@ if (run.integration.tests) {
 reg.finalizer(bye,
     function (x) {
         if (run.integration.tests) {
-            with(test.authentication, {
+            with_test_authentication({
                 datasets.end <- urls(datasetCatalog())
                 leftovers <- setdiff(datasets.end, datasets.start)
                 if (length(leftovers)) {

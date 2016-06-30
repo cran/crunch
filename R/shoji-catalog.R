@@ -1,14 +1,13 @@
-init.ShojiCatalog <- function (.Object, ...) {
+setMethod("initialize", "ShojiCatalog", function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     names(.Object@index) <- absoluteURL(names(.Object@index), .Object@self)
     return(.Object)
-}
-setMethod("initialize", "ShojiCatalog", init.ShojiCatalog)
+})
 
-is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
+is.catalog <- function (x) inherits(x, "ShojiCatalog")
 
-getIndexSlot <- function (x, i, what=character(1)) {
-    vapply(index(x), function (a) a[[i]], what, USE.NAMES=FALSE)
+getIndexSlot <- function (x, i, what=character(1), ifnot=NA_character_) {
+    vapply(index(x), function (a) a[[i]] %||% ifnot, what, USE.NAMES=FALSE)
 }
 
 setIndexSlot <- function (x, i, value, unique=FALSE) {
@@ -51,11 +50,11 @@ dirtyElements <- function (x, y) {
 ##' @rdname catalog-extract
 ##' @export
 setMethod("[", c("ShojiCatalog", "character"), function (x, i, ...) {
-    w <- match(i, urls(x))
+    w <- whichNameOrURL(x, i)
     if (any(is.na(w))) {
         halt("Undefined elements selected: ", serialPaste(i[is.na(w)]))
     }
-    callNextMethod(x, w, value)
+    return(x[w])
 })
 ##' @rdname catalog-extract
 ##' @export
@@ -103,20 +102,35 @@ setMethod("[[", c("ShojiCatalog", "character"), function (x, i, ...) {
 ##' @export
 setMethod("$", "ShojiCatalog", function (x, name) x[[name]])
 
+##' @rdname catalog-extract
+##' @export
+setMethod("$<-", "ShojiCatalog", function (x, name, value) {
+    x[[name]] <- value
+    return(x)
+})
+
+##' @rdname catalog-extract
+##' @export
+setMethod("[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
+    function (x, i, j, value) {
+        index(x)[i] <- index(value)[i]
+        ## Assume that PATCHing has happened outside this function
+        return(x)
+    })
+
 ##' Length of Catalog
 ##' @param x a Catalog
 ##' @return Integer: the number of elements in the index list
 ##' @name catalog-length
 NULL
 
-whichNameOrURL <- function (x, i) {
-    ns <- names(x)
-    w <- match(i, ns)
+whichNameOrURL <- function (x, i, secondary=names(x)) {
+    w <- match(i, secondary)
     if (any(is.na(w))) {
         w <- match(i, urls(x))
     } else {
         ## Warn if duplicated
-        dups <- i %in% ns[duplicated(ns)]
+        dups <- i %in% secondary[duplicated(secondary)]
         if (any(dups)) {
             bads <- i[dups]
             msg <- ifelse(length(bads) > 1,
@@ -177,6 +191,10 @@ setMethod("names", "ShojiCatalog", function (x) getIndexSlot(x, "name"))
 setMethod("names<-", "ShojiCatalog", function (x, value) {
     setIndexSlot(x, "name", value, unique=TRUE)
 })
+
+##' @rdname describe-catalog
+##' @export
+setMethod("emails", "ShojiCatalog", function (x) getIndexSlot(x, "email"))
 
 ##' @export
 as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x[[i]])

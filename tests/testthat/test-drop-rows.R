@@ -7,14 +7,13 @@ with_mock_HTTP({
             paste0('POST /api/datasets/dataset1/table.json ',
             '{"command":"delete","filter":{"function":"==",',
             '"args":[{"variable":"/api/datasets/dataset1/variables/gender.json"},',
-            '{"value":1,"type":{"function":"typeof","args":[',
-            '{"variable":"/api/datasets/dataset1/variables/gender.json"}]}}]}}'),
+            '{"value":1}]}}'),
             fixed=TRUE)
     })
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("dropRows really removes rows", {
                 try(ds <- dropRows(ds, ds$v4 == "C"))

@@ -36,6 +36,8 @@ setGeneric("descriptions", function (x) standardGeneric("descriptions"))
 setGeneric("descriptions<-",
     function (x, value) standardGeneric("descriptions<-"), signature="x")
 setGeneric("emails", function (x) standardGeneric("emails"))
+setGeneric("email", function (x) standardGeneric("email"))
+
 setGeneric("types", function (x) standardGeneric("types"))
 setGeneric("timestamps", function (x) standardGeneric("timestamps"))
 
@@ -91,6 +93,20 @@ setGeneric("activeFilter<-",
     function (x, value) standardGeneric("activeFilter<-"))
 setGeneric("is.public", function (x) standardGeneric("is.public"))
 setGeneric("is.public<-", function (x, value) standardGeneric("is.public<-"))
+setGeneric("is.editor", function (x) standardGeneric("is.editor"))
+setGeneric("is.editor<-", function (x, value) standardGeneric("is.editor<-"))
+setGeneric("is.archived", function (x) standardGeneric("is.archived"))
+setGeneric("is.archived<-", function (x, value) standardGeneric("is.archived<-"))
+setGeneric("is.draft", function (x) standardGeneric("is.draft"))
+setGeneric("is.draft<-", function (x, value) standardGeneric("is.draft<-"))
+setGeneric("is.published", function (x) standardGeneric("is.published"))
+setGeneric("is.published<-", function (x, value) standardGeneric("is.published<-"))
+setGeneric("groupClass", function (x) standardGeneric("groupClass"))
+setGeneric("entityClass", function (x) standardGeneric("entityClass"))
+setGeneric("entitiesInitializer", function (x) standardGeneric("entitiesInitializer"))
+
+setGeneric("owner", function (x) standardGeneric("owner"))
+setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
 
 setGeneric("dim")
 setGeneric("ncol")
@@ -128,6 +144,7 @@ setGeneric("lapply")
 setGeneric("is.na")
 setGeneric("is.na<-")
 setGeneric("%in%")
+setGeneric("write.csv")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))
 
@@ -156,3 +173,8 @@ setGeneric("jsonprep", function (x, ...) standardGeneric("jsonprep"))
 
 setGeneric("getShowContent",
     function (x, ...) standardGeneric("getShowContent"))
+
+.backstopUpdate <- function (x, i, j, value) {
+    ## Backstop error so you don't get "Object of class S4 is not subsettable"
+    halt(paste("Cannot update", class(x), "with type", class(value)))
+}
