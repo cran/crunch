@@ -52,8 +52,8 @@ test_that("dirtyElements", {
 test_that("joinPath", {
     expect_identical(joinPath("/api/datasets/", "../variables/"),
         "/api/variables/")
-    expect_identical(joinPath("/api/variables/", "4412es.json"),
-        "/api/variables/4412es.json")
+    expect_identical(joinPath("/api/variables/", "4412es/"),
+        "/api/variables/4412es/")
     expect_identical(joinPath("a/b/c/d/../e/f/", "g/../../h/"),
         "a/b/c/e/h/")
     expect_identical(joinPath("/api/datasets/", "/variables/"),
@@ -68,8 +68,8 @@ test_that("absoluteURL", {
     base.url <- "https://fake.crunch.io/api/datasets/"
     expect_identical(absoluteURL("../variables/", base.url),
         "https://fake.crunch.io/api/variables/")
-    expect_identical(absoluteURL("4412es.json", base.url),
-        "https://fake.crunch.io/api/datasets/4412es.json")
+    expect_identical(absoluteURL("4412es/", base.url),
+        "https://fake.crunch.io/api/datasets/4412es/")
     expect_identical(absoluteURL("g/../../h/",
         "https://fake.crunch.io/a/b/c/d/../e/f/"),
         "https://fake.crunch.io/a/b/c/e/h/")
@@ -112,4 +112,11 @@ test_that("startsWith/endsWith for old R", {
     expect_false(alt.startsWith("http://", "https"))
     expect_true(alt.endsWith("http://", "//"))
     expect_false(alt.endsWith("http://", "http"))
+})
+
+test_that("uniquify", {
+    expect_identical(uniquify(rep("a", 4)),
+        c("a", "a  (1)", "a  (2)", "a  (3)"))
+    expect_identical(uniquify(c("b", "a", "a", "abcd", "a")),
+        c("b", "a", "a  (1)", "abcd", "a  (2)"))
 })

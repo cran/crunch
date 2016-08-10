@@ -25,7 +25,7 @@ with_mock_HTTP({
         expect_is(e1, "CrunchExpr")
         zexp <- list(`function`="+",
             args=list(
-                list(variable="/api/datasets/dataset1/variables/birthyr.json"),
+                list(variable="/api/datasets/dataset1/variables/birthyr/"),
                 list(value=5)
             )
         )
@@ -43,42 +43,80 @@ with_mock_HTTP({
     })
 
     test_that("R logical & CrunchLogicalExpr", {
-        e <- c(TRUE, FALSE, TRUE) & ds$gender == "Female"
-        expect_is(e, "CrunchLogicalExpr")
-        e <- c(TRUE, FALSE, TRUE) | ds$gender == "Female"
-        expect_is(e, "CrunchLogicalExpr")
-        e <- ds$gender == "Female" & c(TRUE, FALSE, TRUE)
-        expect_is(e, "CrunchLogicalExpr")
-        e <- ds$gender == "Female" | c(TRUE, FALSE, TRUE)
-        expect_is(e, "CrunchLogicalExpr")
+        expect_is(c(TRUE, FALSE, TRUE) & ds$gender == "Female",
+            "CrunchLogicalExpr")
+        expect_is(c(TRUE, FALSE, TRUE) | ds$gender == "Female",
+            "CrunchLogicalExpr")
+        expect_is(ds$gender == "Female" & c(TRUE, FALSE, TRUE),
+            "CrunchLogicalExpr")
+        expect_is(ds$gender == "Female" | c(TRUE, FALSE, TRUE),
+            "CrunchLogicalExpr")
     })
 
-    test_that("Referencing category names that don't exist errors", {
+    test_that("Datetime operations: logical", {
+        expect_output(ds$starttime == "2015-01-01",
+            'Crunch logical expression: starttime == "2015-01-01"')
+        expect_output(ds$starttime > "2015-01-01",
+            'Crunch logical expression: starttime > "2015-01-01"')
+        expect_output(ds$starttime == as.Date("2015-01-01"),
+            'Crunch logical expression: starttime == "2015-01-01"')
+        expect_output(ds$starttime > as.Date("2015-01-01"),
+            'Crunch logical expression: starttime > "2015-01-01"')
+    })
+
+    test_that("Logical expr with categoricals", {
         expect_is(ds$gender == "Male", "CrunchLogicalExpr")
         expect_output(ds$gender == "Male",
-            'Crunch logical expression: gender == 1L', fixed=TRUE)
-        expect_error(ds$gender == "other",
+            'Crunch logical expression: gender == "Male"', fixed=TRUE)
+        expect_output(ds$gender == as.factor("Male"),
+            'Crunch logical expression: gender == "Male"', fixed=TRUE)
+        expect_output(ds$gender %in% "Male",
+            'Crunch logical expression: gender == "Male"', fixed=TRUE)
+        expect_output(ds$gender %in% as.factor("Male"),
+            'Crunch logical expression: gender == "Male"', fixed=TRUE)
+        expect_output(ds$gender %in% c("Male", "Female"),
+            'Crunch logical expression: gender %in% c("Male", "Female")',
+            fixed=TRUE)
+        expect_output(ds$gender %in% as.factor(c("Male", "Female")),
+            'Crunch logical expression: gender %in% c("Male", "Female")',
+            fixed=TRUE)
+        expect_output(ds$gender != "Female",
+            'Crunch logical expression: gender != "Female"', fixed=TRUE)
+        expect_output(ds$gender != as.factor("Female"),
+            'Crunch logical expression: gender != "Female"', fixed=TRUE)
+    })
+    test_that("Referencing category names that don't exist warns and drops", {
+        expect_warning(
+            expect_output(ds$gender == "other",
+                'Crunch logical expression: gender %in% character(0)', fixed=TRUE),
             paste("Category not found:", dQuote("other")))
-        expect_error(ds$gender %in% c("other", "Male", "another"),
+        expect_warning(
+            expect_output(ds$gender %in% c("other", "Male", "another"),
+                'Crunch logical expression: gender == "Male"', fixed=TRUE),
             paste("Categories not found:", dQuote("other"), "and",
                 dQuote("another")))
+        expect_warning(
+            expect_output(ds$gender != "other",
+                'Crunch logical expression: !gender %in% character(0)', fixed=TRUE),
+            paste("Category not found:", dQuote("other")))
     })
 
     test_that("Show method for logical expressions", {
         expect_output(ds$gender %in% c("Male", "Female"),
-            'Crunch logical expression: gender %in% 1:2',
+            'Crunch logical expression: gender %in% c("Male", "Female"',
             fixed=TRUE)
         expect_output(ds$gender %in% 1:2,
-            'Crunch logical expression: gender %in% 1:2',
+            'Crunch logical expression: gender %in% c("Male", "Female"',
             fixed=TRUE)
         expect_output(ds$birthyr == 1945 | ds$birthyr < 1941,
             'birthyr == 1945 | birthyr < 1941',
             fixed=TRUE)
         expect_output(ds$gender %in% "Male" & !is.na(ds$birthyr),
-            'gender == 1L & !is.na(birthyr)',
+            'gender == "Male" & !is.na(birthyr)',
             fixed=TRUE)
-        skip("TODO: implement datetime ops first")
-        print(ds$starttime > "2015-04-01")
+        expect_output(!(ds$gender == "Male"),
+            'Crunch logical expression: !gender == "Male"', fixed=TRUE)
+            ## TODO: better parentheses for ^^
     })
     test_that("Show method for expresssions", {
         skip("TODO: something intelligent with parentheses and order of operations")
@@ -173,6 +211,16 @@ if (run.integration.tests) {
                         df[[i]][df$v4 %in% "B"], info=i)
                 }
                 expect_length(as.vector(ds$v3[ds$q1 %in% "selected"]), 10)
+            })
+            test_that("Select values with %in% on nonexistent categories", {
+                expect_length(as.vector(ds$v3[ds$v4 %in% numeric(0)]), 0)
+                expect_length(as.vector(ds$v3[!(ds$v4 %in% numeric(0))]), 20)
+                expect_warning(
+                    expect_length(as.vector(ds$v3[ds$v4 == "other"]), 0),
+                    paste0("Category not found: ", dQuote("other"), ". Dropping."))
+                expect_warning(
+                    expect_length(as.vector(ds$v3[ds$v4 != "other"]), 20),
+                    paste0("Category not found: ", dQuote("other"), ". Dropping."))
             })
 
             uncached({

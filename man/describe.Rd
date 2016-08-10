@@ -22,8 +22,14 @@
 \alias{name,CrunchVariable-method}
 \alias{name,ShojiObject-method}
 \alias{name<-}
-\alias{name<-,CrunchDataset,character-method}
-\alias{name<-,CrunchVariable,character-method}
+\alias{name<-,CrunchDataset-method}
+\alias{name<-,CrunchVariable-method}
+\alias{notes}
+\alias{notes,CrunchDataset-method}
+\alias{notes,CrunchVariable-method}
+\alias{notes<-}
+\alias{notes<-,CrunchDataset-method}
+\alias{notes<-,CrunchVariable-method}
 \alias{startDate}
 \alias{startDate,CrunchDataset-method}
 \alias{startDate<-}
@@ -32,7 +38,7 @@
 \usage{
 \S4method{name}{CrunchDataset}(x)
 
-\S4method{name}{CrunchDataset,character}(x) <- value
+\S4method{name}{CrunchDataset}(x) <- value
 
 \S4method{description}{CrunchDataset}(x)
 
@@ -48,11 +54,15 @@
 
 \S4method{id}{CrunchDataset}(x)
 
+\S4method{notes}{CrunchDataset}(x)
+
+\S4method{notes}{CrunchDataset}(x) <- value
+
 \S4method{name}{ShojiObject}(x)
 
 \S4method{name}{CrunchVariable}(x)
 
-\S4method{name}{CrunchVariable,character}(x) <- value
+\S4method{name}{CrunchVariable}(x) <- value
 
 \S4method{description}{CrunchVariable}(x)
 
@@ -61,6 +71,10 @@
 \S4method{alias}{CrunchVariable}(object)
 
 \S4method{alias}{CrunchVariable}(x) <- value
+
+\S4method{notes}{CrunchVariable}(x)
+
+\S4method{notes}{CrunchVariable}(x) <- value
 }
 \arguments{
 \item{x}{a Dataset or Variable.}

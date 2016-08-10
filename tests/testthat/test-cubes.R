@@ -32,17 +32,17 @@ with_mock_HTTP({
         expect_is(rollup(v), "CrunchExpr")
         expect_identical(zcl(rollup(v)),
             list(`function`="rollup",
-                args=list(list(variable="/api/datasets/dataset1/variables/starttime.json"),
+                args=list(list(variable="/api/datasets/dataset1/variables/starttime/"),
                 list(value="s"))))
         expect_is(rollup(v, resolution="Y"), "CrunchExpr")
         expect_identical(zcl(rollup(v, resolution="Y")),
             list(`function`="rollup",
-                args=list(list(variable="/api/datasets/dataset1/variables/starttime.json"),
+                args=list(list(variable="/api/datasets/dataset1/variables/starttime/"),
                 list(value="Y"))))
         expect_is(rollup(v, resolution=NULL), "CrunchExpr")
         expect_identical(zcl(rollup(v, resolution=NULL)),
             list(`function`="rollup",
-                args=list(list(variable="/api/datasets/dataset1/variables/starttime.json"),
+                args=list(list(variable="/api/datasets/dataset1/variables/starttime/"),
                 list(value=NULL))))
     })
 })
@@ -300,6 +300,11 @@ if (run.integration.tests) {
                         v7=c("C", "E"))))
             })
 
+            test_that("Numeric aggregates on categoricals with numeric values", {
+                expect_equivalent(as.array(crtabs(mean(v4) ~ v4, data=ds)),
+                    array(c(1, 2), dim=2L, dimnames=list(v4=c("B", "C"))))
+            })
+
             test_that("Missing values in cubes", {
                 expect_equivalent(round(as.array(crtabs(sd(v3) ~ bin(v3) + v7,
                     data=ds)), 3),
@@ -321,7 +326,7 @@ if (run.integration.tests) {
             })
 
             test_that("Cube with variables and R objects", {
-                skip("(400) Bad Request: No such category id: '1'.")
+                skip("object 'd4' not found")
                 d4 <- cubedf$v4
                 expect_equivalent(as.array(crtabs(~ d4 + v7, data=ds)),
                     array(c(5, 5, 2, 3), dim=c(2L, 2L),

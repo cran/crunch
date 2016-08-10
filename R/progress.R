@@ -1,5 +1,5 @@
-##' @importFrom httpcache uncached
-##' @importFrom utils txtProgressBar setTxtProgressBar
+#' @importFrom httpcache uncached
+#' @importFrom utils txtProgressBar setTxtProgressBar
 pollProgress <- function (progress_url, wait=.5) {
     ## Configure polling interval. Will increase by rate (>1) until reaches max
     max.wait <- 30
@@ -33,4 +33,10 @@ pollProgress <- function (progress_url, wait=.5) {
             progress_url, '"))` until it reports 100% complete')
     }
     return(status)
+}
+
+crunchTimeout <- function () {
+    opt <- getOption("crunch.timeout")
+    if (!is.numeric(opt)) opt <- 900
+    return(opt)
 }
