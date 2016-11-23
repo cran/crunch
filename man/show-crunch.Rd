@@ -8,14 +8,12 @@
 \alias{show,CrunchExpr-method}
 \alias{show,CrunchLogicalExpr-method}
 \alias{show,CrunchVariable-method}
-\alias{show,ShojiCatalog-method}
+\alias{show,OrderGroup-method}
 \alias{show,ShojiObject-method}
 \alias{show-crunch}
 \title{Show methods for Crunch objects}
 \usage{
 \S4method{show}{ShojiObject}(object)
-
-\S4method{show}{ShojiCatalog}(object)
 
 \S4method{show}{CrunchVariable}(object)
 
@@ -28,6 +26,8 @@
 \S4method{show}{CrunchLogicalExpr}(object)
 
 \S4method{show}{CrunchCube}(object)
+
+\S4method{show}{OrderGroup}(object)
 }
 \arguments{
 \item{object}{the object}

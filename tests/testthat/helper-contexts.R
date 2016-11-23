@@ -27,8 +27,15 @@ with_mock_HTTP <- function (expr) {
                 if (is.null(url)) {
                     stop("No URL found", call.=FALSE)
                 }
-                url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params
-                url <- sub("\\/$", ".json", url)
+                url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params in the URL
+                q <- list(...)$query
+                ext <- ".json"
+                if (!is.null(q)) {
+                    ## There's a query.
+                    ## Hash it, take the first 6 chars, and add to the filename
+                    ext <- paste0("-", substr(digest::digest(q), 1, 6), ext)
+                }
+                url <- sub("\\/$", ext, url)
                 url <- sub("^\\/", "", url) ## relative to cwd
                 return(fakeResponse(url))
             },
@@ -81,14 +88,6 @@ with_test_authentication <- function (expr) {
             }),
             print=FALSE,
             where=crGET))
-        # suppressMessages(trace("createDataset",
-        #     quote({
-        #         # If we care about making unique dataset names, do this:
-        #         # body$body$name <- paste(now(), body$body$name)
-        #     }),
-        #     at=3,
-        #     print=FALSE,
-        #     where=createSource))
         on.exit({
             suppressMessages(untrace("locationHeader", where=crGET))
             # suppressMessages(untrace("createDataset", where=crGET))
@@ -109,6 +108,13 @@ with_test_authentication <- function (expr) {
 
 purgeEntitiesCreated <- function () {
     seen <- get("entities.created", envir=globalenv())
+    ds.urls <- grep("/datasets/(.*?)/$", seen, value=TRUE)
+    if (length(ds.urls)) {
+        ignore <- Reduce("|", lapply(ds.urls, function (x) {
+            startsWith(seen, x) & seen != x
+        }))
+        seen <- seen[!ignore]
+    }
     for (u in seen) {
         ## We could filter out variables, batches, anything under a dataset
         ## since we're going to delete the datasets
@@ -116,6 +122,13 @@ purgeEntitiesCreated <- function () {
     }
     assign("entities.created", c(), envir=globalenv())
     invisible()
+}
+
+## Substitute for testthat::describe or similar, just a wrapper around a context
+## to force deleting stuff it creates sooner
+whereas <- function (...) {
+    on.exit(purgeEntitiesCreated())
+    eval.parent(...)
 }
 
 uniqueDatasetName <- now

@@ -206,7 +206,7 @@ hr {
 %\VignetteIndexEntry{Manipulating variables and deriving new ones}
 -->
 
-<p><a href="variable-order.md">Previous: variable organization</a></p>
+<p><a href="variable-order.html">Previous: variable organization</a></p>
 
 <h1>Transforming and deriving</h1>
 
@@ -219,20 +219,20 @@ hr {
 <pre><code class="r">ds$age &lt;- 2015 - ds$birthyr
 </code></pre>
 
-<p>Now, we have an age variable, and it looks like we&#39;d expect it would relative to <code>birthyr</code>: </p>
+<p>Now, we have an age variable, and it looks like we&#39;d expect it would relative to <code>birthyr</code>:</p>
 
 <pre><code class="r">summary(ds$age)
 </code></pre>
 
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  21.000  37.000  46.000  49.223  60.000  93.000
+##   22.00   38.00   48.50   49.62   59.75   90.00
 </code></pre>
 
 <pre><code class="r">summary(ds$birthyr)
 </code></pre>
 
-<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## 1922.000 1955.000 1969.000 1965.777 1978.000 1994.000
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1925    1955    1966    1965    1977    1993
 </code></pre>
 
 <p>Age is now a derived variable, functionally linked to <code>birthyr</code> on the server. Note that in order to create <code>age</code>, we didn&#39;t pull any values off of the server; we just supplied the derivation expression.</p>
@@ -257,8 +257,8 @@ hr {
 <pre><code class="r">summary(ds$birthyr)
 </code></pre>
 
-<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## 1945.000 1955.000 1969.000 1966.529 1978.000 1994.000
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1945    1955    1966    1966    1977    1993
 </code></pre>
 
 <p>Not only that: since <code>age</code> is a function of <code>birthyr</code> on the server, its values also update now that we&#39;ve modified <code>birthyr</code>. Max age is now 70, or 2015 - 1945.</p>
@@ -267,7 +267,7 @@ hr {
 </code></pre>
 
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  21.000  37.000  46.000  48.471  60.000  70.000
+##   22.00   38.00   48.50   48.98   59.75   70.00
 </code></pre>
 
 <p>Once again, we&#39;ve done this operation by turning idiomatic R expressions into Crunch expression syntax.</p>
@@ -282,7 +282,7 @@ hr {
 
 <p>The work gets done without having to pull data off of the server.</p>
 
-<p><a href="analyze.md">Next: analyzing data</a></p>
+<p><a href="analyze.html">Next: analyzing data</a></p>
 
 </body>
 

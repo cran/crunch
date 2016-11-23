@@ -206,7 +206,7 @@ hr {
 %\VignetteIndexEntry{Variable Order}
 -->
 
-<p><a href="array-variables.md">Previous: array variables</a></p>
+<p><a href="array-variables.html">Previous: array variables</a></p>
 
 <h1>Variable Order and Organization</h1>
 
@@ -218,73 +218,24 @@ hr {
 
 <h2>Viewing the order</h2>
 
-<p>Picking up with the dataset we used in the <a href="array-variables.md">array variables vignette</a>, we can fetch the <code>ordering</code> property of the dataset to view the current organization:</p>
+<p>Picking up with the dataset we used in the <a href="array-variables.html">array variables vignette</a>, we can fetch the <code>ordering</code> property of the dataset to view the current organization:</p>
 
 <pre><code class="r">ordering(ds)
 </code></pre>
 
-<pre><code>## starttime
-## endtime
-## perc_skipped
+<pre><code>## perc_skipped
 ## newsint2
 ## Direction of country
-## snowdenfav
-## snowdenleakapp
-## snowdenpros
-## snowdenpenalty
+## Favorability of Edward Snowden
+## Approval of Snowden&#39;s Leak
+## Support for Prosecution of Snowden
+## Penalty for Snowden
 ## manningknowledge
 ## manningfavorability
 ## manningguilt
 ## manningpenalty
-## betterpartyissues
-## immigration
-## gay
-## education
-## healthcare
-## taxes
-## abortion
-## economy
-## jobs
-## betterpartygroups
-## gays
-## women
-## blacks
-## hispanics
-## families
-## smallbus
-## guns
-## christians
-## immig
-## gaymar2
-## congressdone
-## agendasetter
-## theaterfreq
-## moviepreference
-## seentopmovies
-## ironman3
-## despicableme2
-## manofsteel
-## monstersu
-## fastfurious6
-## startrek
-## worldwarz
-## loneranger
-## greatgatsby
-## wolverine
-## movierefreshments
-## butterpopcorn
-## bestmovies
 ## Issue importance
 ## imissf
-## imissf2
-## fav
-## fav_obam
-## fav_boeh
-## fav_mccon
-## fav_reid
-## fav_pelosi
-## fav_biden
-## fav_hclin
 ## obamaapp
 ## Approval of Obama on issues
 ## congapp
@@ -292,29 +243,6 @@ hr {
 ## ideoobama
 ## saysobama
 ## likeobama
-## econtrend
-## stockpos
-## persfinretro
-## ownorrent
-## ownhomevalretro
-## areahomeval
-## homevalpro
-## mortworry
-## homebuypros
-## child18
-## voteregadd_rev
-## voteregadd2_rev
-## student2
-## job
-## employstat2
-## jobmult
-## wkhrs
-## jobworry
-## jobavail
-## jobavailsixmon
-## occupxhappywjob
-## hhincpros
-## exhaustsavings
 ## birthyr
 ## gender
 ## pid3
@@ -323,19 +251,10 @@ hr {
 ## race
 ## educ
 ## marstat
-## pew_bornagain
-## pew_religimp
-## pew_churatd
-## pew_prayer
 ## phone
 ## faminc
-## faminc2
-## inputstate
-## comments
 ## region
 ## state
-## obamaGroup
-## obamaVote
 ## weight
 ## votereg_new
 ## is_voter
@@ -350,9 +269,9 @@ hr {
 <p>Since I know how this dataset is organized, I&#39;m going quickly toss the variables into one of a small number of groups, instantiated with <code>VariableGroup</code>, and collect them in a container object called <code>VariableOrder</code>.</p>
 
 <pre><code class="r">ordering(ds) &lt;- VariableOrder(
-        VariableGroup(&quot;Demos&quot;, ds[c(1:3, 93:118)]),
-        VariableGroup(&quot;Tracking questions&quot;, ds[c(4,5,52:92)]),
-        VariableGroup(&quot;This week&quot;, ds[6:51])
+        VariableGroup(&quot;Demos&quot;, ds[c(1, 21:37)]),
+        VariableGroup(&quot;Tracking questions&quot;, ds[c(2,3, 11:20)]),
+        VariableGroup(&quot;This week&quot;, ds[4:11])
     )
 </code></pre>
 
@@ -362,8 +281,6 @@ hr {
 </code></pre>
 
 <pre><code>## [+] Demos
-##     starttime
-##     endtime
 ##     perc_skipped
 ##     birthyr
 ##     gender
@@ -373,19 +290,10 @@ hr {
 ##     race
 ##     educ
 ##     marstat
-##     pew_bornagain
-##     pew_religimp
-##     pew_churatd
-##     pew_prayer
 ##     phone
 ##     faminc
-##     faminc2
-##     inputstate
-##     comments
 ##     region
 ##     state
-##     obamaGroup
-##     obamaVote
 ##     weight
 ##     votereg_new
 ##     is_voter
@@ -394,17 +302,9 @@ hr {
 ## [+] Tracking questions
 ##     newsint2
 ##     Direction of country
+##     manningpenalty
 ##     Issue importance
 ##     imissf
-##     imissf2
-##     fav
-##     fav_obam
-##     fav_boeh
-##     fav_mccon
-##     fav_reid
-##     fav_pelosi
-##     fav_biden
-##     fav_hclin
 ##     obamaapp
 ##     Approval of Obama on issues
 ##     congapp
@@ -412,79 +312,18 @@ hr {
 ##     ideoobama
 ##     saysobama
 ##     likeobama
-##     econtrend
-##     stockpos
-##     persfinretro
-##     ownorrent
-##     ownhomevalretro
-##     areahomeval
-##     homevalpro
-##     mortworry
-##     homebuypros
-##     child18
-##     voteregadd_rev
-##     voteregadd2_rev
-##     student2
-##     job
-##     employstat2
-##     jobmult
-##     wkhrs
-##     jobworry
-##     jobavail
-##     jobavailsixmon
-##     occupxhappywjob
-##     hhincpros
-##     exhaustsavings
 ## [+] This week
-##     snowdenfav
-##     snowdenleakapp
-##     snowdenpros
-##     snowdenpenalty
+##     Favorability of Edward Snowden
+##     Approval of Snowden&#39;s Leak
+##     Support for Prosecution of Snowden
+##     Penalty for Snowden
 ##     manningknowledge
 ##     manningfavorability
 ##     manningguilt
 ##     manningpenalty
-##     betterpartyissues
-##     immigration
-##     gay
-##     education
-##     healthcare
-##     taxes
-##     abortion
-##     economy
-##     jobs
-##     betterpartygroups
-##     gays
-##     women
-##     blacks
-##     hispanics
-##     families
-##     smallbus
-##     guns
-##     christians
-##     immig
-##     gaymar2
-##     congressdone
-##     agendasetter
-##     theaterfreq
-##     moviepreference
-##     seentopmovies
-##     ironman3
-##     despicableme2
-##     manofsteel
-##     monstersu
-##     fastfurious6
-##     startrek
-##     worldwarz
-##     loneranger
-##     greatgatsby
-##     wolverine
-##     movierefreshments
-##     butterpopcorn
-##     bestmovies
 </code></pre>
 
-<p>Groups can be created with several kinds of inputs. You can specify a vector or list of variable references (URLs), as returned from the <code>self</code> method of variables. That list of references may also contain <code>VariableGroup</code> objects as well, which will nest those Groups inside the Group you&#39;re creating (see &ldquo;Nested Groups&rdquo; below). You can also provide a list of variable entities or, as in this example, a subset of a dataset entity (which can be thought of as a list of variables). </p>
+<p>Groups can be created with several kinds of inputs. You can specify a vector or list of variable references (URLs), as returned from the <code>self</code> method of variables. That list of references may also contain <code>VariableGroup</code> objects as well, which will nest those Groups inside the Group you&#39;re creating (see &ldquo;Nested Groups&rdquo; below). You can also provide a list of variable entities or, as in this example, a subset of a dataset entity (which can be thought of as a list of variables).</p>
 
 <h2>Group names</h2>
 
@@ -507,7 +346,7 @@ names(ordering(ds))
 
 <h2>Reordering groups and entities</h2>
 
-<p><code>VariableOrder</code> and <code>VariableGroup</code> support standard R forms of indexing for extracting and reordering. </p>
+<p><code>VariableOrder</code> and <code>VariableGroup</code> support standard R forms of indexing for extracting and reordering.</p>
 
 <p>Let&#39;s move &ldquo;Demographics&rdquo; to the end:</p>
 
@@ -531,15 +370,6 @@ ordering(ds)
 ##     Direction of country
 ##     Issue importance
 ##     imissf
-##     imissf2
-##     fav
-##     fav_obam
-##     fav_boeh
-##     fav_mccon
-##     fav_reid
-##     fav_pelosi
-##     fav_biden
-##     fav_hclin
 ##     obamaapp
 ##     Approval of Obama on issues
 ##     congapp
@@ -547,80 +377,17 @@ ordering(ds)
 ##     ideoobama
 ##     saysobama
 ##     likeobama
-##     econtrend
-##     stockpos
-##     persfinretro
-##     ownorrent
-##     ownhomevalretro
-##     areahomeval
-##     homevalpro
-##     mortworry
-##     homebuypros
-##     child18
-##     voteregadd_rev
-##     voteregadd2_rev
-##     student2
-##     job
-##     employstat2
-##     jobmult
-##     wkhrs
-##     jobworry
-##     jobavail
-##     jobavailsixmon
-##     occupxhappywjob
-##     hhincpros
-##     exhaustsavings
 ## [+] This week
 ##     manningknowledge
 ##     manningfavorability
 ##     manningguilt
 ##     manningpenalty
-##     betterpartyissues
-##     immigration
-##     gay
-##     education
-##     healthcare
-##     taxes
-##     abortion
-##     economy
-##     jobs
-##     betterpartygroups
-##     gays
-##     women
-##     blacks
-##     hispanics
-##     families
-##     smallbus
-##     guns
-##     christians
-##     immig
-##     gaymar2
-##     congressdone
-##     agendasetter
-##     theaterfreq
-##     moviepreference
-##     seentopmovies
-##     ironman3
-##     despicableme2
-##     manofsteel
-##     monstersu
-##     fastfurious6
-##     startrek
-##     worldwarz
-##     loneranger
-##     greatgatsby
-##     wolverine
-##     movierefreshments
-##     butterpopcorn
-##     bestmovies
 ##     [+] Snowden
-##         snowdenfav
-##         snowdenleakapp
-##         snowdenpros
-##         snowdenpenalty
+##         Favorability of Edward Snowden
+##         Approval of Snowden&#39;s Leak
+##         Support for Prosecution of Snowden
+##         Penalty for Snowden
 ## [+] Demographics
-##     starttime
-##     endtime
 ##     perc_skipped
 ##     birthyr
 ##     gender
@@ -630,19 +397,10 @@ ordering(ds)
 ##     race
 ##     educ
 ##     marstat
-##     pew_bornagain
-##     pew_religimp
-##     pew_churatd
-##     pew_prayer
 ##     phone
 ##     faminc
-##     faminc2
-##     inputstate
-##     comments
 ##     region
 ##     state
-##     obamaGroup
-##     obamaVote
 ##     weight
 ##     votereg_new
 ##     is_voter
@@ -656,7 +414,7 @@ ordering(ds)
 
 <p>Third, the four variable references we put into &ldquo;Snowden&rdquo; were also removed from their positions in the &ldquo;This week&rdquo; group: they were &ldquo;moved&rdquo; rather than copied. This is what we might expect from a files-and-folders form of organization. If you wish to make copies, you can set <code>duplicates(ordering(ds)) &lt;- TRUE</code>. If we had done that in this example, we&#39;d have the four Snowden variables appearing both in the &ldquo;This week&rdquo; group and in the nested &ldquo;Snowden&rdquo; group. (More accurately, and keeping with the file-system metaphor, setting duplicates to <code>TRUE</code> lets you create symbolic links rather than actually copying the variables. Only the references are copied; there is only one variable behind them.)</p>
 
-<p><a href="derive.md">Next: transforming and deriving</a></p>
+<p><a href="derive.html">Next: transforming and deriving</a></p>
 
 </body>
 

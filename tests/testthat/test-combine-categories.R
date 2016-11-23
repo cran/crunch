@@ -7,6 +7,7 @@ with_mock_HTTP({
         name="Gender 1 cat",
         description="Gender",
         discarded=FALSE,
+        notes="",
         format=list(summary=list(digits=2)),
         view=list(include_missing=FALSE,
             show_counts=FALSE,
@@ -16,7 +17,7 @@ with_mock_HTTP({
         expr=list(
             `function`="combine_categories",
             args=list(
-                list(variable="/api/datasets/dataset1/variables/gender/"),
+                list(variable="/api/datasets/1/variables/gender/"),
                 list(value=list(
                     list(
                         name="Both",

@@ -206,35 +206,37 @@ hr {
 %\VignetteIndexEntry{Datasets: creating, loading, and manipulating}
 -->
 
-<p><a href="getting-started.md">Previous: Getting started</a> </p>
+<p><a href="getting-started.html">Previous: Getting started</a></p>
 
 <h1>Datasets in <code>crunch</code></h1>
 
-<p>To get started working with Crunch datasets in R, we need to get a dataset in our local R session. This means we either need to create a new one or load an existing dataset. </p>
+<p>To get started working with Crunch datasets in R, we need to get a dataset in our local R session. This means we either need to create a new one or load an existing dataset.</p>
 
 <h2>Uploading datasets</h2>
 
-<p>To create new datasets, multiple paths exist. In the web application, you can upload files to create datasets. From <code>crunch</code>, there are two methods for creating datasets: one for <code>data.frames</code> and one for files of other (non-R) formats. </p>
+<p>To create new datasets, multiple paths exist. In the web application, you can upload files to create datasets. From <code>crunch</code>, there are two methods for creating datasets: one for <code>data.frames</code> and one for files of other (non-R) formats.</p>
 
 <h3>1. newDataset</h3>
 
-<p>You can create a dataset from any <code>data.frame</code> you have in your R session with <code>newDataset</code>:</p>
+<p>The <code>crunch</code> package contains a sample dataset that we&#39;ll use throughout the vignettes: a sample drawn from a political survey fielded by YouGov on behalf of the <em>Economist</em>.</p>
 
-<pre><code class="r">load(&quot;economist.RData&quot;)
-dim(df)
+<pre><code class="r">load(&quot;../vignettes/economist.RData&quot;)
+dim(economist)
 </code></pre>
 
-<pre><code>## [1] 1000  142
+<pre><code>## [1] 250  61
 </code></pre>
 
-<pre><code class="r">ds &lt;- newDataset(df, name=&quot;Economist/YouGov Weekly Survey&quot;)
+<p>You can create a dataset from any <code>data.frame</code> you have in your R session with <code>newDataset</code>. Let&#39;s use that sample dataset:</p>
+
+<pre><code class="r">ds &lt;- newDataset(economist, name=&quot;Economist/YouGov Weekly Survey&quot;)
 dim(ds)
 </code></pre>
 
-<pre><code>## [1] 1000  142
+<pre><code>## [1] 250  61
 </code></pre>
 
-<p><code>newDataset</code> translates R data types into their analogous types in Crunch. </p>
+<p><code>newDataset</code> translates R data types into their analogous types in Crunch.</p>
 
 <ul>
 <li>character &ndash;&gt; Text Variable</li>
@@ -310,11 +312,11 @@ description(ds)
 delete(ds)
 </code></pre>
 
-<p>The second way to delete is <code>deleteDataset</code>, which works like <code>loadDataset</code>: you supply a dataset name. This way is faster if you have not already loaded the dataset object into your R session: no need to fetch something from the server just to then tell the server to delete it. </p>
+<p>The second way to delete is <code>deleteDataset</code>, which works like <code>loadDataset</code>: you supply a dataset name. This way is faster if you have not already loaded the dataset object into your R session: no need to fetch something from the server just to then tell the server to delete it.</p>
 
-<p>For details on both, see their help pages. </p>
+<p>For details on both, see their help pages.</p>
 
-<p><a href="variables.md">Next: Variable metadata</a> </p>
+<p><a href="variables.html">Next: Variable metadata</a></p>
 
 </body>
 

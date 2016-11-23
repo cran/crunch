@@ -121,9 +121,11 @@ setMethod("dim", "CrunchDataset",
 #' @export
 setMethod("ncol", "CrunchDataset", function (x) length(variables(x)))
 
-namekey <- function (x) {
+namekey <- function (x=NULL) {
     if (is.variable(x)) {
         return(match.arg(getOption("crunch.namekey.array"), c("alias", "name")))
+    } else if (inherits(x, "VariableOrder") || inherits(x, "VariableGroup")) {
+        return(match.arg(getOption("crunch.namekey.variableorder"), c("name", "alias")))
     } else {
         return(match.arg(getOption("crunch.namekey.dataset"), c("alias", "name")))
     }
@@ -134,35 +136,6 @@ namekey <- function (x) {
 setMethod("names", "CrunchDataset", function (x) {
     getIndexSlot(variables(x), namekey(x))
 })
-
-#' Dataset weights
-#' @param x a Dataset
-#' @param value a Variable to set as weight, or NULL to remove the existing
-#' weight
-#' @return For the getter, a Variable if there is a weight, else NULL. For the
-#' setter, x, modified accordingly
-#' @export
-weight <- function (x) {
-    stopifnot(is.dataset(x))
-    w <- x@body$weight
-    if (!is.null(w)) {
-        w <- CrunchVariable(allVariables(x)[[w]], filter=activeFilter(x))
-    }
-    return(w)
-}
-
-#' @rdname weight
-#' @export
-`weight<-` <- function (x, value) {
-    stopifnot(is.dataset(x))
-    if (is.variable(value)) {
-        value <- self(value)
-    } else if (!is.null(value)) {
-        halt("Weight must be a Variable or NULL")
-    }
-    x <- setEntitySlot(x, "weight", value)
-    return(x)
-}
 
 setMethod("tuple", "CrunchDataset", function (x) x@tuple)
 setMethod("tuple<-", "CrunchDataset", function (x, value) {
@@ -267,6 +240,15 @@ variableCatalogURL <- function (dataset) {
 }
 
 summaryURL <- function (x) shojiURL(x, "views", "summary")
+
+cubeURL <- function (x) {
+    if (is.dataset(x)) {
+        return(shojiURL(x, "views", "cube"))
+    } else {
+        ## :( Construct the URL
+        return(absoluteURL("./cube/", datasetReference(x)))
+    }
+}
 
 #' Access a Dataset's Variables Catalog
 #'
@@ -415,5 +397,40 @@ setMethod("is.published<-", c("CrunchDataset", "logical"), function (x, value) {
 #' @export
 publish <- function (x) {
     is.published(x) <- TRUE
+    return(x)
+}
+
+#' View and modify dataset-level settings
+#'
+#' These methods allow access and control over dataset settings. Currently
+#' supported settings include 'viewers_can_export' and
+#' 'viewers_can_change_weight', which govern specific authorizations for users
+#' with view-only access to this datset; and 'weight', which is the default
+#' weight variable for the dataset, the one that will be set for newly shared
+#' users and the one that viewers will have always on if they are not authorized
+#' to change weights. Additional settings will be added in the future. See
+#' \url{http://docs.crunch.io/#fragments}, under 'Settings', for an up-to-date
+#' list of settings supported throughout the Crunch system. Clients may also
+#' provide and use custom settings if they choose.
+#' @param x CrunchDataset
+#' @param value A settings object (\code{ShojiEntity}), for the setter
+#' @return The getter returns a settings object (\code{ShojiEntity}). The setter
+#' returns the dataset (\code{x}).
+#' @examples
+#' \dontrun{
+#' settings(ds)
+#' settings(ds)$viewers_can_export <- TRUE
+#' }
+#' @export
+settings <- function (x) {
+    stopifnot(is.dataset(x))
+    return(ShojiEntity(crGET(shojiURL(x, "fragments", "settings"))))
+}
+
+#' @rdname settings
+#' @export
+"settings<-" <- function (x, value) {
+    stopifnot(is.dataset(x))
+    updateEntity(settings(x), value)
     return(x)
 }

@@ -61,12 +61,15 @@ login <- function (email=getOption("crunch.email"),
 }
 
 #' Get various catalogs for your Crunch session
-#' @return a list.
+#' @return A Session object. Access dataset and project catalogs from it.
+#' @examples
+#' \dontrun{
+#' cr <- session()
+#' cr$datasets
+#' cr$projects
+#' }
 #' @export
-session <- function () {
-    list(datasets=datasets(),
-        projects=projects())
-}
+session <- function () new("Session")
 
 crunchAuth <- function (email, password=NULL, ...) {
     ## Validate authentication inputs and then POST to the API
@@ -76,9 +79,7 @@ crunchAuth <- function (email, password=NULL, ...) {
     if (is.null(password)) {
         if (interactive()) {
             cat(paste0("Crunch.io password for ", email, ": "))
-            without_echo({
-                password <- readline()
-            })
+            without_echo(password <- readline())
         } else {
             halt("Must supply a password")
         }
@@ -105,10 +106,16 @@ without_echo <- function (expr) {
     eval.parent(expr)
 }
 
+#' Add an auth token as a cookie manually
+#'
+#' Set the auth token rather than from a Set-Cookie response header. Also modify
+#' the user-agent to include the service this is coming from.
+#' @param token character auth token
+#' @param ua character optional string to add to the User-Agent request header
+#' @return Nothing; called for its side effects.
+#' @export
+#' @keywords internal
 tokenAuth <- function (token, ua="token") {
-    ## Add an auth token as a cookie manually, rather than from a Set-Cookie
-    ## response header.
-    ## Also modify the user-agent to include the service this is coming from
     set_config(c(config(cookie=paste0("token=", token)),
         add_headers(`user-agent`=crunchUserAgent(ua))))
     warmSessionCache()

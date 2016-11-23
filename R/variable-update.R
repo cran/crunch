@@ -124,7 +124,7 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
                 "not present in the category ids of variable ", dQuote(name(x))))
         }
         if (add.no.data) {
-            categories(x)[[length(categories(x)) + 1]] <- Category(data=.no.data)
+            x <- addNoDataCategory(x)
         }
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
         return(x)
@@ -143,7 +143,7 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
                 dQuote(name(x))))
         }
         if (add.no.data) {
-            categories(x)[[length(categories(x)) + 1]] <- Category(data=.no.data)
+            x <- addNoDataCategory(x)
         }
         value <- n2i(value, categories(x))
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
@@ -221,13 +221,5 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
 #' @rdname variable-update
 #' @export
 setMethod("is.na<-", "CrunchVariable", function (x, value) {
-    ## Temporarily kill this method until API supports correctly
-    halt("is.na<- not yet supported for CrunchVariables")
-
-    lab <- gsub('"', "", deparse(substitute(value)))
-    value <- zcl(.dispatchFilter(value))
-    payload <- structure(list(value), .Names=lab)
-    # cat(toJSON(payload))
-    out <- crPOST(x@fragments$missing_rules, body=toJSON(payload))
-    return(x)
+    x[value] <- NA
 })

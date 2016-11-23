@@ -208,7 +208,7 @@ hr {
 
 <h1>Getting started with <code>crunch</code></h1>
 
-<p><a href="http://crunch.io/">Crunch.io</a> provides a cloud-based data store and analytic engine. It has a <a href="https://beta.crunch.io/">web client</a> for interactive data exploration and visualization. The <em>crunch</em> package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results. </p>
+<p><a href="http://crunch.io/">Crunch.io</a> provides a cloud-based data store and analytic engine. It has a <a href="https://app.crunch.io/">web client</a> for interactive data exploration and visualization. The <em>crunch</em> package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results.</p>
 
 <pre><code class="r">library(crunch)
 </code></pre>
@@ -233,12 +233,14 @@ hr {
 <p>The Crunch data store is built around datasets, which contain variables. Unlike R <code>data.frames</code> and atomic vectors, Crunch datasets and variables contain additional metadata. The following vignettes illustrate how you can create and work with datasets using <em>crunch</em>.</p>
 
 <ul>
-<li><a href="datasets.md">Datasets</a>: creating, loading, and manipulating datasets in Crunch</li>
-<li><a href="variables.md">Variables</a>: cleaning and defining variable metadata</li>
-<li><a href="array-variables.md">Array variables</a>: how to create and manipulate categorical-array and multiple-response variables</li>
-<li><a href="variable-order.md">Variable organization</a>: defining a hierarchy and arranging variables within it</li>
-<li><a href="derive.md">Transformations and derivations</a>: alter values within a dataset and create new variables as a function of others</li>
-<li><a href="analyze.md">Computing on Crunch data</a>: crosstabulation and more </li>
+<li><a href="datasets.html">Datasets</a>: creating, loading, and manipulating datasets in Crunch</li>
+<li><a href="variables.html">Variables</a>: cleaning and defining variable metadata</li>
+<li><a href="array-variables.html">Array variables</a>: how to create and manipulate categorical-array and multiple-response variables</li>
+<li><a href="variable-order.html">Variable organization</a>: defining a hierarchy and arranging variables within it</li>
+<li><a href="derive.html">Transformations and derivations</a>: alter values within a dataset and create new variables as a function of others</li>
+<li><a href="analyze.html">Computing on Crunch data</a>: crosstabulation and more</li>
+<li><a href="filters.html">Filtering</a>: subsetting data, both in your R session and in the web interface</li>
+<li><a href="export.html">Downloading and exporting</a>: how to pull data from the server, both for use in R and file export</li>
 </ul>
 
 </body>

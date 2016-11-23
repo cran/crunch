@@ -73,7 +73,7 @@ setMethod("categories", "VariableEntity",
 #' @export
 setMethod("categories<-", c("CategoricalVariable", "Categories"),
     function (x, value) {
-        dropCache(absoluteURL("../../cube/", self(x)))
+        dropCache(cubeURL(x))
         ent <- setEntitySlot(entity(x), "categories", value)
         return(x)
     })
@@ -81,7 +81,7 @@ setMethod("categories<-", c("CategoricalVariable", "Categories"),
 #' @export
 setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
     function (x, value) {
-        dropCache(absoluteURL("../../cube/", self(x)))
+        dropCache(cubeURL(x))
         lapply(subvariables(tuple(x)), dropCache) ## Subvariables will update too
         ent <- setEntitySlot(entity(x), "categories", value)
         return(x)
@@ -137,8 +137,10 @@ setMethod("categories<-", c("CrunchVariable", "ANY"),
 
 setMethod("datasetReference", "CrunchVariable", function (x) {
     # x@urls$dataset_url
-    ## Not HATEOAS
-    absoluteURL("../../", self(x))
+    rootURL(x, "dataset") %||% datasetReference(self(x))
+})
+setMethod("datasetReference", "character", function (x) {
+    sub("(.*/datasets/.*?/).*", "\\1", x)
 })
 setMethod("datasetReference", "ANY", function (x) NULL)
 
@@ -154,26 +156,10 @@ unbind <- function (x) {
     stopifnot(inherits(x, "CategoricalArrayVariable"))
     ## Delete self and drop cache for variable catalog (parent)
     u <- self(x)
-    out <- crDELETE(u)
-    dropCache(absoluteURL("../", u))
+    out <- crPOST(u, body='{"unbind": {}}')
+    dropCache(datasetReference(u))
     invisible(out)
 }
-
-#' @rdname delete
-#' @export
-setMethod("delete", "CrunchVariable",
-    function (x, ...) invisible(crDELETE(self(x))))
-
-#' @rdname delete
-#' @export
-setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
-    u <- self(x)
-    subvars <- subvariables(tuple(x))
-    out <- crDELETE(u)
-    lapply(subvars, crDELETE)
-    dropCache(absoluteURL("../", u))
-    invisible(out)
-})
 
 #' "Subset" a Variable
 #'
@@ -192,14 +178,7 @@ NULL
 
 #' @rdname variable-extract
 #' @export
-setMethod("[", c("CrunchVariable", "CrunchExpr"), function (x, i, ...) {
-    f <- activeFilter(x)
-    if (length(zcl(f))) {
-        i <- f & i
-    }
-    activeFilter(x) <- i
-    return(x)
-})
+setMethod("[", c("CrunchVariable", "CrunchExpr"), .updateActiveFilter)
 #' @rdname variable-extract
 #' @export
 setMethod("[", c("CrunchVariable", "numeric"), function (x, i, ...) {
@@ -209,8 +188,4 @@ setMethod("[", c("CrunchVariable", "numeric"), function (x, i, ...) {
 })
 #' @rdname variable-extract
 #' @export
-setMethod("[", c("CrunchVariable", "logical"), function (x, i, ...) {
-    i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
-        expression=.dispatchFilter(i))
-    return(x[i])
-})
+setMethod("[", c("CrunchVariable", "logical"), .updateActiveFilterLogical)

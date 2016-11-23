@@ -11,6 +11,12 @@ test_that("login checks for email and password before POSTing", {
         "Must supply a password")
 })
 
+test_that("without_echo doesn't crash on this OS", {
+    without_echo({
+        expect_true(TRUE)
+    })
+})
+
 with_mock_HTTP({
     test_that("Jupyter helper sets up env", {
         with(reset.option("httr_config"), {
@@ -34,13 +40,6 @@ if (run.integration.tests) {
     })
 
     test_that("crunchAuth succeeds when it should and not when it shouldn't", {
-        logout()
-        em <- getOption("crunch.email")
-        pw <- getOption("crunch.pw")
-        expect_true(is.character(em))
-        expect_true(is.character(pw))
-        expect_true(is.list(crunchAuth(em, password=pw)))
-        suppressMessages(login())
         logout()
         expect_error(crunchAuth("lkjasdfksdfkjhl", password="w23nrnsod"),
             "Unable to authenticate lkjasdfksdfkjhl")

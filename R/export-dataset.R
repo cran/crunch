@@ -40,12 +40,14 @@ variablesFilter <- function (dataset) {
     ## If so, return a Crunch expression to filter them
     allvars <- allVariables(dataset)
     if (length(allvars) != length(ShojiCatalog(crGET(self(allvars))))) {
-        return(list(`function`="identify", args=list(list(id=urls(allvars)))))
+        v <- structure(lapply(urls(allvars), function (x) list(variable=x)),
+            .Names=ids(allvars))
+        return(list(`function`="select", args=list(list(map=v))))
     }
     ## Else, return NULL
     return(NULL)
 }
 
-##' @rdname exportDataset
-##' @export
+#' @rdname exportDataset
+#' @export
 setMethod("write.csv", "CrunchDataset", function (...) exportDataset(..., format="csv"))

@@ -10,6 +10,7 @@ with_mock_HTTP({
         name="MR combined",
         description="Please select all that apply",
         discarded=FALSE,
+        notes="",
         format=list(summary=list(digits=2), data=list(digits=2)),
         view=list(include_noneoftheabove=FALSE,
             column_width=NULL
@@ -17,16 +18,16 @@ with_mock_HTTP({
         expr=list(
             `function`="combine_responses",
             args=list(
-                list(variable="/api/datasets/dataset1/variables/mymrset/"),
+                list(variable="/api/datasets/1/variables/mymrset/"),
                 list(value=list(
                     list(
                         name="Extremes",
-                        combined_ids=I(c("/api/datasets/dataset1/variables/subvar2/",
-                            "/api/datasets/dataset1/variables/subvar3/"))
+                        combined_ids=I(c("/api/datasets/1/variables/mymrset/subvariables/subvar2/",
+                            "/api/datasets/1/variables/mymrset/subvariables/subvar3/"))
                     ),
                     list(
                         name="Second",
-                        combined_ids=I(c("/api/datasets/dataset1/variables/subvar1/"))
+                        combined_ids=I(c("/api/datasets/1/variables/mymrset/subvariables/subvar1/"))
                     )
                 ))
             )

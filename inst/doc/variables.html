@@ -206,11 +206,11 @@ hr {
 %\VignetteIndexEntry{Variables: cleaning and defining metadata}
 -->
 
-<p><a href="datasets.md">Previous: create and load datasets</a></p>
+<p><a href="datasets.html">Previous: create and load datasets</a></p>
 
 <h1>Manipulating variables within datasets</h1>
 
-<p>Once you&#39;ve uploaded data to Crunch, you&#39;ll likely want to spend some time cleaning up the metadata associated with your dataset. Legacy statistical programs offer only limited support for variable metadata, both in type and quality. Because Crunch facilitates data visualization, collaboration, and sharing results with others, making your dataset presentation-quality is worthwhile, and this often requires additional work after uploading a data file. </p>
+<p>Once you&#39;ve uploaded data to Crunch, you&#39;ll likely want to spend some time cleaning up the metadata associated with your dataset. Legacy statistical programs offer only limited support for variable metadata, both in type and quality. Because Crunch facilitates data visualization, collaboration, and sharing results with others, making your dataset presentation-quality is worthwhile, and this often requires additional work after uploading a data file.</p>
 
 <p>Most of the operations described below can also be accomplished in the web client. However, users comfortable with scripting may find it faster or easier to automate these actions with <code>crunch</code>. Such edits made within R are carried out on the remote Crunch dataset, thereby keeping data in sync across all client applications.</p>
 
@@ -218,11 +218,11 @@ hr {
 
 <p>Crunch takes the principled stand that working with data in the 21st Century should not be constrained by legacies of the punch-card era. Variables should have &ldquo;names&rdquo; that are human-readable and searchable by their meaning&mdash;there is no reason to constrain variable names to be eight characters, all caps, etc. &ldquo;Aided awareness: coffee roasters&rdquo; is much nicer and more presentable than &ldquo;Q2B_V1&rdquo;.</p>
 
-<p>At the same time, shorter, user-defined, unique identifiers for variables do have their uses. For one, it&#39;s what most any legacy statistical software uses for its identifiers, so retaining them on import will help us line up variables when appending a subsequent batch of imported data, for example. For another, when interacting with a dataset from the command line, it can be useful to have shorter, machine-friendlier references. </p>
+<p>At the same time, shorter, user-defined, unique identifiers for variables do have their uses. For one, it&#39;s what most any legacy statistical software uses for its identifiers, so retaining them on import will help us line up variables when appending a subsequent batch of imported data, for example. For another, when interacting with a dataset from the command line, it can be useful to have shorter, machine-friendlier references.</p>
 
 <p>So, Crunch stores two user-settable identifiers for variables. What you may have thought of as a variable &ldquo;label&rdquo;, Crunch elevates to the status of &ldquo;name&rdquo;. What you may be used to thinking of as a variable &ldquo;name&rdquo;, Crunch calls &ldquo;alias&rdquo;.</p>
 
-<p>Aliases and names have slightly different validation constraints. Aliases must be unique across the entire dataset, including among array <a href="array-variables.md">subvariables</a>. &ldquo;Names&rdquo;, however, only must be unique within <a href="variable-order.md">variable order groups</a>. Any string is valid for either alias or name, though you may want more machine-friendly strings as aliases. In most cases, you probably won&#39;t even set aliases, though: they&#39;ll be set when you import your dataset and will be whatever the names were in your source data.</p>
+<p>Aliases and names have slightly different validation constraints. Aliases must be unique across the entire dataset, including among array <a href="array-variables.html">subvariables</a>. &ldquo;Names&rdquo;, however, only must be unique within <a href="variable-order.html">variable order groups</a>. Any string is valid for either alias or name, though you may want more machine-friendly strings as aliases. In most cases, you probably won&#39;t even set aliases, though: they&#39;ll be set when you import your dataset and will be whatever the names were in your source data.</p>
 
 <p>In sum, name is crunch alias, label is crunch name.</p>
 
@@ -234,13 +234,13 @@ hr {
 
 <p>Because the <code>names</code> attribute is used for indexing elements in R, if we want to extract variables based on alias, it means that the <code>names</code> attribute of dataset must actually expose aliases. This may be dissonant, but it has some nice properties. For one, comparing our Crunch dataset with the <code>data.frame</code> from which it was created, their <code>names</code> attribute have the same contents:</p>
 
-<pre><code class="r">identical(names(ds), names(df))
+<pre><code class="r">identical(names(ds), names(economist))
 </code></pre>
 
 <pre><code>## [1] TRUE
 </code></pre>
 
-<p>You can reference and extract variables from a dataset as if it were a <code>data.frame</code>, using the <code>$</code>, <code>[</code>, and <code>[[</code> methods. </p>
+<p>You can reference and extract variables from a dataset as if it were a <code>data.frame</code>, using the <code>$</code>, <code>[</code>, and <code>[[</code> methods.</p>
 
 <pre><code class="r">track.var &lt;- ds$track
 track.var
@@ -249,9 +249,9 @@ track.var
 <pre><code>## track (categorical)
 ## 
 ##                                         Count
-## Off on the wrong track                    576
-## Generally headed in the right direction   285
-## Not sure                                  139
+## Off on the wrong track                    137
+## Generally headed in the right direction    80
+## Not sure                                   33
 </code></pre>
 
 <p>Like datasets, variables have various attributes like <code>name</code> and <code>description</code> that can be set naturally.</p>
@@ -260,7 +260,7 @@ track.var
 description(track.var) &lt;- &quot;In your opinon, is the country going in the right direction, or is it on the wrong track?&quot;
 </code></pre>
 
-<p>Two caveats. First, because we first extracted the variable from the dataset before making edits, the dataset object has stale metadata for this variable. </p>
+<p>Two caveats. First, because we first extracted the variable from the dataset before making edits, the dataset object has stale metadata for this variable.</p>
 
 <pre><code class="r">name(track.var) == name(ds$track)
 </code></pre>
@@ -274,7 +274,7 @@ description(track.var) &lt;- &quot;In your opinon, is the country going in the r
 name(ds$track) &lt;- &quot;Direction of country&quot;
 </code></pre>
 
-<p><code>ds</code> would be up to date. </p>
+<p><code>ds</code> would be up to date.</p>
 
 <p>This can be remedied one of two ways. We could either assign <code>track.var</code> back to <code>ds</code>, as in</p>
 
@@ -327,38 +327,30 @@ name(ds$track) &lt;- &quot;Direction of country&quot;
 <pre><code class="r">head(names(variables(ds)), 10)
 </code></pre>
 
-<pre><code>##  [1] &quot;starttime&quot;            &quot;endtime&quot;              &quot;perc_skipped&quot;        
-##  [4] &quot;newsint2&quot;             &quot;Direction of country&quot; &quot;snowdenfav&quot;          
-##  [7] &quot;snowdenleakapp&quot;       &quot;snowdenpros&quot;          &quot;snowdenpenalty&quot;      
-## [10] &quot;manningknowledge&quot;
+<pre><code>##  [1] &quot;perc_skipped&quot;         &quot;newsint2&quot;             &quot;Direction of country&quot; &quot;snowdenfav&quot;           &quot;snowdenleakapp&quot;      
+##  [6] &quot;snowdenpros&quot;          &quot;snowdenpenalty&quot;       &quot;manningknowledge&quot;     &quot;manningfavorability&quot;  &quot;manningguilt&quot;
 </code></pre>
 
 <p>These attributes all allow assignment with <code>&lt;-</code>. The methods <code>names</code> and <code>aliases</code> yield character vectors, and they take characters in assignment. Hence, you can use any vectorized string manipulation tools available in R, such as regular expressions, to edit variable names efficiently. You can also just supply a replacement vector, like</p>
 
-<pre><code class="r">names(variables(ds))[6:9] &lt;- c(&quot;Favorability of Edward Snowden&quot;, 
+<pre><code class="r">names(variables(ds))[4:7] &lt;- c(&quot;Favorability of Edward Snowden&quot;,
                                &quot;Approval of Snowden&#39;s Leak&quot;,
                                &quot;Support for Prosecution of Snowden&quot;,
                                &quot;Penalty for Snowden&quot;)
 head(names(variables(ds)), 10)
 </code></pre>
 
-<pre><code>##  [1] &quot;starttime&quot;                         
-##  [2] &quot;endtime&quot;                           
-##  [3] &quot;perc_skipped&quot;                      
-##  [4] &quot;newsint2&quot;                          
-##  [5] &quot;Direction of country&quot;              
-##  [6] &quot;Favorability of Edward Snowden&quot;    
-##  [7] &quot;Approval of Snowden&#39;s Leak&quot;        
-##  [8] &quot;Support for Prosecution of Snowden&quot;
-##  [9] &quot;Penalty for Snowden&quot;               
-## [10] &quot;manningknowledge&quot;
+<pre><code>##  [1] &quot;perc_skipped&quot;                       &quot;newsint2&quot;                           &quot;Direction of country&quot;              
+##  [4] &quot;Favorability of Edward Snowden&quot;     &quot;Approval of Snowden&#39;s Leak&quot;         &quot;Support for Prosecution of Snowden&quot;
+##  [7] &quot;Penalty for Snowden&quot;                &quot;manningknowledge&quot;                   &quot;manningfavorability&quot;               
+## [10] &quot;manningguilt&quot;
 </code></pre>
 
 <h2>Categorical variables</h2>
 
 <p>Many variables in survey data are categorial: respondents have a finite set of answers to the survey question, and the answers are first and foremost of a nominal, not quantitative nature. In R, this data type is represented as a <code>factor</code>. The response options, are contained in the factor&#39;s &ldquo;levels&rdquo; as a character vector. Manipulation of these levels is limited and often challenging.</p>
 
-<p>In Crunch, categorical variables&#39; &ldquo;categories&rdquo; are objects with richer metadata. </p>
+<p>In Crunch, categorical variables&#39; &ldquo;categories&rdquo; are objects with richer metadata.</p>
 
 <pre><code class="r">is.Categorical(track.var)
 </code></pre>
@@ -369,9 +361,11 @@ head(names(variables(ds)), 10)
 <pre><code class="r">categories(track.var)
 </code></pre>
 
-<pre><code>## [ 1 ]  Generally headed in the right direction
-## [ 2 ]  Off on the wrong track
-## [ 3 ]  Not sure
+<pre><code>##   id                                    name value missing
+## 1  1 Generally headed in the right direction     1   FALSE
+## 2  2                  Off on the wrong track     2   FALSE
+## 3  3                                Not sure     3   FALSE
+## 4 -1                                 No Data    NA    TRUE
 </code></pre>
 
 <h3>Category attributes</h3>
@@ -381,32 +375,29 @@ head(names(variables(ds)), 10)
 <pre><code class="r">names(categories(track.var))
 </code></pre>
 
-<pre><code>## [1] &quot;Generally headed in the right direction&quot;
-## [2] &quot;Off on the wrong track&quot;                 
-## [3] &quot;Not sure&quot;
+<pre><code>## [1] &quot;Generally headed in the right direction&quot; &quot;Off on the wrong track&quot;                 
+## [3] &quot;Not sure&quot;                                &quot;No Data&quot;
 </code></pre>
 
 <pre><code class="r">values(categories(track.var))
 </code></pre>
 
-<pre><code>## [1] 1 2 3
+<pre><code>## [1]  1  2  3 NA
 </code></pre>
 
 <pre><code class="r">ids(categories(track.var))
 </code></pre>
 
-<pre><code>## [1] 1 2 3
+<pre><code>## [1]  1  2  3 -1
 </code></pre>
 
 <pre><code class="r">is.na(categories(track.var))
 </code></pre>
 
-<pre><code>## Generally headed in the right direction 
-##                                   FALSE 
-##                  Off on the wrong track 
-##                                   FALSE 
-##                                Not sure 
-##                                   FALSE
+<pre><code>## Generally headed in the right direction                  Off on the wrong track                                Not sure 
+##                                   FALSE                                   FALSE                                   FALSE 
+##                                 No Data 
+##                                    TRUE
 </code></pre>
 
 <p>Names and values can be assigned into categories, but ids cannot: they are immutable references to values within the column of data on the server. Missingness can be set with <code>is.na</code>. Character values assigned will mark those categories as missing, leaving other categories unchanged. Logical values assigned will set the missing TRUE/FALSE accordingly.</p>
@@ -417,9 +408,11 @@ is.na(categories(track.var)) &lt;- &quot;Not sure&quot;
 categories(track.var)
 </code></pre>
 
-<pre><code>## [ 1 ]  Right track
-## [ -1 ]  Wrong track
-## [ 0 ]  Not sure
+<pre><code>##   id                                    name value missing
+## 1  1 Generally headed in the right direction     1   FALSE
+## 2  3                                Not sure     0    TRUE
+## 3  2                             Wrong track    -1   FALSE
+## 4 -1                                 No Data    NA    TRUE
 </code></pre>
 
 <pre><code class="r">ids(categories(track.var)) &lt;- sample(ids(categories(track.var)), replace=FALSE)
@@ -436,9 +429,10 @@ categories(track.var)
 categories(track.var)
 </code></pre>
 
-<pre><code>## [ 1 ]  Right track
-## [ 0 ]  Not sure
-## [ -1 ]  Wrong track
+<pre><code>##   id                                    name value missing
+## 1  1 Generally headed in the right direction     1   FALSE
+## 2  2                             Wrong track    -1   FALSE
+## 3  3                                Not sure     0    TRUE
 </code></pre>
 
 <p>As with all other metadata edits discussed, updating with these methods automatically sends the changes to the server, so your local edits are reflected in the cloud.</p>
@@ -447,13 +441,15 @@ categories(track.var)
 
 <p>Datasets often contain variables that you may want to use &ndash; perhaps through a derived variable, a transformation, or a recode &ndash; or that may simply not be relevant for the analytic tasks at hand. In short, you want to hide them. They aren&#39;t deleted, so you can restore them if you need them later, but they no longer clutter the dataset &ldquo;workspace&rdquo;.</p>
 
-<p>As when working with a <code>data.frame</code>, you typically assign the return of a dataset-level function back to the variable representing the dataset in your R script or session. </p>
+<p>As when working with a <code>data.frame</code>, you typically assign the return of a dataset-level function back to the variable representing the dataset in your R script or session.</p>
 
-<pre><code class="r">ds &lt;- hideVariables(ds, &quot;comments&quot;)
+<p>In our example dataset, we have two copies of a voter-registration variable, &ldquo;votereg_new&rdquo; and &ldquo;votereg_old&rdquo;. Let&#39;s hide the old version:</p>
+
+<pre><code class="r">ds &lt;- hideVariables(ds, &quot;votereg_old&quot;)
 hiddenVariables(ds)
 </code></pre>
 
-<pre><code>## [1] &quot;comments&quot;
+<pre><code>## [1] &quot;votereg_old&quot;
 </code></pre>
 
 <p>As with the <code>is.na</code> function, you can update a variable by assigning it to the hidden variables list.</p>
@@ -462,7 +458,7 @@ hiddenVariables(ds)
 hiddenVariables(ds)
 </code></pre>
 
-<pre><code>## [1] &quot;comments&quot;  &quot;pid7others&quot;
+<pre><code>## [1] &quot;votereg_old&quot;  &quot;pid7others&quot;
 </code></pre>
 
 <p>These variables are now hidden, both locally in your R session and remotely on the server, which you can see in the web application. And, just as you could restore them there, you can also restore them from R:</p>
@@ -471,14 +467,14 @@ hiddenVariables(ds)
 hiddenVariables(ds)
 </code></pre>
 
-<pre><code>## [1] &quot;comments&quot;
+<pre><code>## [1] &quot;votereg_old&quot;
 </code></pre>
 
 <h2>Deleting variables</h2>
 
 <p>Sometimes you do want to delete variables permanently. Doing so is easy, but we have some protections in place to keep you from accidentally deleting things from a dataset that may be shared with many people on the server.</p>
 
-<p>To delete, you can assign <code>NULL</code> in to the dataset for that variable, just like you were removing a column from a <code>data.frame</code>. In our example dataset, we have two copies of a voter-registration variable, &ldquo;votereg_new&rdquo; and &ldquo;votereg_old&rdquo;. Let&#39;s kill the old one:</p>
+<p>To delete, you can assign <code>NULL</code> in to the dataset for that variable, just like you were removing a column from a <code>data.frame</code>. Let&#39;s kill the &ldquo;votereg_old&rdquo; variable permanently:</p>
 
 <pre><code class="r">ds$votereg_old &lt;- NULL
 </code></pre>
@@ -497,7 +493,7 @@ hiddenVariables(ds)
 
 <p>The <code>with(consent(), ...)</code> pattern works everywhere in <code>crunch</code> that requires confirmation to do an action, such as deleting datasets.</p>
 
-<p><a href="array-variables.md">Next: create and manipulate array variables</a></p>
+<p><a href="array-variables.html">Next: create and manipulate array variables</a></p>
 
 </body>
 

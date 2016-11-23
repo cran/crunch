@@ -27,15 +27,15 @@ copyVariable <- function (x, deep=FALSE, ...) {
     stopifnot(is.variable(x))
 
     newbody <- list(...)
-    oldbody <- modifyList(copyVariableReferences(x), tuple(x)@body)
+    oldbody <- modifyList(copyVariableReferences(x), copyVariableReferences(tuple(x)))
     oldbody$name <- paste0(oldbody$name, " (copy)")
     oldbody$alias <- paste0(oldbody$alias, "_copy")
 
     body <- modifyList(oldbody, newbody)
     body$id <- NULL
     if (deep) {
-        if (body$type %in% c("categorical_array", "multiple_response")) {
-            halt("Deep copying of array variables is not implemented.")
+        if (body$type == "multiple_response") {
+            halt("Deep copying of multiple-response variables is not implemented.")
         }
         body$values <- as.vector(x, mode="id")
         if (body$type %in% c("categorical", "categorical_array", "multiple_response")) {
@@ -44,7 +44,9 @@ copyVariable <- function (x, deep=FALSE, ...) {
                 body$subvariables_catalog <- NULL
                 body$subvariables <- lapply(names(subvariables(x)),
                     function (n) list(name=n))
-                ## Format the values?
+                ## Turn values into a matrix, rather than data.frame
+                body$values <- matrix(do.call("c", body$values),
+                    nrow=nrow(body$values))
             }
         } else if (body$type == "datetime") {
             body$resolution <- entity(x)@body$resolution
@@ -63,7 +65,7 @@ copyVariable <- function (x, deep=FALSE, ...) {
 copy <- copyVariable
 
 copyVariableReferences <- function (x, fields=c("name", "alias",
-                                    "description", "discarded", "format",
+                                    "description", "discarded", "format", "notes",
                                     "view", "type")) {
 
     if (inherits(x, "CrunchVariable")) {

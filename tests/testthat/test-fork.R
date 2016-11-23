@@ -1,5 +1,28 @@
 context("Fork and merge")
 
+with_mock_HTTP({
+    ds1 <- loadDataset("test ds")
+    ds2 <- loadDataset("ECON.sav")
+
+    test_that("mergeFork requests", {
+        expect_POST(mergeFork(ds1, ds2),
+            "/api/datasets/1/actions/",
+            '{"element":"shoji:entity",',
+            '"body":{"dataset":"/api/datasets/3/",',
+            '"autorollback":true,"force":false}}')
+        expect_POST(mergeFork(ds1, ds2, autorollback=FALSE),
+            "/api/datasets/1/actions/",
+            '{"element":"shoji:entity",',
+            '"body":{"dataset":"/api/datasets/3/",',
+            '"autorollback":false,"force":false}}')
+        expect_POST(mergeFork(ds1, ds2, force=TRUE),
+            "/api/datasets/1/actions/",
+            '{"element":"shoji:entity",',
+            '"body":{"dataset":"/api/datasets/3/",',
+            '"autorollback":true,"force":true}}')
+    })
+})
+
 with_test_authentication({
     ds <- newDataset(df)
     test_that("Fork catalog exists", {
@@ -52,6 +75,9 @@ with_test_authentication({
     # 0. There's an exclusion, set above.
     # 1. Edit variable metadata
     names(categories(f1$v4))[1:2] <- c("d", "e")
+    ## Add a category
+    categories(f1$v4) <- c(categories(f1$v4),
+        Category(name="F", missing=FALSE, numeric_value=NULL, id=4))
     name(f1$v2) <- "Variable Two"
     description(f1$v3) <- "The third variable in the dataset"
 
@@ -69,8 +95,8 @@ with_test_authentication({
     f1$v7 <- f1$v3 - 6
 
     # 6. Conditionally edit values of categorical variable
-    f1$v4[f1$v8 == 5] <- "e"
-    f1$v4[f1$v8 == 4] <- "e"
+    f1$v4[f1$v8 == 5] <- "F"
+    f1$v4[f1$v8 == 4] <- "F"
 
     # 7. Delete a variable and replace it with one of the same name
     v1copy <- copy(f1$v1, name=name(f1$v1), alias=alias(f1$v1), deep=TRUE)
@@ -87,9 +113,9 @@ with_test_authentication({
         expect_output(exclusion(dataset), "v3 < 11")
         expect_identical(dim(dataset), c(17L, 8L))
         expect_identical(names(na.omit(categories(dataset$v4))),
-            c("d", "e"))
+            c("d", "e", "F"))
         expect_equivalent(as.array(crtabs(~ v4, data=dataset)),
-            array(c(4, 13), dim=2L, dimnames=list(v4=c("d", "e"))))
+            array(c(4, 5, 8), dim=3L, dimnames=list(v4=c("d", "e", "F"))))
         expect_identical(name(dataset$v2), "Variable Two")
         expect_identical(description(dataset$v3),
             "The third variable in the dataset")
@@ -115,5 +141,28 @@ with_test_authentication({
     })
     test_that("Certain changes don't merge", {
         expect_identical(description(ds), "")
+    })
+
+    whereas("Merging from parent to fork", {
+        parent <- newDataset(df)
+        child <- forkDataset(parent)
+
+        names(categories(parent$v4))[1:2] <- c("d", "e")
+        parent$v5 <- NULL
+
+        test_that("Before merging from parent", {
+            expect_identical(names(categories(parent$v4))[1:2], c("d", "e"))
+            expect_identical(names(categories(child$v4))[1:2], c("B", "C"))
+            expect_null(parent$v5)
+            expect_true(is.Datetime(child$v5))
+        })
+
+        test_that("After merging from parent", {
+            child <- mergeFork(child, parent)
+            expect_identical(names(categories(parent$v4))[1:2], c("d", "e"))
+            expect_identical(names(categories(child$v4))[1:2], c("d", "e"))
+            expect_null(parent$v5)
+            expect_null(child$v5)
+        })
     })
 })
