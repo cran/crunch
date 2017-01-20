@@ -345,6 +345,11 @@ filters(ds)[[&quot;Young males&quot;]]
 ## 1 Young males b68e568c205d448c99120e2b72e7d585     FALSE
 </code></pre>
 
+<p>You could also have made the filter with the <code>newFilter</code> function:</p>
+
+<pre><code class="r">f &lt;- newFilter(&quot;Young males&quot;, ds$gender == &quot;Male&quot; &amp; ds$age &lt; 30)
+</code></pre>
+
 <p>This filter is now available for you to use in the web application. If you want to make the filter available to all viewers of the dataset, make it &ldquo;public&rdquo;:</p>
 
 <pre><code class="r">is.public(filters(ds)[[&quot;Young males&quot;]]) &lt;- TRUE

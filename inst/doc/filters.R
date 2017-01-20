@@ -54,6 +54,9 @@ cat(print.young.males1, sep="\n")
 print(filter.catalog.2)
 
 ## ---- eval=FALSE------------------------------------------------------------------------------------------------------
+#  f <- newFilter("Young males", ds$gender == "Male" & ds$age < 30)
+
+## ---- eval=FALSE------------------------------------------------------------------------------------------------------
 #  is.public(filters(ds)[["Young males"]]) <- TRUE
 #  filters(ds)
 
