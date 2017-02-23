@@ -18,45 +18,32 @@ setMethod("filters", "CrunchDataset", function (x) {
 #' @export
 setMethod("filters<-", "CrunchDataset", function (x, value) x)
 
-#' View and modify Filter entity attributes
+#' View and modify "public" attribute
 #'
-#' @param x a CrunchFilter
+#' @param x a Crunch object
 #' @param value an attribute to set
-#' @return For \code{is.public}, a logical value for whether the filter is
+#' @return For \code{is.public}, a logical value for whether the object is
 #' flagged as shared with all dataset viewers. (Its setter thus takes a
-#' logical value as well.)
-#' @name filter-methods
+#' logical value as well.) Catalogs return a vector of logicals corresponding
+#' to the length of the catalog, while entities return a single value.
+#' @name is-public
 #' @aliases is.public<- is.public
 NULL
 
-#' @rdname filter-methods
+#' @rdname is-public
 #' @export
 setMethod("is.public", "CrunchFilter", function (x) x@body$is_public)
 
-#' @rdname filter-methods
+#' @rdname is-public
 #' @export
 setMethod("is.public<-", "CrunchFilter", function (x, value) {
     setEntitySlot(x, "is_public", value)
 })
 
-
-#' @rdname catalog-extract
-#' @export
-setMethod("[[", c("FilterCatalog", "character"), function (x, i, ...) {
-    stopifnot(length(i) == 1)
-    z <- match(i, names(x))
-    if (is.na(z)) {
-        return(NULL)
-    }
-    return(x[[z]])
-})
-
 #' @rdname catalog-extract
 #' @export
 setMethod("[[", c("FilterCatalog", "numeric"), function (x, i, ...) {
-    stopifnot(length(i) == 1)
-    url <- urls(x)[i]
-    return(CrunchFilter(crGET(url)))
+    getEntity(x, i, CrunchFilter, ...)
 })
 
 #' @rdname catalog-extract

@@ -8,6 +8,7 @@ vget <- function (name) {
     ## Return a function you can lapply/vapply to select an attribute
     ## Usage: lapply(list.of.stuff, vget("name"))
     ## instead of: lapply(list.of.stuff, function (x) x$name)
+    ## N.B.: don't use if you're doing lapply(x, FUN) (because the x's will clash)
     return(function (x) x[[name]])
 }
 
@@ -90,6 +91,13 @@ emptyObject <- function (...) {
     ## Make the function take ... so you can *apply over something and just
     ## call the function
     structure(list(), .Names=character(0))
+}
+
+I <- function (x) {
+    ## Because of R deprecation warning:
+    ## Calling 'structure(NULL, *)' is deprecated, as NULL cannot have attributes.
+    if (!is.null(x)) x <- base::I(x)
+    return(x)
 }
 
 null <- function (...) NULL
