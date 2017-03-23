@@ -7,8 +7,8 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.15.0
-Date: 2017-02-22
+Version: 1.15.2
+Date: 2017-03-22
 Authors@R: c(person("Neal", "Richardson", role = c("aut", "cre"),
     email = "neal@crunch.io"))
 Author: Neal Richardson [aut, cre]
@@ -23,6 +23,6 @@ Suggests: knitr, httptest (>= 1.1.0)
 VignetteBuilder: knitr
 RoxygenNote: 6.0.0
 NeedsCompilation: no
-Packaged: 2017-02-22 17:20:00 UTC; neal.richardson
+Packaged: 2017-03-22 23:08:33 UTC; neal.richardson
 Repository: CRAN
-Date/Publication: 2017-02-23 08:31:00
+Date/Publication: 2017-03-23 06:18:07 UTC
