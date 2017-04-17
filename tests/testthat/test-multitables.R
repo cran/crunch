@@ -28,14 +28,14 @@ with_mock_HTTP({
         expect_identical(names(mults), c("My banner", "Shared multitable"))
         ## Note that this PATCHes the entity, not the catalog
         expect_PATCH(names(mults)[2] <- "New name",
-            'api/datasets/1/multitables/4de322/',
+            'https://app.crunch.io/api/datasets/1/multitables/4de322/',
             '{"name":"New name"}')
     })
     test_that("Multitable catalog is.public", {
         expect_identical(is.public(mults), c(FALSE, TRUE))
         ## Note that this PATCHes the entity, not the catalog
         expect_PATCH(is.public(mults)[2] <- FALSE,
-            'api/datasets/1/multitables/4de322/',
+            'https://app.crunch.io/api/datasets/1/multitables/4de322/',
             '{"is_public":false}')
         expect_no_request(is.public(mults)[2] <- TRUE)
     })
@@ -44,27 +44,27 @@ with_mock_HTTP({
     test_that("Multitable object methods", {
         expect_identical(name(m), "My banner")
         expect_PATCH(name(m) <- "Another name",
-            'api/datasets/1/multitables/ed30c4/',
+            'https://app.crunch.io/api/datasets/1/multitables/ed30c4/',
             '{"name":"Another name"}')
         expect_PATCH(is.public(m) <- TRUE,
-            'api/datasets/1/multitables/ed30c4/',
+            'https://app.crunch.io/api/datasets/1/multitables/ed30c4/',
             '{"is_public":true}')
         expect_no_request(is.public(m) <- FALSE)
     })
 
     test_that("newMultitable", {
         expect_POST(newMultitable(~ gender + mymrset, data=ds, name="New multitable"),
-            'api/datasets/1/multitables/',
+            'https://app.crunch.io/api/datasets/1/multitables/',
             '{"element":"shoji:entity","body":{',
             '"name":"New multitable",',
-            '"template":[{"query":[{"variable":"api/datasets/1/variables/gender/"}],',
-            '"variable":"api/datasets/1/variables/gender/"},',
+            '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}],',
+            '"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
             '{"query":[{"function":"selected_array",',
-            '"args":[{"variable":"api/datasets/1/variables/mymrset/"}]},',
-            '{"each":"api/datasets/1/variables/mymrset/"}],',
-            '"variable":"api/datasets/1/variables/mymrset/"}]',
+            '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]},',
+            '{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+            '"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]',
             '}}')
-        with_POST("api/datasets/1/multitables/4de322/", {
+        with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset, data=ds, name="New multitable")
             expect_is(mtable, "Multitable")
         })
@@ -72,17 +72,17 @@ with_mock_HTTP({
 
     test_that("newMultitable provides a default name based on the formula", {
         expect_POST(newMultitable(~ gender + mymrset, data=ds),
-            'api/datasets/1/multitables/',
+            'https://app.crunch.io/api/datasets/1/multitables/',
             '{"element":"shoji:entity","body":{',
             '"name":"gender + mymrset",',
-            '"template":[{"query":[{"variable":"api/datasets/1/variables/gender/"}],',
-            '"variable":"api/datasets/1/variables/gender/"},',
+            '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}],',
+            '"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
             '{"query":[{"function":"selected_array",',
-            '"args":[{"variable":"api/datasets/1/variables/mymrset/"}]},',
-            '{"each":"api/datasets/1/variables/mymrset/"}],',
-            '"variable":"api/datasets/1/variables/mymrset/"}]',
+            '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]},',
+            '{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
+            '"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]',
             '}}')
-        with_POST("api/datasets/1/multitables/4de322/", {
+        with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset, data=ds, name="New multitable")
             expect_is(mtable, "Multitable")
         })
@@ -100,19 +100,20 @@ with_mock_HTTP({
         expect_null(weight(ds))
     })
     test_that("tabBook sets the right request header", {
+        skip("Too much mocking and tracing")
         expect_header(
             expect_POST(tabBook(m, data=ds, format="xlsx"),
-                'api/datasets/1/multitables/ed30c4/tabbook/'),
+                'https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/'),
             "Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         expect_header(
             expect_POST(tabBook(m, data=ds, format="json"),
-                'api/datasets/1/multitables/ed30c4/tabbook/'),
+                'https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/'),
             "Accept: application/json")
     })
 
     ## TODO: test the query shape
 
-    with_POST("api/datasets/1/multitables/tabbook-result.json", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-result.json", {
         book <- tabBook(m, data=ds, format="json")
         test_that("tabBook JSON returns TabBookResult", {
             expect_is(book, "TabBookResult")
@@ -123,11 +124,6 @@ with_mock_HTTP({
             expect_length(book[[1]], 3)
             expect_identical(dim(book), c(2L, 3L))
             expect_is(book[[1]][[1]], "CrunchCube")
-        })
-        test_that("tab book names", {
-            expect_identical(names(book), c("Admit", "Gender"))
-            expect_is(book[["Admit"]], "MultitableResult")
-            expect_null(book[["NOTVALID"]])
         })
         test_that("tab book print methods", {
             ## Print method for MultitableResult cbinds together the Cubes
@@ -164,15 +160,30 @@ with_mock_HTTP({
         ## --> are descriptions coming from backend if they exist?
     })
 
-    with_POST("api/datasets/1/multitables/tabbook-array-result.json", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-array-result.json", {
         book <- tabBook(m, data=ds, format="json")
         test_that("tabBook JSON with arrays returns TabBookResult", {
             expect_is(book, "TabBookResult")
             expect_identical(dim(book), c(3L, 3L))
-            expect_identical(names(book),
-                c("quarter", "categorical_array", "mymrset"))
             expect_identical(prop.table(book, 2)[[2]][[2]],
                 prop.table(book[[2]][[2]], 2))
+        })
+    })
+
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook.json", {
+        ## This mock was taken from the integration test below
+        book <- tabBook(m, data=ds)
+        test_that("tabBook from apidocs dataset (mock)", {
+            expect_is(book, "TabBookResult")
+            expect_identical(dim(book), c(9L, 3L))
+            expect_identical(prop.table(book, 2)[[2]][[2]],
+                prop.table(book[[2]][[2]], 2))
+        })
+        test_that("tab book names", {
+            expect_identical(names(book)[1:4],
+                c("All pets owned", "Pet", "Pets by location", "Number of dogs"))
+            expect_is(book[["Pet"]], "MultitableResult")
+            expect_null(book[["NOTVALID"]])
         })
     })
 })
@@ -228,5 +239,7 @@ with_test_authentication({
         skip_locally("Vagrant host doesn't serve files correctly")
         book <- tabBook(mult, data=ds, format="json")
         expect_is(book, "TabBookResult")
+        expect_identical(dim(book), c(ncol(ds), 3L))
+        expect_identical(names(book), names(variables(ds)))
     })
 })

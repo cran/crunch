@@ -39,18 +39,52 @@ with_mock_HTTP({
         expect_is(rollup(v), "CrunchExpr")
         expect_identical(zcl(rollup(v)),
             list(`function`="rollup",
-                args=list(list(variable="api/datasets/1/variables/starttime/"),
+                args=list(list(variable="https://app.crunch.io/api/datasets/1/variables/starttime/"),
                 list(value="s"))))
         expect_is(rollup(v, resolution="Y"), "CrunchExpr")
         expect_identical(zcl(rollup(v, resolution="Y")),
             list(`function`="rollup",
-                args=list(list(variable="api/datasets/1/variables/starttime/"),
+                args=list(list(variable="https://app.crunch.io/api/datasets/1/variables/starttime/"),
                 list(value="Y"))))
         expect_is(rollup(v, resolution=NULL), "CrunchExpr")
         expect_identical(zcl(rollup(v, resolution=NULL)),
             list(`function`="rollup",
-                args=list(list(variable="api/datasets/1/variables/starttime/"),
+                args=list(list(variable="https://app.crunch.io/api/datasets/1/variables/starttime/"),
                 list(value=NULL))))
+    })
+
+    test_that("formulaToCubeQuery", {
+        expect_identical(formulaToCubeQuery(mean(birthyr) ~ gender, data=ds),
+            list(
+                dimensions=list(zcl(ds$gender)),
+                measures=list(mean=zfunc("cube_mean", ds$birthyr))
+            ))
+        expect_identical(formulaToCubeQuery( ~ gender, data=ds),
+            list(
+                dimensions=list(zcl(ds$gender)),
+                measures=list(count=zfunc("cube_count"))
+            ))
+        expect_identical(formulaToCubeQuery(n() ~ gender, data=ds),
+            list(
+                dimensions=list(zcl(ds$gender)),
+                measures=list(count=zfunc("cube_count"))
+            ))
+        expect_identical(formulaToCubeQuery(list(mean(birthyr), n()) ~ gender, data=ds),
+            list(
+                dimensions=list(zcl(ds$gender)),
+                measures=list(
+                    mean=zfunc("cube_mean", ds$birthyr),
+                    count=zfunc("cube_count"))
+            ))
+    })
+    test_that("formulaToCubeQuery preserves measure names", {
+        expect_identical(formulaToCubeQuery(list(avg=mean(birthyr), cts=n()) ~ gender, data=ds),
+            list(
+                dimensions=list(zcl(ds$gender)),
+                measures=list(
+                    avg=zfunc("cube_mean", ds$birthyr),
+                    cts=zfunc("cube_count"))
+            ))
     })
 })
 

@@ -118,8 +118,19 @@ setMethod("dim", "TabBookResult", function (x) {
 #' @rdname tabbook-methods
 #' @export
 setMethod("names", "TabBookResult", function (x) {
-    unlist(lapply(x, function (s) s$sheet_name))
+    unlist(lapply(x$meta$sheets, function (sheet) sheet$name))
 })
+#' @rdname tabbook-methods
+#' @export
+setMethod("aliases", "TabBookResult", function (x) {
+    unlist(lapply(x, function (mt) aliases(mt[[1]])[1]), use.names=FALSE)
+})
+#' @rdname tabbook-methods
+#' @export
+setMethod("descriptions", "TabBookResult", function (x) {
+    unlist(lapply(x, function (mt) descriptions(mt[[1]])[1]), use.names=FALSE)
+})
+
 setMethod("lapply", "TabBookResult", function (X, FUN, ...) {
     lapply(X$sheets, FUN, ...)
 })
@@ -141,7 +152,20 @@ setMethod("initialize", "MultitableResult", function (.Object, ...) {
                 name="Total"
             )
         )))
-    .Object$result <- lapply(.Object$result, CrunchCube)
+    .Object$result <- lapply(.Object$result, function (cube) {
+        cube <- CrunchCube(cube)
+        ## If cubes are 3D (categorical array x multitable), aperm the cubes so
+        ## that column is multitable var (3 -> 2), row is category of
+        ## array (2 -> 1), subvar is "tab" (1 -> 3)
+        if (length(dim(cube)) == 3L) {
+            ## TODO: CubeDims should get a [ method
+            ## TODO: CrunchCube should get a dimensions<-
+            cube@dims <- CubeDims(dimensions(cube)[c(2, 3, 1)],
+                references=dimensions(cube)@references[c(2, 3, 1)])
+            cube@arrays <- lapply(cube@arrays, aperm, perm=c(2, 3, 1))
+        }
+        return(cube)
+    })
     return(.Object)
 })
 #' @rdname tabbook-methods
@@ -155,12 +179,33 @@ setMethod("[[", "MultitableResult", function (x, i, ...) {
 setMethod("lapply", "MultitableResult", function (X, FUN, ...) {
     lapply(X$result, FUN, ...)
 })
+#' @rdname tabbook-methods
+#' @export
+setMethod("names", "MultitableResult", function (x) {
+    unlist(lapply(x, function (cube) names(cube)[2]), use.names=FALSE)
+})
+#' @rdname tabbook-methods
+#' @export
+setMethod("aliases", "MultitableResult", function (x) {
+    unlist(lapply(x, function (cube) aliases(cube)[2]), use.names=FALSE)
+})
+#' @rdname tabbook-methods
+#' @export
+setMethod("descriptions", "MultitableResult", function (x) {
+    unlist(lapply(x, function (cube) descriptions(cube)[2]), use.names=FALSE)
+})
 
 #' @rdname show-crunch
 #' @export
 setMethod("show", "MultitableResult", function (object) {
     show(do.call("cbind", lapply(object, cubeToArray)))
 })
+
+#' @export
+as.array.TabBookResult <- function (x, ...) lapply(x, as.array)
+
+#' @export
+as.array.MultitableResult <- function (x, ...) lapply(x, as.array)
 
 #' @rdname cube-computing
 #' @export
