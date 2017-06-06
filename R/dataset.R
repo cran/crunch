@@ -88,6 +88,49 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
     invisible(setEntitySlot(x, "notes", value))
 })
 
+
+#' Get and set the primary key for a Crunch dataset
+#'
+#' A primary key is a variable in a dataset that has a unique value for every 
+#' row. A variable must be either numeric or text type and have no duplicate or
+#' missing values. A primary key on a dataset causes updates to that dataset
+#' that have the rows with the same primary key value(s) as the first dataset 
+#' to update the existing rows rather than inserting new ones.
+#'
+#' @param x a Dataset
+#' @param value For the setter, a single Variable to use as the primary key or `NULL` to remove the primary key.
+#' @return Getter returns the Variable object that is used as the primary key (`NULL` if there is no primary key); setter
+#' returns \code{x} duly modified.
+#' @name pk
+#' @aliases pk pk<-
+NULL 
+
+#' @rdname pk
+#' @export
+setMethod("pk", "CrunchDataset", function (x)  {
+    pk <- ShojiEntity(crGET(shojiURL(x, "fragments", "pk")))$pk
+    if (length(pk)) {
+        return(x[[pk[[1]]]])
+    } else {
+        return(NULL)
+    }
+})
+#' @rdname pk
+#' @export
+setMethod("pk<-", "CrunchDataset", function (x, value) {
+    if (is.null(value)) {
+        crDELETE(shojiURL(x, "fragments", "pk"))
+    } else {
+        # payload <- toJSON(structure(list(structure(list(self(value)))),
+                                    # .Names="pk"))
+        payload <- toJSON(list(pk=I(self(value))))
+        crPOST(shojiURL(x, "fragments", "pk"), body=payload)        
+    }
+
+    invisible(x)
+})
+
+
 trimISODate <- function (x) {
     ## Drop time from datestring if it's only a date
     if (is.character(x) && nchar(x) > 10 && endsWith(x, "T00:00:00+00:00")) {
@@ -190,7 +233,7 @@ setMethod("refresh", "CrunchDataset", function (x) {
 #' for datasets and \code{\link{hide}} for variables.
 #'
 #' Deleting requires confirmation. In an interactive session, you will be asked
-#' to confirm. To avoid that prompt, or to delete objects from a 
+#' to confirm. To avoid that prompt, or to delete objects from a
 #' non-interactive session, wrap the call in \code{\link{with_consent}} to give
 #' your permission to delete.
 #'
@@ -414,9 +457,9 @@ publish <- function (x) {
 #' list of settings supported throughout the Crunch system. Clients may also
 #' provide and use custom settings if they choose.
 #' @param x CrunchDataset
-#' @param value A settings object (\code{ShojiEntity}), for the setter
-#' @return The getter returns a settings object (\code{ShojiEntity}). The setter
-#' returns the dataset (\code{x}).
+#' @param value A settings object (`ShojiEntity`), for the setter
+#' @return The getter returns a settings object (`ShojiEntity`). The setter
+#' returns the dataset (`x`).
 #' @examples
 #' \dontrun{
 #' settings(ds)
@@ -435,3 +478,36 @@ settings <- function (x) {
     updateEntity(settings(x), value)
     return(x)
 }
+
+#' View or set a dashboard URL
+#'
+#' You can designate a dashboard that will show when the dataset is loaded in
+#' the Crunch web app. This dashboard could be a Crunch Shiny ("Crunchy") app,
+#' a CrunchBox, or something else.
+#'
+#' @param x CrunchDataset
+#' @param value For the setter, a URL (character) or `NULL` to unset the
+#' dashboard.
+#' @return The getter returns a URL (character) or `NULL`. The setter
+#' returns the dataset (`x`).
+#' @examples
+#' \dontrun{
+#' dashboard(ds) <- "https://shiny.crunch.io/example/"
+#' }
+#' @export
+dashboard <- function (x) {
+    stopifnot(is.dataset(x))
+    app_settings <- x@body[["app_settings"]] %||% list()
+    whaam <- app_settings[["whaam"]] %||% list()
+    return(whaam[["dashboardUrl"]])
+}
+
+#' @rdname dashboard
+#' @export
+setDashboardURL <- function (x, value) {
+    setEntitySlot(x, "app_settings", list(whaam=list(dashboardUrl=value)))
+}
+
+#' @rdname dashboard
+#' @export
+"dashboard<-" <- setDashboardURL

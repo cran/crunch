@@ -23,7 +23,13 @@
 #' datasets(proj) <- ds
 #' }
 datasets <- function (x=getAPIRoot()) {
-    DatasetCatalog(crGET(shojiURL(x, "catalogs", "datasets")))
+    if (inherits(x, "SearchResults")) {
+        ## This is close enough to a dataset catalog
+        out <- structure(list(index=x$datasets), class="shoji")
+    } else {
+        out <- crGET(shojiURL(x, "catalogs", "datasets"))
+    }
+    DatasetCatalog(out)
 }
 
 #' Show the names of all Crunch datasets
@@ -58,7 +64,8 @@ selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
     }
     if (is.null(project)) {
         ## Means a project was specified (like by name) but it didn't exist
-        halt("Project ", deparse(eval.parent(Call$project))[1], " is not valid")
+        halt("Project ", deparseAndFlatten(eval.parent(Call$project)),
+            " is not valid")
     }
 
     if (refresh) {
