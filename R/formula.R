@@ -30,7 +30,11 @@ formulaToQuery <- function (formula, data) {
     ## Evaluate the formula's terms in order to catch derived expressions
     v.call <- do.call(substitute,
         list(expr=f.vars, env=registerCubeFunctions(all.f.vars)))
-    vars <- eval(v.call, as.environment(data), environment(formula))
+    if (missing(data)) {
+        vars <- eval(v.call, NULL, environment(formula))
+    } else {
+        vars <- eval(v.call, as.environment(data), environment(formula))
+    }
 
     ## Validate that vars are non-null
     nullvars <- vapply(vars, is.null, logical(1))
@@ -174,6 +178,11 @@ varToDim <- function (x) {
         ## Pseudo-ZCL from registerCubeFunctions, used to compute MR by subvar
         ## x is thus list(`function`="as_selected", args=list(list(variable=self)))
         return(list(list(each=x$args[[1]]$variable), zfunc("as_selected", x$args[[1]])))
+    } else if (is.CrunchExpr(x)) {
+        ## Give a name and alias "references"
+        ref <- formatExpression(x)
+        v$references <- list(name=ref, alias=ref)
+        return(list(v))
     } else {
         ## Just the var ref, but nest in a list so we can unlist to flatten
         return(list(v))

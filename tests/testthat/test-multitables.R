@@ -33,11 +33,34 @@ with_mock_crunch({
     })
     test_that("Multitable catalog is.public", {
         expect_identical(is.public(mults), c(FALSE, TRUE))
+        expect_identical(is.public(mults[[1]]), FALSE)
+        expect_identical(is.public(mults[[2]]), TRUE)
         ## Note that this PATCHes the entity, not the catalog
         expect_PATCH(is.public(mults)[2] <- FALSE,
             'https://app.crunch.io/api/datasets/1/multitables/4de322/',
             '{"is_public":false}')
         expect_no_request(is.public(mults)[2] <- TRUE)
+    })
+
+    test_that("Multitable delete requires consent", {
+        expect_error(delete(mults[["Shared multitable"]]),
+                     "Must confirm deleting multitable")
+        expect_error(mults[["Shared multitable"]] <- NULL,
+                     "Must confirm deleting multitable")
+    })
+
+    with(consent(), {
+        test_that("Multitable delete", {
+            expect_DELETE(delete(mults[["Shared multitable"]]),
+                          'https://app.crunch.io/api/datasets/1/multitables/4de322/')
+            expect_DELETE(multitables(ds)[["Shared multitable"]] <- NULL,
+                          "https://app.crunch.io/api/datasets/1/multitables/4de322/" )
+            expect_DELETE(multitables(ds)[[2]] <- NULL,
+                          "https://app.crunch.io/api/datasets/1/multitables/4de322/" )
+            expect_silent(multitables(ds)[[999]] <- NULL)
+            expect_error(multitables(ds)[[list(1)]] <- NULL, "invalid subscript type 'list'")
+            expect_error(multitables(ds)[[2i]] <- NULL, "invalid subscript type 'complex'")
+        })
     })
 
     m <- mults[[1]]
@@ -57,14 +80,11 @@ with_mock_crunch({
                                   name="New multitable"),
             'https://app.crunch.io/api/datasets/1/multitables/',
             '{"element":"shoji:entity","body":{',
-            '"name":"New multitable",',
-            '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}],',
-            '"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+            '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
             '{"query":[{"function":"selected_array",',
             '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]},',
-            '{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
-            '"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]',
-            '}}')
+            '{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}]',
+            ',"name":"New multitable"}}')
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset, data=ds,
                                     name="New multitable")
@@ -76,21 +96,18 @@ with_mock_crunch({
         expect_POST(newMultitable(~ gender + mymrset, data=ds),
             'https://app.crunch.io/api/datasets/1/multitables/',
             '{"element":"shoji:entity","body":{',
-            '"name":"gender + mymrset",',
-            '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}],',
-            '"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+            '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
             '{"query":[{"function":"selected_array",',
             '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]},',
-            '{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}],',
-            '"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]',
-            '}}')
+            '{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}]',
+            ',"name":"gender + mymrset"}}')
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset, data=ds,
                                     name="New multitable")
             expect_is(mtable, "Multitable")
         })
     })
-    
+
     test_that("importMultitable", {
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset, data=ds,
@@ -99,22 +116,47 @@ with_mock_crunch({
         })
         expect_POST(importMultitable(ds, mtable, name='copied_multitable'),
                     'https://app.crunch.io/api/datasets/1/multitables/',
-                    '{"element":"shoji:entity","body":{', 
+                    '{"element":"shoji:entity","body":{',
                     '"multitable":"https://app.crunch.io/api/datasets/1/multitables/4de322/",',
                     '"name":"copied_multitable"}}')
     })
-    
+
     test_that("multitable show method", {
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset, data=ds,
                                     name="Shared multitable")
             expect_is(mtable, "Multitable")
         })
-        expect_output(mtable, 
+        expect_output(mtable,
                       paste(paste0("Multitable ", dQuote("Shared multitable")),
                                    "Column variables:",
                                    "  gender",
                                    "  mymrset", sep="\n"))
+    })
+
+    test_that("multitable list methods", {
+        expect_POST(multitables(ds)[["mt again"]] <- ~ gender + birthyr,
+                    "https://app.crunch.io/api/datasets/1/multitables/",
+                    '{"element":"shoji:entity","body":',
+                    '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
+                    '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
+                    ',"name":"mt again"}}'
+                    )
+        expect_PATCH(multitables(ds)[["Shared multitable"]] <- ~ gender + birthyr,
+                    "https://app.crunch.io/api/datasets/1/multitables/4de322/",
+                    '{"element":"shoji:entity","body":',
+                    '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
+                    '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
+                    '}}'
+        )
+        expect_PATCH(multitables(ds)[[2]] <- ~ gender + birthyr,
+                     "https://app.crunch.io/api/datasets/1/multitables/4de322/",
+                     '{"element":"shoji:entity","body":',
+                     '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
+                     '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
+                     '}}'
+        )
+        expect_error(multitables(ds)[[999]] <- ~ gender + birthyr, "subscript out of bounds: 999")
     })
 
     test_that("newMultitable validation", {
@@ -141,7 +183,7 @@ with_mock_crunch({
 
     ## TODO: test the query shape
 
-    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-result.json", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-result/", {
         book <- tabBook(m, data=ds, format="json")
         test_that("tabBook JSON returns TabBookResult", {
             expect_is(book, "TabBookResult")
@@ -188,7 +230,7 @@ with_mock_crunch({
         ## --> are descriptions coming from backend if they exist?
     })
 
-    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-array-result.json", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-array-result/", {
         book <- tabBook(m, data=ds, format="json")
         test_that("tabBook JSON with arrays returns TabBookResult", {
             expect_is(book, "TabBookResult")
@@ -198,7 +240,7 @@ with_mock_crunch({
         })
     })
 
-    with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook.json", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
         ## This mock was taken from the integration test below
         book <- tabBook(m, data=ds)
         test_that("tabBook from apidocs dataset (mock)", {
@@ -231,6 +273,23 @@ with_test_authentication({
                                               "Column variables:",
                                               "  selected_array(allpets)",
                                               "  q1"))
+    })
+
+    test_that("Can make a multitable with list methods", {
+        multitables(ds)[["new mt"]] <- ~ country + q3
+        expect_identical(getShowContent(multitables(ds)[["new mt"]]),
+                         c(paste0("Multitable ", dQuote("new mt")),
+                                  "Column variables:",
+                                  "  country",
+                                  "  q3"))
+        multitables(ds)[["new mt"]] <- ~ country + q1
+        expect_identical(getShowContent(multitables(ds)[["new mt"]]),
+                         c(paste0("Multitable ", dQuote("new mt")),
+                           "Column variables:",
+                           "  country",
+                           "  q1"))
+        with_consent(multitables(ds)[["new mt"]] <- NULL)
+        expect_false("new mt" %in% names(multitables(refresh(ds))))
     })
 
     mult <- multitables(ds)[["allpets + q1"]]
@@ -272,10 +331,20 @@ with_test_authentication({
                                               "  selected_array(allpets)",
                                               "  q1"))
     })
-    
+
     test_that("importMultitable works without a name", {
         m <- importMultitable(ds2, mult)
         expect_identical(name(m), "Yet another name")
+    })
+
+    mults <- multitables(ds2)
+    with(consent(), {
+        test_that("Multitable delete", {
+            delete(mults[["Yet another name"]])
+            expect_equal(length(multitables(refresh(ds2))), 1)
+            expect_true(!"Yet another name" %in% names(multitables(ds2)))
+            expect_equal(names(multitables(ds2)), "copied_multitable")
+        })
     })
 
     test_that("We can get an xlsx tab book", {
@@ -287,7 +356,7 @@ with_test_authentication({
 
     test_that("We can get an json tab book", {
         skip_locally("Vagrant host doesn't serve files correctly")
-        book <- tabBook(mult, data=ds, format="json")
+        book <- tabBook(mult, data=ds)
         expect_is(book, "TabBookResult")
         expect_identical(dim(book), c(ncol(ds), 3L))
         expect_identical(names(book), names(variables(ds)))

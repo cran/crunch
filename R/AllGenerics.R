@@ -42,6 +42,12 @@ setGeneric("notes<-", function (x, value) standardGeneric("notes<-"),
     signature="x")
 setGeneric("pk", function (x) standardGeneric("pk"))
 setGeneric("pk<-", function (x, value) standardGeneric("pk<-"))
+setGeneric("digits", function (x) standardGeneric("digits"))
+setGeneric("digits<-", function (x, value) standardGeneric("digits<-"))
+setGeneric("geo", function (x) standardGeneric("geo"))
+setGeneric("geo<-", function (x, value) standardGeneric("geo<-"))
+setGeneric("fetchGeoFile", function (x) standardGeneric("fetchGeoFile"))
+
 
 setGeneric("types", function (x) standardGeneric("types"))
 setGeneric("timestamps", function (x) standardGeneric("timestamps"))
@@ -62,6 +68,9 @@ setGeneric("subvariables<-",
 setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
 setGeneric("hide", function (x) standardGeneric("hide"))
 setGeneric("unhide", function (x) standardGeneric("unhide"))
+setGeneric("derivation", function (x) standardGeneric("derivation"))
+setGeneric("derivation<-", function (x, value) standardGeneric("derivation<-"))
+
 
 setGeneric("urls", function (x) standardGeneric("urls"))
 setGeneric("self", function (x) standardGeneric("self"))
@@ -107,6 +116,8 @@ setGeneric("is.draft", function (x) standardGeneric("is.draft"))
 setGeneric("is.draft<-", function (x, value) standardGeneric("is.draft<-"))
 setGeneric("is.published", function (x) standardGeneric("is.published"))
 setGeneric("is.published<-", function (x, value) standardGeneric("is.published<-"))
+setGeneric("is.derived", function (x) standardGeneric("is.derived"))
+setGeneric("is.derived<-", function (x, value) standardGeneric("is.derived<-"))
 setGeneric("groupClass", function (x) standardGeneric("groupClass"))
 setGeneric("entityClass", function (x) standardGeneric("entityClass"))
 setGeneric("entitiesInitializer", function (x) standardGeneric("entitiesInitializer"))
@@ -154,7 +165,7 @@ setGeneric("lapply")
 setGeneric("is.na")
 setGeneric("is.na<-")
 setGeneric("%in%")
-setGeneric("write.csv")
+setGeneric("write.csv", function(x, ...) utils::write.csv(x, ...))
 setGeneric("duplicated")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))
@@ -189,3 +200,18 @@ setGeneric("getShowContent",
     ## Backstop error so you don't get "Object of class S4 is not subsettable"
     halt(paste("Cannot update", class(x), "with type", class(value)))
 }
+
+
+# for ggplot to not copmlain when given crunchdata
+#' Fortify crunch objects for use with ggplot
+#'
+#' @param model model or other R object to convert to data frame
+#' @param data original dataset, if needed
+#' @param ... other arguments passed to methods
+#' @name fortify
+#' @export
+fortify.CrunchDataFrame <- function(model, data, ...) model
+
+#' @rdname fortify
+#' @export
+fortify.CrunchDataset <- function(model, data, ...) model
