@@ -201,11 +201,6 @@ hr {
 </head>
 
 <body>
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Array Variables}
--->
-
 <p><a href="variables.html">Previous: variables</a></p>
 
 <h1>Array Variables</h1>
@@ -223,8 +218,8 @@ hr {
 <pre><code class="r">grep(&quot;^imiss_&quot;, names(ds), value=TRUE)
 </code></pre>
 
-<pre><code>##  [1] &quot;imiss_c&quot; &quot;imiss_q&quot; &quot;imiss_j&quot; &quot;imiss_r&quot; &quot;imiss_t&quot; &quot;imiss_m&quot; &quot;imiss_d&quot;
-##  [8] &quot;imiss_f&quot; &quot;imiss_p&quot; &quot;imiss_h&quot; &quot;imiss_s&quot; &quot;imiss_g&quot; &quot;imiss_b&quot;
+<pre><code>##  [1] &quot;imiss_b&quot; &quot;imiss_c&quot; &quot;imiss_d&quot; &quot;imiss_f&quot; &quot;imiss_g&quot; &quot;imiss_h&quot; &quot;imiss_j&quot;
+##  [8] &quot;imiss_m&quot; &quot;imiss_p&quot; &quot;imiss_q&quot; &quot;imiss_r&quot; &quot;imiss_s&quot; &quot;imiss_t&quot;
 </code></pre>
 
 <p>These correspond to a survey grid question about how important respondents view a set of issues. Examining one of them, we see</p>
@@ -483,8 +478,8 @@ ds &lt;- refresh(ds)
 <pre><code class="r">grep(&quot;boap&quot;, names(ds), value=TRUE)
 </code></pre>
 
-<pre><code>##  [1] &quot;boap_3&quot;  &quot;boap_11&quot; &quot;boap_6&quot;  &quot;boap_2&quot;  &quot;boap_4&quot;  &quot;boap_14&quot; &quot;boap_9&quot; 
-##  [8] &quot;boap_5&quot;  &quot;boap_12&quot; &quot;boap_13&quot; &quot;boap_7&quot;  &quot;boap_10&quot; &quot;boap_8&quot;
+<pre><code>##  [1] &quot;boap_2&quot;  &quot;boap_3&quot;  &quot;boap_4&quot;  &quot;boap_5&quot;  &quot;boap_6&quot;  &quot;boap_7&quot;  &quot;boap_8&quot; 
+##  [8] &quot;boap_9&quot;  &quot;boap_10&quot; &quot;boap_11&quot; &quot;boap_12&quot; &quot;boap_13&quot; &quot;boap_14&quot;
 </code></pre>
 
 <p><a href="variable-order.html">Next: variable organization</a></p>

@@ -7,7 +7,7 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.18.0
+Version: 1.18.4
 Authors@R: c(
     person("Neal", "Richardson", role=c("aut", "cre"), email="neal@crunch.io"),
     person("Jonathan", "Keane", role="ctb", email="jon.keane@crunch.io"),
@@ -16,9 +16,10 @@ URL: https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)
 Depends: R (>= 3.0.0)
-Imports: httr (>= 1.0.0), httpcache (>= 0.1.4), jsonlite (>= 0.9.15),
-        methods, curl
-Suggests: covr, devtools, httptest (>= 2.0.0), knitr
+Imports: curl, grDevices, httr (>= 1.0.0), httpcache (>= 0.1.4),
+        jsonlite (>= 0.9.15), methods
+Suggests: covr, devtools, httptest (>= 2.0.0), knitr, rmarkdown,
+        rstudioapi, spelling
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
@@ -29,7 +30,7 @@ Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'compare-datasets.R' 'compare-subvariables.R'
         'compare-variables.R' 'compare.R' 'consent.R'
         'context-manager.R' 'copy.R' 'crunch.R' 'crunchbox.R'
-        'cube-dims.R' 'cube-query.R' 'cube-result.R'
+        'cube-dims.R' 'cube-query.R' 'cube-result.R' 'cut.R'
         'dataset-catalog.R' 'dataset-extract.R' 'dataset-order.R'
         'dataset-stream.R' 'dataset-update.R' 'dataset.R'
         'dichotomize.R' 'drop-rows.R' 'edit-lock.R' 'export-dataset.R'
@@ -47,10 +48,10 @@ Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'variable-to-R.R' 'variable-type.R' 'variable-update.R'
         'variable.R' 'versions.R' 'weight.R' 'zcl.R'
 NeedsCompilation: no
-Packaged: 2017-08-21 23:11:40 UTC; neal.richardson
+Packaged: 2017-10-12 05:05:34 UTC; neal.richardson
 Author: Neal Richardson [aut, cre],
   Jonathan Keane [ctb],
   Gordon Shotwell [ctb]
 Maintainer: Neal Richardson <neal@crunch.io>
 Repository: CRAN
-Date/Publication: 2017-08-23 04:59:18 UTC
+Date/Publication: 2017-10-12 14:03:48 UTC

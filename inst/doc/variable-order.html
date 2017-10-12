@@ -201,11 +201,6 @@ hr {
 </head>
 
 <body>
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Variable Order}
--->
-
 <p><a href="array-variables.html">Previous: array variables</a></p>
 
 <h1>Variable Order and Organization</h1>
@@ -320,7 +315,6 @@ hr {
 ##     manningknowledge
 ##     manningfavorability
 ##     manningguilt
-##     manningpenalty
 </code></pre>
 
 <p>Groups can be created with several kinds of inputs. You can specify a vector or list of variable references (URLs), as returned from the <code>self</code> method of variables. That list of references may also contain <code>VariableGroup</code> objects as well, which will nest those Groups inside the Group you&#39;re creating (see &ldquo;Nested Groups&rdquo; below). You can also provide a list of variable entities or, as in this example, a subset of a dataset entity (which can be thought of as a list of variables).</p>
@@ -368,6 +362,7 @@ ordering(ds)
 <pre><code>## [+] Tracking questions
 ##     newsint2
 ##     Direction of country
+##     manningpenalty
 ##     Issue importance
 ##     imissf
 ##     obamaapp
@@ -381,7 +376,6 @@ ordering(ds)
 ##     manningknowledge
 ##     manningfavorability
 ##     manningguilt
-##     manningpenalty
 ##     [+] Snowden
 ##         Favorability of Edward Snowden
 ##         Approval of Snowden&#39;s Leak

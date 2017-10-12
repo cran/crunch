@@ -201,11 +201,6 @@ hr {
 </head>
 
 <body>
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Variables: cleaning and defining metadata}
--->
-
 <p><a href="datasets.html">Previous: create and load datasets</a></p>
 
 <h1>Manipulating variables within datasets</h1>
@@ -348,7 +343,7 @@ head(names(variables(ds)), 10)
 
 <h2>Categorical variables</h2>
 
-<p>Many variables in survey data are categorial: respondents have a finite set of answers to the survey question, and the answers are first and foremost of a nominal, not quantitative nature. In R, this data type is represented as a <code>factor</code>. The response options, are contained in the factor&#39;s &ldquo;levels&rdquo; as a character vector. Manipulation of these levels is limited and often challenging.</p>
+<p>Many variables in survey data are categorical: respondents have a finite set of answers to the survey question, and the answers are first and foremost of a nominal, not quantitative nature. In R, this data type is represented as a <code>factor</code>. The response options, are contained in the factor&#39;s &ldquo;levels&rdquo; as a character vector. Manipulation of these levels is limited and often challenging.</p>
 
 <p>In Crunch, categorical variables&#39; &ldquo;categories&rdquo; are objects with richer metadata.</p>
 
@@ -370,7 +365,7 @@ head(names(variables(ds)), 10)
 
 <h3>Category attributes</h3>
 
-<p>Categories have <code>names</code>, the factor&#39;s levels; numeric <code>values</code> which can be used when interpreting the categorical variable as numeric; and <code>ids</code>, which are analogous to the integer values that underly an R factor. Categories also have their own &ldquo;missing&rdquo; status. Indeed, because Crunch supports more complex missing value support than does R, multiple categories can be marked as missing: there&#39;s not a single &ldquo;NA&rdquo; value.</p>
+<p>Categories have <code>names</code>, the factor&#39;s levels; numeric <code>values</code> which can be used when interpreting the categorical variable as numeric; and <code>ids</code>, which are analogous to the integer values that underlie an R factor. Categories also have their own &ldquo;missing&rdquo; status. Indeed, because Crunch supports more complex missing value support than does R, multiple categories can be marked as missing: there&#39;s not a single &ldquo;NA&rdquo; value.</p>
 
 <pre><code class="r">names(categories(track.var))
 </code></pre>

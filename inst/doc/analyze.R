@@ -71,7 +71,7 @@ class(tab3mr)
 round(100*prop.table(tab3mr, 2))
 
 ## ---- eval=FALSE------------------------------------------------------------------------------------------------------
-#  crtabs(~ imiss$Education + gender, data=ds)
+#  crtabs(~ imiss$imiss_f + gender, data=ds)
 
 ## ---- echo=FALSE------------------------------------------------------------------------------------------------------
 tab3subvar

@@ -201,11 +201,6 @@ hr {
 </head>
 
 <body>
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Working with filters}
--->
-
 <p><a href="analyze.html">Previous: analyzing data</a></p>
 
 <h1>Working with Filters</h1>
@@ -231,6 +226,7 @@ dems
 ## 
 ## $newsint2: newsint2 (categorical)
 ## $track: Direction of country (categorical)
+## $manningpenalty: manningpenalty (categorical)
 ## $imiss: Issue importance (multiple_response)
 ## $imissf: imissf (categorical)
 ## $obamaapp: obamaapp (categorical)
@@ -243,7 +239,6 @@ dems
 ## $manningknowledge: manningknowledge (categorical)
 ## $manningfavorability: manningfavorability (categorical)
 ## $manningguilt: manningguilt (categorical)
-## $manningpenalty: manningpenalty (categorical)
 ## $snowdenfav: Favorability of Edward Snowden (categorical)
 ## $snowdenleakapp: Approval of Snowden&#39;s Leak (categorical)
 ## $snowdenpros: Support for Prosecution of Snowden (categorical)
@@ -333,7 +328,7 @@ filters(ds)[[&quot;Young males&quot;]]
 </code></pre>
 
 <pre><code>## Crunch filter “Young males”
-## Expression: gender == &quot;Male&quot; &amp; age &lt; 30L
+## Expression: gender == &quot;Male&quot; &amp; age &lt; 30
 </code></pre>
 
 <p>This new filter now appears in our filter catalog.</p>
@@ -342,7 +337,7 @@ filters(ds)[[&quot;Young males&quot;]]
 </code></pre>
 
 <pre><code>##          name                               id is_public
-## 1 Young males b68e568c205d448c99120e2b72e7d585     FALSE
+## 1 Young males 1b94c602c6cf49759566082fde3662aa     FALSE
 </code></pre>
 
 <p>You could also have made the filter with the <code>newFilter</code> function:</p>
@@ -357,7 +352,7 @@ filters(ds)
 </code></pre>
 
 <pre><code>##          name                               id is_public
-## 1 Young males b68e568c205d448c99120e2b72e7d585      TRUE
+## 1 Young males 1b94c602c6cf49759566082fde3662aa      TRUE
 </code></pre>
 
 <p>You can also edit the filter expressions by assigning a new one in, like:</p>
@@ -367,7 +362,7 @@ filters(ds)[[&quot;Young males&quot;]]
 </code></pre>
 
 <pre><code>## Crunch filter “Young males”
-## Expression: gender == &quot;Male&quot; &amp; age &lt; 35L
+## Expression: gender == &quot;Male&quot; &amp; age &lt; 35
 </code></pre>
 
 <h2>Exclusion filters</h2>
@@ -384,7 +379,7 @@ filters(ds)[[&quot;Young males&quot;]]
 exclusion(ds)
 </code></pre>
 
-<pre><code>## Crunch logical expression: perc_skipped &gt; 15L
+<pre><code>## Crunch logical expression: perc_skipped &gt; 15
 </code></pre>
 
 <pre><code class="r">dim(ds)

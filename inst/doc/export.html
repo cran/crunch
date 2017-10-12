@@ -201,11 +201,6 @@ hr {
 </head>
 
 <body>
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Downloading and exporting data}
--->
-
 <p><a href="filter.html">Previous: filtering data</a></p>
 
 <h1>Downloading and exporting data</h1>
@@ -310,6 +305,8 @@ is.data.frame(df)
 
 <pre><code class="r">write.csv(ds[ds$pid3 == &quot;Democrat&quot;, c(&quot;age&quot;, &quot;educ&quot;, &quot;gender&quot;)], file=&quot;demo-demos.csv&quot;)
 </code></pre>
+
+<p><a href="crunch-internals.html">Next: Crunch internals</a></p>
 
 </body>
 

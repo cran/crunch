@@ -201,11 +201,6 @@ hr {
 </head>
 
 <body>
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Analyzing data with crunch}
--->
-
 <p><a href="derive.html">Previous: transform and derive</a></p>
 
 <h1>Computing with R and Crunch</h1>
@@ -447,15 +442,15 @@ tab3mr
 
 <p>Finally, just as we saw in the <a href="array-variables.html">array variables</a> vignette, we can grab individual subvariables and crosstab with them:</p>
 
-<pre><code class="r">crtabs(~ imiss$Education + gender, data=ds)
+<pre><code class="r">crtabs(~ imiss$imiss_f + gender, data=ds)
 </code></pre>
 
 <pre><code>##                     gender
-## imiss_h                  Male    Female
-##   Very Important     47.47270 70.032722
-##   Somewhat Important 46.51134 45.048457
-##   Not very Important 11.61341  6.944584
-##   Unimportant        15.95398  6.422805
+## imiss_f                  Male   Female
+##   Very Important     45.64391 63.89258
+##   Somewhat Important 42.62133 37.68492
+##   Not very Important 11.10782 14.61392
+##   Unimportant        19.92492 12.25715
 </code></pre>
 
 <h3>N-way tables</h3>
