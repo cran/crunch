@@ -196,6 +196,7 @@ MultitableCatalog <- setClass("MultitableCatalog", contains="ShojiCatalog")
 #'
 #' @rdname CrunchDataset
 #' @export CrunchDataset
+#' @exportClass CrunchDataset
 CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
     slots=c(
         variables="VariableCatalog",
@@ -273,9 +274,7 @@ Subvariables <- setClass("Subvariables", contains="VariableCatalog",
         filter=CrunchLogicalExpr()
     ))
 
-CubeDims <- setClass("CubeDims", contains="namedList",
-    slots=c(references="VariableCatalog"),
-    prototype=prototype(references=VariableCatalog()))
+CubeDims <- setClass("CubeDims", contains="namedList")
 
 CrunchCube <- setClass("CrunchCube", contains="list",
     slots=c(

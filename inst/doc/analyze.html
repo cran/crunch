@@ -1,627 +1,355 @@
 <!DOCTYPE html>
-<html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>Computing with R and Crunch</title>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
 
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
-  }
-};
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Styles for R syntax highlighter -->
+
+
+<title>Analyzing Crunch Data</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
-
-   pre .literal {
-     color: #990073
-   }
-
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
-</style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
-</script>
-
-
-
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
-}
-
-body {
-  max-width: 800px;
-  margin: auto;
-  padding: 1em;
-  line-height: 20px;
-}
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
-}
-
-h1 {
-   font-size:2.2em;
-}
-
-h2 {
-   font-size:1.8em;
-}
-
-h3 {
-   font-size:1.4em;
-}
-
-h4 {
-   font-size:1.0em;
-}
-
-h5 {
-   font-size:0.9em;
-}
-
-h6 {
-   font-size:0.8em;
-}
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
-}
-
-pre, img {
-  max-width: 100%;
-}
-pre {
-  overflow-x: auto;
-}
-pre code {
-   display: block; padding: 0.5em;
-}
-
-code {
-  font-size: 92%;
-  border: 1px solid #ccc;
-}
-
-code[class] {
-  background-color: #F8F8F8;
-}
-
-table, td, th {
-  border: none;
-}
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
-}
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
-}
-
-@media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
-}
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
 <body>
+
+
+
+
+<h1 class="title toc-ignore">Analyzing Crunch Data</h1>
+
+
+
 <p><a href="derive.html">Previous: transform and derive</a></p>
-
+<div id="computing-with-r-and-crunch" class="section level1">
 <h1>Computing with R and Crunch</h1>
-
 <p>With <code>crunch</code>, you can harness the power of R to do computations with your datasets in Crunch that would be difficult or impossible to accomplish in a graphical user interface.</p>
-
+<div id="crosstabbing" class="section level2">
 <h2>Crosstabbing</h2>
-
 <p>While the web application certainly supports crosstabbing, you may want to do aggregations like this in R. Crosstabbing in R with <code>crunch</code> may allow you to easily do additional computations on the result, for example.</p>
-
-<p><code>crunch</code> contains the <code>crtabs</code> (Crunch-tabs) function, which largely emulates the design of the <code>xtabs</code> function in base R. In essence, you define a formula and provide data in which to evaluate it. In this case, we&#39;ll be providing a <code>CrunchDataset</code>.</p>
-
+<p><code>crunch</code> contains the <code>crtabs</code> (Crunch-tabs) function, which largely emulates the design of the <code>xtabs</code> function in base R. In essence, you define a formula and provide data in which to evaluate it. In this case, we’ll be providing a <code>CrunchDataset</code>.</p>
+<div id="basic-examples" class="section level3">
 <h3>Basic examples</h3>
-
 <p>Like <code>xtabs</code>, <code>crtabs</code> takes a formula and a data argument. Dimensions of your crosstab go on the right side of the <code>~</code>. For a univariate table of frequencies by education, we can do</p>
-
-<pre><code class="r">tab1 &lt;- crtabs(~ educ, data=ds)
-tab1
-</code></pre>
-
-<pre><code>## educ
-##                No HS High school graduate         Some college               2-year               4-year 
-##                   12                   71                   61                   24                   57 
-##            Post-grad 
-##                   25
-</code></pre>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab1 &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>educ, <span class="dt">data=</span>ds)
+tab1</code></pre></div>
+<pre><code>## [1] 12 71 61 24 57 25</code></pre>
 <p>Additional dimensions are added with <code>+</code>. For a two-way table of education and gender,</p>
-
-<pre><code class="r">tab2 &lt;- crtabs(~ educ + gender, data=ds)
-tab2
-</code></pre>
-
-<pre><code>##                       gender
-## educ                   Male Female
-##   No HS                   6      6
-##   High school graduate   33     38
-##   Some college           26     35
-##   2-year                  6     18
-##   4-year                 25     32
-##   Post-grad              15     10
-</code></pre>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab2 &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)
+tab2</code></pre></div>
+<pre><code>##      [,1] [,2]
+## [1,]    6    6
+## [2,]   33   38
+## [3,]   26   35
+## [4,]    6   18
+## [5,]   25   32
+## [6,]   15   10</code></pre>
+</div>
+<div id="weighting" class="section level3">
 <h3>Weighting</h3>
-
 <p><code>crtabs</code> takes advantage of several Crunch features that <code>xtabs</code> does not support. First, it respects weight variables that have been set on the server. This dataset is not currently weighted</p>
-
-<pre><code class="r">weight(ds)
-</code></pre>
-
-<pre><code>## NULL
-</code></pre>
-
-<p>but we can very easily change that. Let&#39;s use the &ldquo;weight&rdquo; variable that already exists in the dataset:</p>
-
-<pre><code class="r">weight(ds) &lt;- ds$weight
-</code></pre>
-
-<p>Now, if we request the same two-way table as before, we&#39;ll get weighted results:</p>
-
-<pre><code class="r">crtabs(~ educ + gender, data=ds)
-</code></pre>
-
-<pre><code>##                       gender
-## educ                        Male    Female
-##   No HS                12.628200  8.698227
-##   High school graduate 43.315170 43.297542
-##   Some college         31.612096 29.963579
-##   2-year                8.567314 15.260707
-##   4-year               16.492669 22.581293
-##   Post-grad             8.935983  8.647220
-</code></pre>
-
-<p>If we want unweighted data, that&#39;s easy enough:</p>
-
-<pre><code class="r">crtabs(~ educ + gender, data=ds, weight=NULL)
-</code></pre>
-
-<pre><code>##                       gender
-## educ                   Male Female
-##   No HS                   6      6
-##   High school graduate   33     38
-##   Some college           26     35
-##   2-year                  6     18
-##   4-year                 25     32
-##   Post-grad              15     10
-</code></pre>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">weight</span>(ds)</code></pre></div>
+<pre><code>## NULL</code></pre>
+<p>but we can very easily change that. Let’s use the “weight” variable that already exists in the dataset:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">weight</span>(ds) &lt;-<span class="st"> </span>ds<span class="op">$</span>weight</code></pre></div>
+<p>Now, if we request the same two-way table as before, we’ll get weighted results:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</code></pre></div>
+<pre><code>##           [,1]      [,2]
+## [1,] 12.628200  8.698227
+## [2,] 43.315170 43.297542
+## [3,] 31.612096 29.963579
+## [4,]  8.567314 15.260707
+## [5,] 16.492669 22.581293
+## [6,]  8.935983  8.647220</code></pre>
+<p>If we want unweighted data, that’s easy enough:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds, <span class="dt">weight=</span><span class="ot">NULL</span>)</code></pre></div>
+<pre><code>##      [,1] [,2]
+## [1,]    6    6
+## [2,]   33   38
+## [3,]   26   35
+## [4,]    6   18
+## [5,]   25   32
+## [6,]   15   10</code></pre>
+</div>
+<div id="proportion-tables" class="section level3">
 <h3>Proportion tables</h3>
-
 <p>As with any <code>array</code> data type, we can compute margin tables, and the <code>prop.table</code> function in R provides a convenient way for sweeping a table by a margin. These work on the output of <code>crtabs</code>, too:</p>
-
-<pre><code class="r">prop.table(tab1)
-</code></pre>
-
-<pre><code>## educ
-##                No HS High school graduate         Some college               2-year               4-year 
-##                0.048                0.284                0.244                0.096                0.228 
-##            Post-grad 
-##                0.100
-</code></pre>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab1)</code></pre></div>
+<pre><code>## [1] 0.048 0.284 0.244 0.096 0.228 0.100</code></pre>
 <p>For column proportions, specify margin=2 (by rows, margin=1):</p>
-
-<pre><code class="r">prop.table(tab2, 2)
-</code></pre>
-
-<pre><code>##                       gender
-## educ                         Male     Female
-##   No HS                0.05405405 0.04316547
-##   High school graduate 0.29729730 0.27338129
-##   Some college         0.23423423 0.25179856
-##   2-year               0.05405405 0.12949640
-##   4-year               0.22522523 0.23021583
-##   Post-grad            0.13513514 0.07194245
-</code></pre>
-
-<p>Let&#39;s make that more readable:</p>
-
-<pre><code class="r">round(100*prop.table(tab2, 2))
-</code></pre>
-
-<pre><code>##                       gender
-## educ                   Male Female
-##   No HS                   5      4
-##   High school graduate   30     27
-##   Some college           23     25
-##   2-year                  5     13
-##   4-year                 23     23
-##   Post-grad              14      7
-</code></pre>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab2, <span class="dv">2</span>)</code></pre></div>
+<pre><code>##            [,1]       [,2]
+## [1,] 0.05405405 0.04316547
+## [2,] 0.29729730 0.27338129
+## [3,] 0.23423423 0.25179856
+## [4,] 0.05405405 0.12949640
+## [5,] 0.22522523 0.23021583
+## [6,] 0.13513514 0.07194245</code></pre>
+<p>Let’s make that more readable:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">round</span>(<span class="dv">100</span><span class="op">*</span><span class="kw">prop.table</span>(tab2, <span class="dv">2</span>))</code></pre></div>
+<pre><code>##      [,1] [,2]
+## [1,]    5    4
+## [2,]   30   27
+## [3,]   23   25
+## [4,]    5   13
+## [5,]   23   23
+## [6,]   14    7</code></pre>
+</div>
+<div id="complex-data-types" class="section level3">
 <h3>Complex data types</h3>
-
-<p><code>crtabs</code> also comfortably handles the more complex data types that Crunch supports, including categorical array and multiple response variables. In the <a href="array-variables.html">array variables vignette</a>, we created a categorical array, &ldquo;imiss&rdquo;, for &ldquo;Important issues&rdquo;. We can crosstab with arrays just as we do non-arrays.</p>
-
-<pre><code class="r">tab3 &lt;- crtabs(~ imiss + gender, data=ds)
-tab3
-</code></pre>
-
-<pre><code>## , , gender = Male
+<p><code>crtabs</code> also comfortably handles the more complex data types that Crunch supports, including categorical array and multiple response variables. In the <a href="array-variables.html">array variables vignette</a>, we created a categorical array, “imiss”, for “Important issues”. We can crosstab with arrays just as we do non-arrays.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab3 &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)
+tab3</code></pre></div>
+<pre><code>## , , 1
 ## 
-##                         imiss
-## imiss                    Very Important Somewhat Important Not very Important Unimportant
-##   Abortion                     31.11036           27.53957          30.125371   32.776132
-##   Education                    47.47270           46.51134          11.613407   15.953981
-##   Gay rights                   11.31668           28.19149          26.431299   55.117086
-##   Health care                  75.85298           39.27766           3.819861    2.600933
-##   Immigration                  49.31502           37.34169          17.139246   17.755480
-##   Medicare                     59.80997           47.99707           9.550301    4.194091
-##   Social security              68.15899           41.79910           6.273460    5.319881
-##   Taxes                        65.01490           41.59154           6.653878    7.761953
-##   Terrorism                    45.64391           42.62133          11.107822   19.924924
-##   The budget deficit           59.03394           30.34666          16.027038   16.143793
-##   The economy                  90.19129           18.19050          13.169648    0.000000
-##   The environment              30.96798           59.36010          19.180623   12.042728
-##   The war in Afghanistan       21.66667           51.95812          20.996176   25.220936
+##           [,1]     [,2]      [,3]      [,4]
+##  [1,] 31.11036 27.53957 30.125371 32.776132
+##  [2,] 47.47270 46.51134 11.613407 15.953981
+##  [3,] 11.31668 28.19149 26.431299 55.117086
+##  [4,] 75.85298 39.27766  3.819861  2.600933
+##  [5,] 49.31502 37.34169 17.139246 17.755480
+##  [6,] 59.80997 47.99707  9.550301  4.194091
+##  [7,] 68.15899 41.79910  6.273460  5.319881
+##  [8,] 65.01490 41.59154  6.653878  7.761953
+##  [9,] 45.64391 42.62133 11.107822 19.924924
+## [10,] 59.03394 30.34666 16.027038 16.143793
+## [11,] 90.19129 18.19050 13.169648  0.000000
+## [12,] 30.96798 59.36010 19.180623 12.042728
+## [13,] 21.66667 51.95812 20.996176 25.220936
 ## 
-## , , gender = Female
+## , , 2
 ## 
-##                         imiss
-## imiss                    Very Important Somewhat Important Not very Important Unimportant
-##   Abortion                     52.59306           45.01694          17.535359   12.266433
-##   Education                    70.03272           45.04846           6.944584    6.422805
-##   Gay rights                   33.97914           34.23703          24.418990   35.813411
-##   Health care                  90.70215           29.57668           3.697671    3.856843
-##   Immigration                  48.19794           48.71002          17.758330   11.222931
-##   Medicare                     72.39412           38.22034          12.111045    4.282138
-##   Social security              73.35809           35.84414          13.522809    5.723524
-##   Taxes                        78.98925           29.93235          11.747300    7.779673
-##   Terrorism                    63.89258           37.68492          14.613920   12.257150
-##   The budget deficit           58.46827           45.55364          15.087550    9.339109
-##   The economy                  93.86900           25.30076           5.421963    3.084749
-##   The environment              53.05919           43.99564          15.071708   11.953823
-##   The war in Afghanistan       48.27161           48.41640          17.997678   13.762882
-</code></pre>
-
-<p>Note that even though we specified two variables in our formula, because &ldquo;imiss&rdquo; itself is two dimensional, our result is a three-dimensional array.</p>
-
-<p>To illustrate working with multiple response variables, let&#39;s convert &ldquo;imiss&rdquo; to multiple response, selecting its positive categories as indicating selection:</p>
-
-<pre><code class="r">ds$imiss &lt;- dichotomize(ds$imiss, c(&quot;Very Important&quot;, &quot;Somewhat Important&quot;))
-</code></pre>
-
-<p>Now, when we crosstab it, we&#39;ll get a two-dimensional table because multiple response variables present a one-dimensional interface:</p>
-
-<pre><code class="r">tab3mr &lt;- crtabs(~ imiss + gender, data=ds)
-tab3mr
-</code></pre>
-
-<pre><code>##                         gender
-## imiss                         Male    Female
-##   Abortion                58.64993  97.61001
-##   Education               93.98404 115.08118
-##   Gay rights              39.50817  68.21617
-##   Health care            115.13064 120.27883
-##   Immigration             86.65671  96.90796
-##   Medicare               107.80704 110.61446
-##   Social security        109.95809 109.20223
-##   Taxes                  106.60644 108.92159
-##   Terrorism               88.26523 101.57750
-##   The budget deficit      89.38060 104.02191
-##   The economy            108.38178 119.16976
-##   The environment         90.32808  97.05483
-##   The war in Afghanistan  73.62479  96.68801
-</code></pre>
-
-<p>It&#39;s worth noting here that the result of <code>crtabs</code> isn&#39;t an <code>array</code> object but a <code>CrunchCube</code> object.</p>
-
-<pre><code class="r">class(tab3mr)
-</code></pre>
-
+##           [,1]     [,2]      [,3]      [,4]
+##  [1,] 52.59306 45.01694 17.535359 12.266433
+##  [2,] 70.03272 45.04846  6.944584  6.422805
+##  [3,] 33.97914 34.23703 24.418990 35.813411
+##  [4,] 90.70215 29.57668  3.697671  3.856843
+##  [5,] 48.19794 48.71002 17.758330 11.222931
+##  [6,] 72.39412 38.22034 12.111045  4.282138
+##  [7,] 73.35809 35.84414 13.522809  5.723524
+##  [8,] 78.98925 29.93235 11.747300  7.779673
+##  [9,] 63.89258 37.68492 14.613920 12.257150
+## [10,] 58.46827 45.55364 15.087550  9.339109
+## [11,] 93.86900 25.30076  5.421963  3.084749
+## [12,] 53.05919 43.99564 15.071708 11.953823
+## [13,] 48.27161 48.41640 17.997678 13.762882</code></pre>
+<p>Note that even though we specified two variables in our formula, because “imiss” itself is two dimensional, our result is a three-dimensional array.</p>
+<p>To illustrate working with multiple response variables, let’s convert “imiss” to multiple response, selecting its positive categories as indicating selection:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ds<span class="op">$</span>imiss &lt;-<span class="st"> </span><span class="kw">dichotomize</span>(ds<span class="op">$</span>imiss, <span class="kw">c</span>(<span class="st">&quot;Very Important&quot;</span>, <span class="st">&quot;Somewhat Important&quot;</span>))</code></pre></div>
+<p>Now, when we crosstab it, we’ll get a two-dimensional table because multiple response variables present a one-dimensional interface:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab3mr &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)
+tab3mr</code></pre></div>
+<pre><code>##            [,1]      [,2]
+##  [1,]  58.64993  97.61001
+##  [2,]  93.98404 115.08118
+##  [3,]  39.50817  68.21617
+##  [4,] 115.13064 120.27883
+##  [5,]  86.65671  96.90796
+##  [6,] 107.80704 110.61446
+##  [7,] 109.95809 109.20223
+##  [8,] 106.60644 108.92159
+##  [9,]  88.26523 101.57750
+## [10,]  89.38060 104.02191
+## [11,] 108.38178 119.16976
+## [12,]  90.32808  97.05483
+## [13,]  73.62479  96.68801</code></pre>
+<p>It’s worth noting here that the result of <code>crtabs</code> isn’t an <code>array</code> object but a <code>CrunchCube</code> object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(tab3mr)</code></pre></div>
 <pre><code>## [1] &quot;CrunchCube&quot;
 ## attr(,&quot;package&quot;)
-## [1] &quot;crunch&quot;
-</code></pre>
-
-<p>This allows us to do the appropriate calculations on arrays and multiple response variables when <code>prop.table</code> is called. To compute a margin table over a multiple response variable, summing along the dimension would give an incorrect value because the responses in a multiple response are not mutually exclusive&ndash;they can&#39;t be assumed to sum to 100 percent. However, the <code>margin.table</code> method on <code>CrunchCubes</code> can compute the correct margin, so <code>prop.table</code> gives correct proportions:</p>
-
-<pre><code class="r">round(100*prop.table(tab3mr, 2))
-</code></pre>
-
-<pre><code>##                         gender
-## imiss                    Male Female
-##   Abortion                 48     76
-##   Education                77     90
-##   Gay rights               33     53
-##   Health care              95     94
-##   Immigration              71     75
-##   Medicare                 89     86
-##   Social security          90     85
-##   Taxes                    88     85
-##   Terrorism                73     79
-##   The budget deficit       74     81
-##   The economy              89     93
-##   The environment          74     76
-##   The war in Afghanistan   61     75
-</code></pre>
-
+## [1] &quot;crunch&quot;</code></pre>
+<p>This allows us to do the appropriate calculations on arrays and multiple response variables when <code>prop.table</code> is called. To compute a margin table over a multiple response variable, summing along the dimension would give an incorrect value because the responses in a multiple response are not mutually exclusive–they can’t be assumed to sum to 100 percent. However, the <code>margin.table</code> method on <code>CrunchCubes</code> can compute the correct margin, so <code>prop.table</code> gives correct proportions:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">round</span>(<span class="dv">100</span><span class="op">*</span><span class="kw">prop.table</span>(tab3mr, <span class="dv">2</span>))</code></pre></div>
+<pre><code>##       [,1] [,2]
+##  [1,]   48   76
+##  [2,]   77   90
+##  [3,]   33   53
+##  [4,]   95   94
+##  [5,]   71   75
+##  [6,]   89   86
+##  [7,]   90   85
+##  [8,]   88   85
+##  [9,]   73   79
+## [10,]   74   81
+## [11,]   89   93
+## [12,]   74   76
+## [13,]   61   75</code></pre>
 <p>Finally, just as we saw in the <a href="array-variables.html">array variables</a> vignette, we can grab individual subvariables and crosstab with them:</p>
-
-<pre><code class="r">crtabs(~ imiss$imiss_f + gender, data=ds)
-</code></pre>
-
-<pre><code>##                     gender
-## imiss_f                  Male   Female
-##   Very Important     45.64391 63.89258
-##   Somewhat Important 42.62133 37.68492
-##   Not very Important 11.10782 14.61392
-##   Unimportant        19.92492 12.25715
-</code></pre>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss<span class="op">$</span>imiss_f <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</code></pre></div>
+<pre><code>##          [,1]      [,2]
+## [1,] 47.47270 70.032722
+## [2,] 46.51134 45.048457
+## [3,] 11.61341  6.944584
+## [4,] 15.95398  6.422805</code></pre>
+</div>
+<div id="n-way-tables" class="section level3">
 <h3>N-way tables</h3>
-
-<p>It&#39;s worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:</p>
-
-<pre><code class="r">round(crtabs(~ imiss + educ + gender, data=ds))
-</code></pre>
-
-<pre><code>## , , gender = Male
+<p>It’s worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">round</span>(<span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss <span class="op">+</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds))</code></pre></div>
+<pre><code>## , , 1
 ## 
-##                         educ
-## imiss                    No HS High school graduate Some college 2-year 4-year Post-grad
-##   Abortion                   6                   17           21      1      9         5
-##   Education                 13                   25           27      9     13         8
-##   Gay rights                 1                   10           18      1      4         5
-##   Health care               12                   43           28      9     15         8
-##   Immigration               10                   25           23      9     12         8
-##   Medicare                  12                   39           27      8     14         7
-##   Social security           12                   41           25      9     14         9
-##   Taxes                     13                   31           31      9     15         8
-##   Terrorism                 12                   25           24      9     12         7
-##   The budget deficit        13                   24           24      8     13         7
-##   The economy               13                   32           31      9     16         9
-##   The environment           12                   31           24      7      9         8
-##   The war in Afghanistan    11                   17           24      2     13         6
+##       [,1] [,2] [,3] [,4] [,5] [,6]
+##  [1,]    6   17   21    1    9    5
+##  [2,]   13   25   27    9   13    8
+##  [3,]    1   10   18    1    4    5
+##  [4,]   12   43   28    9   15    8
+##  [5,]   10   25   23    9   12    8
+##  [6,]   12   39   27    8   14    7
+##  [7,]   12   41   25    9   14    9
+##  [8,]   13   31   31    9   15    8
+##  [9,]   12   25   24    9   12    7
+## [10,]   13   24   24    8   13    7
+## [11,]   13   32   31    9   16    9
+## [12,]   12   31   24    7    9    8
+## [13,]   11   17   24    2   13    6
 ## 
-## , , gender = Female
+## , , 2
 ## 
-##                         educ
-## imiss                    No HS High school graduate Some college 2-year 4-year Post-grad
-##   Abortion                   5                   31           24     10     19         8
-##   Education                  9                   32           28     15     23         9
-##   Gay rights                 4                   17           21      5     15         6
-##   Health care                9                   38           29     15     21         9
-##   Immigration                6                   28           27     10     17         9
-##   Medicare                   9                   34           26     15     19         7
-##   Social security            9                   34           27     13     19         7
-##   Taxes                      9                   32           24     14     22         8
-##   Terrorism                  5                   35           22     14     18         7
-##   The budget deficit         6                   34           23     14     19         7
-##   The economy                9                   37           27     15     23         9
-##   The environment            6                   29           19     14     21         8
-##   The war in Afghanistan     8                   27           27     13     15         7
-</code></pre>
-
+##       [,1] [,2] [,3] [,4] [,5] [,6]
+##  [1,]    5   31   24   10   19    8
+##  [2,]    9   32   28   15   23    9
+##  [3,]    4   17   21    5   15    6
+##  [4,]    9   38   29   15   21    9
+##  [5,]    6   28   27   10   17    9
+##  [6,]    9   34   26   15   19    7
+##  [7,]    9   34   27   13   19    7
+##  [8,]    9   32   24   14   22    8
+##  [9,]    5   35   22   14   18    7
+## [10,]    6   34   23   14   19    7
+## [11,]    9   37   27   15   23    9
+## [12,]    6   29   19   14   21    8
+## [13,]    8   27   27   13   15    7</code></pre>
 <!--
 ### Special functions
 #### bin
 #### rollup
 
 -->
-
+</div>
+<div id="numeric-aggregations" class="section level3">
 <h3>Numeric aggregations</h3>
-
-<p><code>crtabs</code> can also compute quantities other than counts. Using the left-hand side of the formula, we can specify other aggregations to put in the cells of the table. For example, in the <a href="derive.html">deriving variables vignette</a>, we created an &ldquo;age&rdquo; variable. We can easily compute the average age by gender and education:</p>
-
-<pre><code class="r">crtabs(mean(age) ~ educ + gender, data=ds)
-</code></pre>
-
-<pre><code>##                       gender
-## educ                       Male   Female
-##   No HS                54.00829 56.02205
-##   High school graduate 50.31550 48.09241
-##   Some college         40.84733 43.06316
-##   2-year               55.25996 46.68702
-##   4-year               50.14993 40.75736
-##   Post-grad            50.85838 48.64874
-</code></pre>
-
+<p><code>crtabs</code> can also compute quantities other than counts. Using the left-hand side of the formula, we can specify other aggregations to put in the cells of the table. For example, in the <a href="derive.html">deriving variables vignette</a>, we created an “age” variable. We can easily compute the average age by gender and education:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">crtabs</span>(<span class="kw">mean</span>(age) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</code></pre></div>
+<pre><code>##          [,1]     [,2]
+## [1,] 54.00829 56.02205
+## [2,] 50.31550 48.09241
+## [3,] 40.84733 43.06316
+## [4,] 55.25996 46.68702
+## [5,] 50.14993 40.75736
+## [6,] 50.85838 48.64874</code></pre>
 <p>Other supported aggregations include <code>min</code>, <code>max</code>, <code>sd</code>, and <code>sum</code>. For the minimum age by gender and education,</p>
-
-<pre><code class="r">crtabs(min(age) ~ educ + gender, data=ds)
-</code></pre>
-
-<pre><code>##                       gender
-## educ                   Male Female
-##   No HS                  42     45
-##   High school graduate   35     27
-##   Some college           22     24
-##   2-year                 35     26
-##   4-year                 32     24
-##   Post-grad              26     27
-</code></pre>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">crtabs</span>(<span class="kw">min</span>(age) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</code></pre></div>
+<pre><code>##      [,1] [,2]
+## [1,]   42   45
+## [2,]   35   27
+## [3,]   22   24
+## [4,]   35   26
+## [5,]   32   24
+## [6,]   26   27</code></pre>
 <p>We can get unconditional (univariate) statistics by making the right-hand side of your formula be just the number <code>1</code>:</p>
-
-<pre><code class="r">crtabs(min(age) ~ 1, data=ds)
-</code></pre>
-
-<pre><code>## [1] 22
-</code></pre>
-
-<p>Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the <a href="variables.html">variables vignette</a>, we worked with the &ldquo;On the right track&rdquo; question and set some numeric values:</p>
-
-<pre><code class="r">categories(ds$track)
-</code></pre>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">crtabs</span>(<span class="kw">min</span>(age) <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data=</span>ds)</code></pre></div>
+<pre><code>## [1] 22</code></pre>
+<p>Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the <a href="variables.html">variables vignette</a>, we worked with the “On the right track” question and set some numeric values:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">categories</span>(ds<span class="op">$</span>track)</code></pre></div>
 <pre><code>##   id                                    name value missing
 ## 1  1 Generally headed in the right direction     1   FALSE
 ## 2  3                                Not sure     0    TRUE
 ## 3  2                             Wrong track    -1   FALSE
-## 4 -1                                 No Data    NA    TRUE
-</code></pre>
-
-<p>We can use these numeric values to compute an &ldquo;on the right track index&rdquo; by averaging them. If the index is greater than zero, more people thing things are going well, and if it is negative, more respondents are pessimistic.</p>
-
-<pre><code class="r">round(crtabs(mean(track) ~ educ + gender, data=ds), 2)
-</code></pre>
-
-<pre><code>##                       gender
-## educ                    Male Female
-##   No HS                -0.39  -0.05
-##   High school graduate -0.69  -0.22
-##   Some college         -0.05  -0.14
-##   2-year               -0.56  -0.40
-##   4-year               -0.57  -0.08
-##   Post-grad            -0.17   0.02
-</code></pre>
-
+## 4 -1                                 No Data    NA    TRUE</code></pre>
+<p>We can use these numeric values to compute an “on the right track index” by averaging them. If the index is greater than zero, more people thing things are going well, and if it is negative, more respondents are pessimistic.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">round</span>(<span class="kw">crtabs</span>(<span class="kw">mean</span>(track) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds), <span class="dv">2</span>)</code></pre></div>
+<pre><code>##       [,1]  [,2]
+## [1,] -0.39 -0.05
+## [2,] -0.69 -0.22
+## [3,] -0.05 -0.14
+## [4,] -0.56 -0.40
+## [5,] -0.57 -0.08
+## [6,] -0.17  0.02</code></pre>
 <p>Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for women with higher levels of education.</p>
-
+</div>
+<div id="subsetting-data" class="section level3">
 <h3>Subsetting data</h3>
-
-<p>We can also specify a subset of <code>ds</code> to analyze, just as if it were a data.frame. Let&#39;s do the same calculation for Democrats only:</p>
-
-<pre><code class="r">round(crtabs(mean(track) ~ educ + gender, data=ds[ds$pid3 == &quot;Democrat&quot;,]), 2)
-</code></pre>
-
-<pre><code>##                       gender
-## educ                    Male Female
-##   No HS                  NaN   1.00
-##   High school graduate  0.64  -0.08
-##   Some college          0.73   0.30
-##   2-year                1.00   0.00
-##   4-year               -0.12   0.40
-##   Post-grad             0.33   0.12
-</code></pre>
-
+<p>We can also specify a subset of <code>ds</code> to analyze, just as if it were a data.frame. Let’s do the same calculation for Democrats only:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">round</span>(<span class="kw">crtabs</span>(<span class="kw">mean</span>(track) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds[ds<span class="op">$</span>pid3 <span class="op">==</span><span class="st"> &quot;Democrat&quot;</span>,]), <span class="dv">2</span>)</code></pre></div>
+<pre><code>##       [,1]  [,2]
+## [1,]   NaN  1.00
+## [2,]  0.64 -0.08
+## [3,]  0.73  0.30
+## [4,]  1.00  0.00
+## [5,] -0.12  0.40
+## [6,]  0.33  0.12</code></pre>
 <p>Not surprisingly, Democrats were less pessimistic about the direction of the country than the general population.</p>
-
-<p>A few final observations about <code>crtabs</code>. First, all of these calculations have been weighted by the weight variable we set above. We set it and could then forget about it&ndash;we didn&#39;t have to litter all of our expressions with <code>ds$weight</code> and extra arithmetic to do the weighting. Crunch handles this for us.</p>
-
-<p>Second, none of these aggregations required pulling case-level data to your computer. <code>crtabs</code> sends Crunch expressions to the server and receives in return an <code>n</code>-D array of results. The only computations happening locally are the margin tables and sweeping in <code>prop.table</code>, computing on the aggregate results. Your computer would work exactly as hard with this example dataset of 1000 rows as it would with a dataset of 100 million rows.  </p>
-
+<p>A few final observations about <code>crtabs</code>. First, all of these calculations have been weighted by the weight variable we set above. We set it and could then forget about it–we didn’t have to litter all of our expressions with <code>ds$weight</code> and extra arithmetic to do the weighting. Crunch handles this for us.</p>
+<p>Second, none of these aggregations required pulling case-level data to your computer. <code>crtabs</code> sends Crunch expressions to the server and receives in return an <code>n</code>-D array of results. The only computations happening locally are the margin tables and sweeping in <code>prop.table</code>, computing on the aggregate results. Your computer would work exactly as hard with this example dataset of 1000 rows as it would with a dataset of 100 million rows.</p>
+</div>
+</div>
+<div id="statistical-modeling" class="section level2">
 <h2>Statistical modeling</h2>
-
-<p>Any statistical modeling function that takes a <code>data</code> argument should happily accept a <code>CrunchDataset</code> and just do the right thing&ndash;no extra effort or thought required.</p>
-
-<p>Let&#39;s fit a basic Ordinary Least Squares (OLS) model. In our dataset, we have a few questions about Edward Snowden, such as:</p>
-
-<pre><code class="r">ds$snowdenleakapp
-</code></pre>
-
-<pre><code>## Approval of Snowden&#39;s Leak (categorical)
+<p>Any statistical modeling function that takes a <code>data</code> argument should happily accept a <code>CrunchDataset</code> and just do the right thing–no extra effort or thought required.</p>
+<p>Let’s fit a basic Ordinary Least Squares (OLS) model. In our dataset, we have a few questions about Edward Snowden, such as:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ds<span class="op">$</span>snowdenleakapp</code></pre></div>
+<pre><code>## Approval of Snowden's Leak (categorical)
 ## 
 ##                        Count
 ## Strongly disapprove 86.00644
 ## Not sure            55.82542
 ## Somewhat approve    43.19385
 ## Somewhat disapprove 40.26587
-## Strongly approve    24.70842
-</code></pre>
-
-<p>We can use <code>lm</code> to fit our model. Let&#39;s explore the relationship between approval of Snowden&#39;s leak and respondents&#39; interest in current events, party identification, gender, and age.</p>
-
-<pre><code class="r">ols1 &lt;- lm(I(snowdenleakapp == &quot;Strongly approve&quot;) ~ newsint2 + pid3 + gender + age,
-    data=ds)
-summary(ols1)
-</code></pre>
-
+## Strongly approve    24.70842</code></pre>
+<p>We can use <code>lm</code> to fit our model. Let’s explore the relationship between approval of Snowden’s leak and respondents’ interest in current events, party identification, gender, and age.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ols1 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">I</span>(snowdenleakapp <span class="op">==</span><span class="st"> &quot;Strongly approve&quot;</span>) <span class="op">~</span><span class="st"> </span>newsint2 <span class="op">+</span><span class="st"> </span>pid3 <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>age,
+    <span class="dt">data=</span>ds)
+<span class="kw">summary</span>(ols1)</code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = I(snowdenleakapp == &quot;Strongly approve&quot;) ~ newsint2 + 
@@ -646,18 +374,12 @@ summary(ols1)
 ## 
 ## Residual standard error: 0.3366 on 240 degrees of freedom
 ## Multiple R-squared:  0.02533,    Adjusted R-squared:  -0.01122 
-## F-statistic: 0.6931 on 9 and 240 DF,  p-value: 0.7149
-</code></pre>
-
-<p>Looks like partisanship is weakly associated with approval of the NSA leak, but overall the model isn&#39;t a great fit, given our data. (For what it&#39;s worth, we&#39;re working on a randomly drawn subset of the survey so that the size of data included with package is small. Results are more meaningful with the full dataset.) Nevertheless, this example illustrates how straightforward it is to do statistical analysis with data in Crunch. Even though your dataset lives on the server, you can think of it like a local <code>data.frame</code>. Note, for example, that our categorical variables (News Interest, Party ID, and Gender) expand their categories out as dichotomous indicators, just as if they were <code>factor</code> variables in a <code>data.frame</code>.</p>
-
-<p>Given that we&#39;re estimating a model with a dichotomous dependent variable, perhaps a logit would be more appropriate than a strict linear predictor. We can use <code>glm</code> instead:</p>
-
-<pre><code class="r">logit1 &lt;- glm(I(snowdenleakapp == &quot;Strongly approve&quot;) ~ newsint2 + pid3 + gender + age,
-    family=binomial(link=&quot;logit&quot;), data=ds)
-summary(logit1)
-</code></pre>
-
+## F-statistic: 0.6931 on 9 and 240 DF,  p-value: 0.7149</code></pre>
+<p>Looks like partisanship is weakly associated with approval of the NSA leak, but overall the model isn’t a great fit, given our data. (For what it’s worth, we’re working on a randomly drawn subset of the survey so that the size of data included with package is small. Results are more meaningful with the full dataset.) Nevertheless, this example illustrates how straightforward it is to do statistical analysis with data in Crunch. Even though your dataset lives on the server, you can think of it like a local <code>data.frame</code>. Note, for example, that our categorical variables (News Interest, Party ID, and Gender) expand their categories out as dichotomous indicators, just as if they were <code>factor</code> variables in a <code>data.frame</code>.</p>
+<p>Given that we’re estimating a model with a dichotomous dependent variable, perhaps a logit would be more appropriate than a strict linear predictor. We can use <code>glm</code> instead:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">logit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(<span class="kw">I</span>(snowdenleakapp <span class="op">==</span><span class="st"> &quot;Strongly approve&quot;</span>) <span class="op">~</span><span class="st"> </span>newsint2 <span class="op">+</span><span class="st"> </span>pid3 <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>age,
+    <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&quot;logit&quot;</span>), <span class="dt">data=</span>ds)
+<span class="kw">summary</span>(logit1)</code></pre></div>
 <pre><code>## 
 ## Call:
 ## glm(formula = I(snowdenleakapp == &quot;Strongly approve&quot;) ~ newsint2 + 
@@ -680,7 +402,7 @@ summary(logit1)
 ## genderFemale              -0.176401   0.410364  -0.430   0.6673  
 ## age                        0.003547   0.015024   0.236   0.8134  
 ## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
@@ -688,15 +410,24 @@ summary(logit1)
 ## Residual deviance: 184.52  on 240  degrees of freedom
 ## AIC: 204.52
 ## 
-## Number of Fisher Scoring iterations: 5
-</code></pre>
-
+## Number of Fisher Scoring iterations: 5</code></pre>
 <p>As before, not a particularly interesting result, but this is just the beginning of the analysis process. Using <code>crunch</code>, you can keep exploring the data and perhaps find a better fit.</p>
-
-<p>Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and if you specify a subset of the dataset to regress on (as we did above with <code>crtabs</code> when we looked at just Democrats), only those rows are retrieved. This helps minimize the time spent shipping data across the network. Moreover, because of the <code>crunch</code> package&#39;s query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them.</p>
-
+<p>Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and if you specify a subset of the dataset to regress on (as we did above with <code>crtabs</code> when we looked at just Democrats), only those rows are retrieved. This helps minimize the time spent shipping data across the network. Moreover, because of the <code>crunch</code> package’s query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them.</p>
 <p><a href="filters.html">Next: filtering datasets</a></p>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 </body>
-
 </html>
