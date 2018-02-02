@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<p><a href="filter.html">Previous: filtering data</a></p>
+<p><a href="filters.html">Previous: filtering data</a></p>
 <div id="downloading-and-exporting-data" class="section level1">
 <h1>Downloading and exporting data</h1>
 <p>Crunch is designed to facilitate collaboration on a common dataset, a single source of truth in the cloud. As the previous vignettes have shown, you can get a lot of work done in R without pulling the data itself off of the server. Indeed, whenever possible, you should strive to get your work done without pulling data across the network: shipping data across the wire can be slow and inefficient. However, in some cases, you may need to extract a subset of a dataset to do more extensive calculations or manipulations locally. This vignette shows you how to get a local <code>data.frame</code> from your Crunch dataset, as well as how to export a CSV or SPSS file of the dataset or subset of dataset.</p>
@@ -130,7 +130,7 @@ df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(df)
 <p>CSV export does have a “categories” option that governs whether categorical variables are exported as category names or ids. The latter is more concise and pairs well with the Crunch metadata export, but category names can be useful when taking the file without additional metadata.</p>
 <p>As with the <code>as.data.frame</code> methods, you can subset what you export by indexing the rows and columns. Following the previous example, we can get a CSV of that demographic subset by:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write.csv</span>(ds[ds<span class="op">$</span>pid3 <span class="op">==</span><span class="st"> &quot;Democrat&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;educ&quot;</span>, <span class="st">&quot;gender&quot;</span>)], <span class="dt">file=</span><span class="st">&quot;demo-demos.csv&quot;</span>)</code></pre></div>
-<p><a href="crunch-internals.html">Next: Crunch internals</a></p>
+<p><a href="subtotals.html">Next: subtotals</a></p>
 </div>
 </div>
 

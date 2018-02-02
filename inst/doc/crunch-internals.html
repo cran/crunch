@@ -32,6 +32,7 @@
 
 
 
+<p><a href="subtotals.html">Previous: subtotals</a></p>
 <p>The Crunch web app and the <code>crunch</code> package are both built on a <a href="http://docs.crunch.io/">REST API</a>. Users can interact with very large datasets because most of the heavy computation is done on the Crunch servers and not on the users computer. In most cases, you don’t need to know how the API works—the R package handles the HTTP requests and responses and presents meaningful objects and methods to you. To go beyond the basics, though, it can be useful to understand how the API works so that you can make more complex or more efficient (read: faster) operations.</p>
 <div id="catalogs" class="section level3">
 <h3>Catalogs</h3>
@@ -48,6 +49,7 @@ datasets(proj)</code></pre>
 <pre><code>ds &lt;- loadDataset(mydatasets[[&quot;Dataset name&quot;]])
 datasets(proj) &lt;- ds</code></pre>
 <p>Internally there is actually a second method <code>datasets&lt;-</code> that takes the value on the right hand side of the <code>&lt;-</code> operator and posts that value to the datasets attribute of the project catalog. The projects catalog will then update to reflect that a dataset belongs to a particular catalog, and that will be reflected in the web app. Similar patterns happen when you get and set attributes on objects, like “names”.</p>
+<p><a href="abstract-categories.html">Next: Category objects</a></p>
 </div>
 
 

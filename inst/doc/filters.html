@@ -125,13 +125,14 @@ dems</code></pre></div>
 ## $votereg: votereg (numeric)
 ## $age: age (numeric)</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">round</span>(<span class="kw">crtabs</span>(<span class="kw">mean</span>(track) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>dems), <span class="dv">2</span>)</code></pre></div>
-<pre><code>##       [,1]  [,2]
-## [1,]   NaN  1.00
-## [2,]  0.64 -0.08
-## [3,]  0.73  0.30
-## [4,]  1.00  0.00
-## [5,] -0.12  0.40
-## [6,]  0.33  0.12</code></pre>
+<pre><code>##                       gender
+## educ                    Male Female
+##   No HS                  NaN   1.00
+##   High school graduate  0.64  -0.08
+##   Some college          0.73   0.30
+##   2-year                1.00   0.00
+##   4-year               -0.12   0.40
+##   Post-grad             0.33   0.12</code></pre>
 <p>When you extract a variable from a filtered dataset, it too is filtered. So</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(dems<span class="op">$</span>educ)</code></pre></div>
 <pre><code>## educ
@@ -160,23 +161,23 @@ dems</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]] &lt;-<span class="st"> </span>ds<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;Male&quot;</span> <span class="op">&amp;</span><span class="st"> </span>ds<span class="op">$</span>age <span class="op">&lt;</span><span class="st"> </span><span class="dv">30</span>
 <span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]]</code></pre></div>
 <pre><code>## Crunch filter “Young males”
-## Expression: gender == &quot;Male&quot; &amp; age &lt; 30L</code></pre>
+## Expression: gender == &quot;Male&quot; &amp; age &lt; 30</code></pre>
 <p>This new filter now appears in our filter catalog.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filters</span>(ds)</code></pre></div>
 <pre><code>##          name                               id is_public
-## 1 Young males 4a334e5db369469fa78d6fe13c750c6b     FALSE</code></pre>
+## 1 Young males fe5a713cbb2043a4ab88237da5ea6cb6     FALSE</code></pre>
 <p>You could also have made the filter with the <code>newFilter</code> function:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="kw">newFilter</span>(<span class="st">&quot;Young males&quot;</span>, ds<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;Male&quot;</span> <span class="op">&amp;</span><span class="st"> </span>ds<span class="op">$</span>age <span class="op">&lt;</span><span class="st"> </span><span class="dv">30</span>)</code></pre></div>
 <p>This filter is now available for you to use in the web application. If you want to make the filter available to all viewers of the dataset, make it “public”:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">is.public</span>(<span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]]) &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 <span class="kw">filters</span>(ds)</code></pre></div>
 <pre><code>##          name                               id is_public
-## 1 Young males 4a334e5db369469fa78d6fe13c750c6b      TRUE</code></pre>
+## 1 Young males fe5a713cbb2043a4ab88237da5ea6cb6      TRUE</code></pre>
 <p>You can also edit the filter expressions by assigning a new one in, like:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]] &lt;-<span class="st"> </span>ds<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;Male&quot;</span> <span class="op">&amp;</span><span class="st"> </span>ds<span class="op">$</span>age <span class="op">&lt;</span><span class="st"> </span><span class="dv">35</span>
 <span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]]</code></pre></div>
 <pre><code>## Crunch filter “Young males”
-## Expression: gender == &quot;Male&quot; &amp; age &lt; 35L</code></pre>
+## Expression: gender == &quot;Male&quot; &amp; age &lt; 35</code></pre>
 </div>
 <div id="exclusion-filters" class="section level2">
 <h2>Exclusion filters</h2>
@@ -185,7 +186,7 @@ dems</code></pre></div>
 <pre><code>## [1] 250  38</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">exclusion</span>(ds) &lt;-<span class="st"> </span>ds<span class="op">$</span>perc_skipped <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span>
 <span class="kw">exclusion</span>(ds)</code></pre></div>
-<pre><code>## Crunch logical expression: perc_skipped &gt; 15L</code></pre>
+<pre><code>## Crunch logical expression: perc_skipped &gt; 15</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(ds)</code></pre></div>
 <pre><code>## [1] 229  38</code></pre>
 <p>All viewers of the dataset will see the dataset as if those rows do not exist; however, as the editor of the dataset, you can remove the exclusion filter to see them if you need:</p>
