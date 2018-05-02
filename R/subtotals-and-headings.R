@@ -32,7 +32,8 @@
 #'  `Insertions` object) and returns a vector of `TRUE`/`FALSE`s.
 #'
 #' @param x either a variable or CrunchCube object to add or get subtotal
-#' transforms for
+#' transforms for, for `is.Subtotal()` and `is.Heading()` an object to test if
+#' it is either a Subtotal or Heading
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Subtotal to insert
 #' @param name character the name of the subtotal or heading
@@ -42,7 +43,8 @@
 #' the position of the subtotal or heading, either at the top, bottom, or
 #' relative to another category in the cube (default).
 #' @param after character or numeric if `position` is "relative", then the
-#' category name or id to position the subtotal or heading after
+#' category name or id to position the subtotal or heading after. If not supplied
+#' this defaults to the last of the `categories` supplied to `Subtotal`.
 #'
 #' @examples
 #' \dontrun{
@@ -125,18 +127,9 @@ Subtotal <- function (name,
 }
 
 validatePosition <- function (position, after) {
-    if (position == "relative") {
-        # if position is realtive, make sure there is an after
-        if (is.null(after)) {
-            halt("If position is relative, you must supply a category id or ",
-                 "name to the ", dQuote("after"), " argument")
-        }
-    } else {
-        # if position is realtive, make sure there is not an after
-        if (!is.null(after)) {
-            halt("If position is not relative, you cannot supply a category id",
-                 " or name to the ", dQuote("after"), " argument")
-        }
+    if (position != "relative" && !is.null(after)) {
+        halt("If position is not relative, you cannot supply a category id",
+            " or name to the ", dQuote("after"), " argument")
     }
 }
 
@@ -214,6 +207,7 @@ setMethod("subtotals<-", c("CrunchVariable", "ANY"), function (x, value) {
         }, value)))) {
         halt("value must be a list of Subtotals, Headings, or both.")
     }
+
     inserts = Insertions(data = lapply(value,
                                        makeInsertion,
                                        var_categories = categories(x)))
@@ -231,11 +225,14 @@ setMethod("subtotals<-", c("CrunchVariable", "NULL"), function (x, value) {
     # maintain any non-subtotal insertions
     old_inserts <- transforms(x)$insertions
     subtots <- subtotals(x)
-    inserts <- setdiff(old_inserts, subtots)
+    ## If assigning NULL but we already are NULL, there's nothing to do
+    if (!is.null(subtots)) {
+        inserts <- setdiff(old_inserts, subtots)
 
-    bd <- list("transform" = list("insertions" = inserts))
-    ent <- setEntitySlot(entity(x), "view", bd)
-    dropCache(cubeURL(x))
+        bd <- list("transform" = list("insertions" = inserts))
+        ent <- setEntitySlot(entity(x), "view", bd)
+        dropCache(cubeURL(x))
+    }
     return(invisible(x))
 })
 
@@ -313,7 +310,7 @@ subtypeInsertion <- function (insert) {
     if (!inherits(insert, "Insertion")) {
         halt("Must provide an object of type Insertion")
     }
-    if (inherits(insert, c("Subtotal", "Heading"))) {
+    if (inherits(insert, c("Subtotal", "Heading", "SummaryStat"))) {
         # if the insert is already a sub class, return that.
         return(insert)
     }
@@ -327,10 +324,23 @@ subtypeInsertion <- function (insert) {
         position <- "relative"
     }
 
-    if (!(is.na(func(insert))) & func(insert) == 'subtotal') {
-        # this is a subtotal, make it so
-        insert <- Subtotal(name = name(insert), after = after,
-                           position = position, categories = arguments(insert))
+    if (!(is.na(func(insert)))) {
+        # there is a function, check the kind.
+        if (func(insert) == 'subtotal') {
+            # this is a subtotal, make it so
+            insert <- Subtotal(name = name(insert), after = after,
+                               position = position, categories = arguments(insert))
+        }
+        if (func(insert) %in% names(summaryStatInsertions)) {
+            # this is a summary statistic, make it so
+            insert <- SummaryStat(name = name(insert),
+                                  stat = func(insert),
+                                  after = after,
+                                  position = position,
+                                  categories = arguments(insert),
+                                  includeNA = insert$includeNA)
+        }
+
     } else if (is.na(func(insert)) & !is.na(anchor(insert))) {
         # this is a heading, make it so
         insert <- Heading(name = name(insert), after = after,

@@ -18,8 +18,11 @@ ShojiEntity <- setClass("ShojiEntity", contains="ShojiObject")
 ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject",
     slots=c(
         index="list",
-        orders="list"
+        orders="list",
+        graph="list"
     ))
+ShojiFolder <- setClass("ShojiFolder", contains="ShojiCatalog")
+VariableFolder <- setClass("VariableFolder", contains="ShojiFolder")
 ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
     slots=c(
         graph="list",
@@ -80,19 +83,20 @@ setClass("CrunchVariable",
     ),
     prototype=prototype(filter=CrunchLogicalExpr(), tuple=VariableTuple()))
 
+.variableClasses <- list(
+    categorical="CategoricalVariable",
+    numeric="NumericVariable",
+    text="TextVariable",
+    datetime="DatetimeVariable",
+    multiple_response="MultipleResponseVariable",
+    categorical_array="CategoricalArrayVariable"
+)
+
 CrunchVariable <- function (tuple, filter=NULL, ...) {
     ## Slight cheat: this isn't the "CrunchVariable" constructor. Instead
     ## returns a subclass of CrunchVariable
 
-    classes <- list(
-        categorical="CategoricalVariable",
-        numeric="NumericVariable",
-        text="TextVariable",
-        datetime="DatetimeVariable",
-        multiple_response="MultipleResponseVariable",
-        categorical_array="CategoricalArrayVariable"
-    )
-    cls <- classes[[type(tuple)]] %||% "CrunchVariable"
+    cls <- .variableClasses[[type(tuple)]] %||% "CrunchVariable"
     if (is.null(filter)) {
         filter <- CrunchLogicalExpr()
     }
@@ -234,7 +238,7 @@ GenericConstructor <- function (class) {
 #' @param value For `[<-`, the replacement AbstractCategory to insert
 #' @rdname AbstractCategory
 #' @aliases AbstractCategory
-#' 
+#'
 #' @importFrom methods coerce as<- coerce<-
 #' @keywords internal
 #' @export
@@ -311,18 +315,18 @@ Insertions <- GenericConstructor("Insertions")
 #' @export
 setClass("Insertion", contains="AbstractCategory")
 
-# Make a constructor with user-facing and package internal versions instead of 
+# Make a constructor with user-facing and package internal versions instead of
 # simply setMethod("initialize", "Insertions") so that the user-facing version
-# preforms validation, but the internal version does not. This is needed for 
+# preforms validation, but the internal version does not. This is needed for
 # making heterogenous insertions that include classes Subtotal and Heading.
 #' @rdname Insertions
 #' @export
 Insertion <- function (...) {
     out <- .Insertion(...)
-    
+
     # check validity (only when Insertion is called)
     insertionValidity(out)
-    
+
     return(out)
 }
 
@@ -355,6 +359,13 @@ setClass("Heading", contains="Insertion")
 #' @export
 Heading <- GenericConstructor("Heading")
 
+#' @rdname SummaryStat
+#' @export
+setClass("SummaryStat", contains="Insertion")
+
+#' @rdname SummaryStat
+#' @export
+SummaryStat <- GenericConstructor("SummaryStat")
 
 #' @rdname Transforms
 #' @export

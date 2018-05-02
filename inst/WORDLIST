@@ -29,6 +29,7 @@ CrunchBox
 CrunchBoxes
 CrunchCube
 CrunchCubes
+CrunchCube's
 CrunchDataFrame
 CrunchDataFrames
 CrunchDataset
@@ -82,6 +83,7 @@ json
 JSON
 JSONing
 knitr
+magrittr
 makeWeight
 MemberCatalog
 multitable
@@ -97,7 +99,6 @@ OrderGroup
 OrderGroups
 PermissionCatalog
 pid
-pipelining
 POSIXt
 POSTed
 POSTing
@@ -107,9 +108,12 @@ ProjectCatalog
 recode
 recurse
 recurses
+repo
 rmarkdown
 RMarkdown
+rollup
 Rprofile
+RStudio
 sav
 savepoints
 Savepoints
@@ -125,12 +129,14 @@ Snowden
 Snowden's
 spss
 subclasses
+subfolder
 subtyped
 subtypes
 subvariable
 Subvariable
 subvariables
 Subvariables
+SummaryStat
 symlink
 TabBookResult
 TabBookResults

@@ -1,4 +1,4 @@
-context("Subtotals and headings ")
+context("Subtotals and headings")
 
 test_that("Subtotal accepts a variety of inputs", {
     subtot1 <- Subtotal(name = "Approval", categories = c(1, 2), after = 2)
@@ -14,7 +14,14 @@ test_that("Subtotal accepts a variety of inputs", {
     expect_equal(subtot2, subtot3)
 
     subtot_top <- Subtotal(name = "Approval", categories = c(1, 2), position = "top")
-    subtot_top <- Subtotal(name = "Approval", categories = c(1, 2), position = "bottom")
+    subtot_bottom <- Subtotal(name = "Approval", categories = c(1, 2), position = "bottom")
+
+    subtot_after_last_cat <- Subtotal(name = "Approval", categories = c(1, 2))
+    expect_message(expect_equal(anchor(subtot_after_last_cat), NA_integer_),
+                   paste0("Can't determine the anchor position without a ",
+                          "variable. However, when this is added to a Crunch ",
+                          "variable or CrunchCube it will follow the last ",
+                          "category given"))
 })
 
 test_that("Subtotal validates", {
@@ -22,9 +29,6 @@ test_that("Subtotal validates", {
                  "argument \"name\" is missing, with no default")
     expect_error(Subtotal(name = "Total Approval", after = 2),
                  "argument \"categories\" is missing, with no default")
-    expect_error(Subtotal(name = "Total Approval", categories = c(1, 2)),
-                 paste0("If position is relative, you must supply a category ",
-                        "id or name to the .*after.* argument"))
 })
 
 test_that("Subtotal validates with fixed positions", {
@@ -39,9 +43,6 @@ test_that("Subtotal validates with fixed positions", {
 test_that("Heading validates", {
     expect_error(Heading(after = 2),
                  "argument \"name\" is missing, with no default")
-    expect_error(Heading(name = "All the approves"),
-                 paste0("If position is relative, you must supply a category ",
-                        "id or name to the .*after.* argument"))
     expect_error(Heading(name = "All the approves", after = 2, categories = c(1, 2)),
                  "unused argument (categories = c(1, 2))", fixed = TRUE)
 })
@@ -116,6 +117,9 @@ with_mock_crunch({
     test_that("subtotals returns null when there are no subtotals", {
         expect_null(subtotals(ds$gender))
     })
+    test_that("Assigning NULL if already NULL does nothing", {
+        expect_no_request(subtotals(ds$gender) <- NULL)
+    })
 
     test_that("Adding subtotals and headers to a variable that has none, works", {
         expect_PATCH(subtotals(ds$gender) <- list(
@@ -128,6 +132,27 @@ with_mock_crunch({
         '{"anchor":2,"name":"Not men","function":"subtotal","args":[1,-1]},',
         '{"anchor":4,"name":"Women","function":"subtotal","args":[2]},',
         '{"anchor":"top","name":"A subtitle"}]}}}')
+    })
+
+    test_that("When after is not supplied, it defauls to follow the last category", {
+        expect_PATCH(subtotals(ds$gender) <- list(
+            Subtotal(name = "Not men", categories = c(-1, 1)), # categories supplied in reverse order
+            Subtotal(name = "Women", categories = "Female")
+        ),
+            'https://app.crunch.io/api/datasets/1/variables/gender/',
+            '{"view":{"transform":{"insertions":[',
+            '{"anchor":-1,"name":"Not men","function":"subtotal","args":[-1,1]},',
+            '{"anchor":2,"name":"Women","function":"subtotal","args":[2]}]}}}')
+
+        # one supplied category (23) isn't a real category, after should still be -1
+        expect_PATCH(subtotals(ds$gender) <- list(
+            Subtotal(name = "Not men", categories = c(-1, 1, 23)), # categories supplied in reverse order
+            Subtotal(name = "Women", categories = "Female")
+        ),
+            'https://app.crunch.io/api/datasets/1/variables/gender/',
+            '{"view":{"transform":{"insertions":[',
+            '{"anchor":-1,"name":"Not men","function":"subtotal","args":[-1,1,23]},',
+            '{"anchor":2,"name":"Women","function":"subtotal","args":[2]}]}}}')
     })
 
     test_that("subtotals and headers to a variable that has some, appends", {
@@ -216,7 +241,7 @@ with_test_authentication({
 
         expect_json_equivalent(transforms(ds$v4), trans_resp)
 
-        expect_output(subtotals(ds$v4),
+        expect_prints(subtotals(ds$v4),
                       get_output(data.frame(
                           anchor = c("top", 1, 2, "bottom"),
                           name = c("This is a subtitle","B alone","C alone", "B+C"),
