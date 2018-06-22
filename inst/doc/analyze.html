@@ -390,20 +390,22 @@ tab3mr
 </code></pre>
 
 <pre><code>##                         gender
-## imiss                         Male    Female
-##   Abortion                58.64993  97.61001
-##   Education               93.98404 115.08118
-##   Gay rights              39.50817  68.21617
-##   Health care            115.13064 120.27883
-##   Immigration             86.65671  96.90796
-##   Medicare               107.80704 110.61446
-##   Social security        109.95809 109.20223
-##   Taxes                  106.60644 108.92159
-##   Terrorism               88.26523 101.57750
-##   The budget deficit      89.38060 104.02191
-##   The economy            108.38178 119.16976
-##   The environment         90.32808  97.05483
-##   The war in Afghanistan  73.62479  96.68801
+## imiss                          Male     Female
+##   Abortion                58.649930  97.610008
+##   Education               93.984044 115.081178
+##   Gay rights              39.508173  68.216167
+##   Health care            115.130638 120.278828
+##   Immigration             86.656706  96.907961
+##   Medicare               107.807040 110.614461
+##   Social security        109.958090 109.202235
+##   Taxes                  106.606438 108.921595
+##   Terrorism               88.265235 101.577497
+##   The budget deficit      89.380602 104.021909
+##   The economy            108.381784 119.169762
+##   The environment         90.328080  97.054830
+##   The war in Afghanistan  73.624791  96.688008
+##   &lt;NA&gt;                     1.059559   5.867937
+##   &lt;NA&gt;                   120.491874 122.580631
 </code></pre>
 
 <p>It&#39;s worth noting here that the result of <code>crtabs</code> isn&#39;t an <code>array</code> object but a <code>CrunchCube</code> object.</p>
@@ -423,19 +425,21 @@ tab3mr
 
 <pre><code>##                         gender
 ## imiss                    Male Female
-##   Abortion                 48     76
-##   Education                77     90
-##   Gay rights               33     53
-##   Health care              95     94
-##   Immigration              71     75
-##   Medicare                 89     86
-##   Social security          90     85
-##   Taxes                    88     85
-##   Terrorism                73     79
-##   The budget deficit       74     81
-##   The economy              89     93
-##   The environment          74     76
-##   The war in Afghanistan   61     75
+##   Abortion                  5      7
+##   Education                 7      8
+##   Gay rights                3      5
+##   Health care               9      8
+##   Immigration               7      7
+##   Medicare                  8      8
+##   Social security           9      7
+##   Taxes                     8      7
+##   Terrorism                 7      7
+##   The budget deficit        7      7
+##   The economy               8      8
+##   The environment           7      7
+##   The war in Afghanistan    6      7
+##   &lt;NA&gt;                      0      0
+##   &lt;NA&gt;                      9      8
 </code></pre>
 
 <p>Finally, just as we saw in the <a href="array-variables.html">array variables</a> vignette, we can grab individual subvariables and crosstab with them:</p>
@@ -475,6 +479,8 @@ tab3mr
 ##   The economy               13                   32           31      9     16         9
 ##   The environment           12                   31           24      7      9         8
 ##   The war in Afghanistan    11                   17           24      2     13         6
+##   &lt;NA&gt;                       0                    0            1      0      0         0
+##   &lt;NA&gt;                      13                   43           31      9     16         9
 ## 
 ## , , gender = Female
 ## 
@@ -493,6 +499,8 @@ tab3mr
 ##   The economy                9                   37           27     15     23         9
 ##   The environment            6                   29           19     14     21         8
 ##   The war in Afghanistan     8                   27           27     13     15         7
+##   &lt;NA&gt;                       0                    5            1      0      0         0
+##   &lt;NA&gt;                       9                   38           29     15     23         9
 </code></pre>
 
 <!--

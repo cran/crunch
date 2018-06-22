@@ -135,7 +135,7 @@ with(temp.option(foo.bar="no", foo.other="other"), {
             expect_null(envOrOption("somethingelse")) ## Null if neither
             ## default works
             expect_identical(envOrOption("somethingelse", "I'm a default"),
-                             "I'm a default") 
+                             "I'm a default")
         })
     })
 })
@@ -157,10 +157,15 @@ test_that("default date formater", {
     expect_equal(datetimeFormater(NULL), "%Y-%m-%d %H:%M:%S")
 })
 
+test_that("loadCube can handle a number of locations", {
+    # loadCube can load old fixtures that lack element/self/value metadata
+    cube <- loadCube("cubes/array-cube-sans-metadata.json")
+    expect_is(cube, "CrunchCube")
+})
 
 test_that("Cubify works with many dimensions", {
     # 1d
-    cube_json <- fromJSON(test_path("cubes/univariate-categorical.json"))
+    cube_json <- fromJSON(system.file("cubes/univariate-categorical.json", package = "crunch"))
     cube <- loadCube(test_path("cubes/univariate-categorical.json"))
 
     dn <- dimnames(cube@arrays$count)
@@ -169,7 +174,7 @@ test_that("Cubify works with many dimensions", {
     expect_length(dim(cube@arrays$count), 1)
 
     # 2d
-    cube_json <- fromJSON(test_path("cubes/cat-array.json"))
+    cube_json <- fromJSON(system.file("cubes/cat-array.json", package = "crunch"))
     cube <- loadCube(test_path("cubes/cat-array.json"))
 
     dn <- dimnames(cube@arrays$count)
@@ -178,7 +183,7 @@ test_that("Cubify works with many dimensions", {
     expect_length(dim(cube@arrays$count), 2)
 
     # 3d
-    cube_json <- fromJSON(test_path("cubes/selected-crosstab-4.json"))
+    cube_json <- fromJSON(system.file("cubes/selected-crosstab-4.json", package = "crunch"))
     cube <- loadCube(test_path("cubes/selected-crosstab-4.json"))
 
     dn <- dimnames(cube@arrays$count)
@@ -187,7 +192,7 @@ test_that("Cubify works with many dimensions", {
     expect_length(dim(cube@arrays$count), 3)
 
     # 3+d
-    cube_json <- fromJSON(test_path("cubes/cat-x-mr-x-mr.json"))
+    cube_json <- fromJSON(system.file("cubes/cat-x-mr-x-mr.json", package = "crunch"))
     cube <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
 
     dn <- dimnames(cube@arrays$count)
@@ -205,9 +210,14 @@ test_that("is.TRUEorFALSE errors correctly", {
 })
 
 test_that("checkInstalledPackages", {
-    expect_error(checkInstalledPackages(c("not", "installed")),
-        paste0("Missing required packages: ", dQuote("not"), " and ", dQuote("installed")))
+    expect_error(checkInstalledPackages(c("NoTaPaCkAgE", "NoRtHiSoNe")),
+        paste0("Missing required packages: ", dQuote("NoTaPaCkAgE"), " and ", dQuote("NoRtHiSoNe")))
     expect_silent(checkInstalledPackages("stats"))
+})
+
+test_that("hasFunction", {
+    expect_true(hasFunction("makeArray", "crunch"))
+    expect_false(hasFunction("Totally_not_a_function", "crunch"))
 })
 
 with_mock_crunch({
@@ -222,25 +232,4 @@ with_mock_crunch({
                      "Array-like variables can't be used with function `embed_func()`.",
                      fixed = TRUE)
     })
-
-    test_that("has.function", {
-        func <- zfunc("cast", ds$birthyr, "text")
-        expect_true(has.function(func, "cast"))
-        expect_false(has.function(func, "case"))
-
-        func <- zfunc("case",
-                      zfunc("cast", ds$birthyr, "text"),
-                      list(args = list()))
-        expect_true(has.function(func, "cast"))
-        expect_true(has.function(func, "case"))
-        expect_false(has.function(func, "selected_array"))
-
-        func <- zfunc("case", zfunc("cast",
-                                    zfunc("selected_array", ds$birthyr, "text"),
-                                    "text"))
-        expect_true(has.function(func, "cast"))
-        expect_true(has.function(func, "case"))
-        expect_true(has.function(func, "selected_array"))
-    })
-
 })

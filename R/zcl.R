@@ -29,7 +29,7 @@ setMethod("zcl", "Date", r2zcl)
 setMethod("zcl", "POSIXt", r2zcl)
 setMethod("zcl", "logical", function (x) {
     if (length(x)) {
-        if (getOption("crunch.3vl", FALSE)) {
+        if (getOption("crunch.3vl", TRUE)) {
             ## 3VL categorical
             out <- r2zcl(x)
             out$type <- list(class="categorical", categories=.selected.cats)
@@ -55,4 +55,18 @@ setMethod("zcl", "CrunchFilter", function (x) x@body$expression)
 zfunc <- function (func, ...) {
     ## Wrapper that creates ZCL function syntax
     return(list(`function`=func, args=lapply(list(...), zcl)))
+}
+
+# check if a template or query has a particular ZCL function somewhere in it recursively.
+has.function <- function (query, funcs) {
+    query <- unlist(query, recursive = TRUE)
+
+    func_names <- grepl("function$", names(query))
+    func_names <- names(query)[func_names]
+
+    if (any(query[func_names] %in% funcs)) {
+        return(TRUE)
+    }
+
+    return(FALSE)
 }
