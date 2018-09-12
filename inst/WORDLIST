@@ -30,6 +30,7 @@ DatasetGroups
 DatasetOrder
 Datetime
 DatetimeVariable
+Devs
 Dichotomize
 FilterCatalog
 Getter
@@ -75,6 +76,7 @@ TabBookResult
 TabBookResults
 Unhide
 UserEntity
+UserCatalog
 VariableCatalog
 VariableDefinition
 VariableDefinitions
@@ -106,6 +108,7 @@ customizations
 darkgreen
 dataset's
 datetime
+deduplicated
 deserialization
 df
 dichotomization

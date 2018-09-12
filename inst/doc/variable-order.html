@@ -339,10 +339,19 @@ ds %&gt;%
 
 <pre><code class="r">ds %&gt;%
     cd(&quot;Demos&quot;) %&gt;%
-    setName(&quot;Demographics&quot;)
+    setNames(c(&quot;Birth Year&quot;, &quot;Gender&quot;, &quot;Political Ideo. (3 category)&quot;, 
+    &quot;Political Ideo. (7 category)&quot;,  &quot;Political Ideo. (7 category; other)&quot;,  
+    &quot;Race&quot;, &quot;Education&quot;, &quot;Marital Status&quot;, &quot;Phone&quot;, &quot;Family Income&quot;, &quot;Region&quot;, 
+    &quot;State&quot;, &quot;Weight&quot;, &quot;Voter Registration (new)&quot;, &quot;Is a voter?&quot;, 
+    &quot;Voter Registration (old)&quot;, &quot;Voter Registration&quot;))
 </code></pre>
 
-<p>We can also set the names of the objects contained in a folder with <code>setNames()</code>.</p>
+<p>We can also set the names of the objects contained in a folder with <code>setNames()</code>:</p>
+
+<pre><code class="r">ds %&gt;%
+    cd(&quot;Demos&quot;) %&gt;%
+    setName(&quot;Demographics&quot;)
+</code></pre>
 
 <h2>Ordering within folders</h2>
 
