@@ -89,7 +89,7 @@ as.data.frame.CrunchDataFrame <- function(x,
     write.csv(ds, tmp, categorical = "id", include.hidden = include.hidden)
     # TODO: use variableMetadata to provide all `colClasses`?
     # meta <- variableMetadata(ds)
-    ds_out <- read.csv(tmp, stringsAsFactors = FALSE)
+    ds_out <- read.csv(tmp, stringsAsFactors = FALSE, check.names = FALSE)
     return(csvToDataFrame(ds_out, x))
 }
 
@@ -204,16 +204,6 @@ as.data.frame.FilterCatalog <- function(x,
                                         optional = FALSE,
                                         keys = c("name", "id", "is_public"),
                                         ...) {
-    catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
-}
-
-#' @rdname catalog-dataframes
-#' @export
-as.data.frame.ProjectCatalog <- function(x,
-                                         row.names = NULL,
-                                         optional = FALSE,
-                                         keys = c("name", "id", "description"),
-                                         ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
 

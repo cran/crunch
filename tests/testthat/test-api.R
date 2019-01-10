@@ -74,6 +74,13 @@ with_mock_crunch({
         )
         expect_identical(resp, crGET("https://app.crunch.io/api/"))
     })
+    test_that("404 error message includes the request URL", {
+        expect_error(
+            resp <- crGET("https://app.crunch.io/404/"),
+            "Client error: (404) Not Found: https://app.crunch.io/404/",
+            fixed = TRUE
+        )
+    })
 
     test_that("Checking feature flags", {
         expect_true(featureFlag("this_is_on"))
@@ -105,14 +112,14 @@ if (run.integration.tests) {
         expect_true(grepl("rcrunch", r$headers[["User-Agent"]]))
     })
 
-    test_that("crunchUserAgent", {
-        expect_true(grepl("rcrunch", crunchUserAgent()))
-        expect_true(grepl("libcurl", crunchUserAgent()))
+    test_that("crunch_user_agent", {
+        expect_true(grepl("rcrunch", crunch_user_agent()))
+        expect_true(grepl("libcurl", crunch_user_agent()))
         expect_error(
-            crunchUserAgent("anotherpackage/3.1.4"),
+            crunch_user_agent("anotherpackage/3.1.4"),
             NA
         )
-        expect_true(grepl("anotherpackage", crunchUserAgent("anotherpackage")))
+        expect_true(grepl("anotherpackage", crunch_user_agent("anotherpackage")))
     })
 
     with_test_authentication({

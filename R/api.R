@@ -69,7 +69,6 @@ handleAPIresponse <- function(response, special.statuses = list()) {
             msg <- c("The API resource at ", response$url, " returned a warning.")
         }
 
-
         warning(
             msg,
             " Details: ",
@@ -134,16 +133,20 @@ handleAPIresponse <- function(response, special.statuses = list()) {
             ## Server is busy and telling us to retry the request again after
             ## some period.
             wait <- get_header("Retry-After", response$headers)
-            message("This request is taking longer than expected. Please stand by...",
-                call. = FALSE
-            )
+            message("This request is taking longer than expected. Please stand by...")
             Sys.sleep(as.numeric(wait))
             ## TODO: resend request headers? Or, include the request to evaluate
             ## inside this function, do match.call at the beginning, and re-eval?
             return(crGET(response$url))
         }
         msg <- http_status(response)$message
-        msg2 <- try(content(response)$message, silent = TRUE)
+        if (code == 404) {
+            # Add the URL that was "not found" (there isn't going to be any
+            # useful response content message)
+            msg2 <- response$url
+        } else {
+            msg2 <- try(content(response)$message, silent = TRUE)
+        }
         if (!is.error(msg2)) {
             msg <- paste(msg, msg2, sep = ": ")
         }
@@ -170,9 +173,16 @@ locationHeader <- function(response) {
 
 get_crunch_config <- function() getOption("crunch.httr_config")
 
+#' Set or modify general Crunch API request configuration
+#'
+#' @param cfg A [httr::config()] object
+#' @return A list of length one containing the configuration that was set; this
+#' function is called primarily for its side effects.
+#' @keywords internal
+#' @export
 set_crunch_config <- function(cfg = c(
                                   config(postredir = 3),
-                                  add_headers(`user-agent` = crunchUserAgent())
+                                  add_headers(`user-agent` = crunch_user_agent())
                               ),
                               update = FALSE) {
     if (update) {
@@ -181,19 +191,45 @@ set_crunch_config <- function(cfg = c(
     options(crunch.httr_config = cfg)
 }
 
-#' @importFrom utils packageVersion
+#' Generate or extend the User-Agent string
+#'
+#' By default, the names and versions of curl, httr, and any attached Crunch
+#' packages are included in the User-Agent request header. You can add to this
+#' using this function.
+#' @param ... Additional character terms to add to the User-Agent string
+#' @return The User-Agent string. Provide this appropriately in requests or set
+#' globally with [set_crunch_config()].
+#' @export
+#' @keywords internal
 #' @importFrom curl curl_version
-crunchUserAgent <- function(x) {
+crunch_user_agent <- function(...) {
     ## Cf. httr:::default_ua
-    versions <- c(
-        libcurl = curl_version()$version,
-        curl = as.character(packageVersion("curl")),
-        httr = as.character(packageVersion("httr")),
-        rcrunch = as.character(packageVersion("crunch"))
+    ## Include versions of any of these packages, if attached
+    pkgs <- ua_packages[ua_packages %in% loadedNamespaces()]
+    ua <- c(
+        # Also include the libcurl version
+        paste0("libcurl/", curl_version()$version),
+        mapply(packageUA, pkgs, names(pkgs)),
+        # And any extra bits provided
+        ...
     )
-    ua <- paste0(names(versions), "/", versions, collapse = " ")
-    if (!missing(x)) ua <- paste(ua, x)
-    return(ua)
+    return(paste(ua, collapse = " "))
+}
+
+ua_packages <- c(
+    # This is a named vector so that we can provide an alternate name in the
+    # user-agent string ("rcrunch" instead of "crunch", for example)
+    curl="curl",
+    httr="httr",
+    rcrunch="crunch",
+    crplyr="crplyr",
+    crunchy="crunchy"
+)
+
+#' @importFrom utils packageVersion
+packageUA <- function (pkg, name=pkg) {
+    # Return a string like "rcrunch/3.4.2" for a package
+    paste0(name, "/", as.character(packageVersion(pkg)))
 }
 
 handleShoji <- function(x) {

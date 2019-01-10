@@ -203,15 +203,11 @@ hr {
 <body>
 <p><a href="array-variables.html">Previous: array variables</a></p>
 
-<blockquote>
-<p>This is the new variable folder API, which replaces the old &ldquo;ordering&rdquo; API. It is currently in a beta testing phase. Feedback on your experience working with it is greatly appreciated. During this beta period, both old and new APIs are available. For details on the old methods, see <a href="variable-order-old.html">the old vignette</a>.</p>
-</blockquote>
-
 <p>In the web application, variables in a dataset are displayed in a list on the left side of the screen.</p>
 
 <!-- screenshot -->
 
-<p>Typically, when you import a dataset, the variable list is flat, but it can be organized into an accordion-like hierarchy. The <a href="http://support.crunch.io/crunch/crunch_organizing-variables.html">variable organizer in the Crunch GUI</a> allows you to organize your variables visually, but you can also manage this metadata from R using the <code>crunch</code> package.</p>
+<p>Typically, when you import a dataset, the variable list is flat, but it can be organized into an accordion-like hierarchy. The variable organizer in the Crunch GUI allows you to organize your variables visually, but you can also manage this metadata from R using the <code>crunch</code> package.</p>
 
 <h2>File-system like</h2>
 
@@ -339,10 +335,10 @@ ds %&gt;%
 
 <pre><code class="r">ds %&gt;%
     cd(&quot;Demos&quot;) %&gt;%
-    setNames(c(&quot;Birth Year&quot;, &quot;Gender&quot;, &quot;Political Ideo. (3 category)&quot;, 
+    setNames(c(&quot;Birth Year&quot;, &quot;Gender&quot;, &quot;Political Ideo. (3 category)&quot;,
     &quot;Political Ideo. (7 category)&quot;,  &quot;Political Ideo. (7 category; other)&quot;,  
-    &quot;Race&quot;, &quot;Education&quot;, &quot;Marital Status&quot;, &quot;Phone&quot;, &quot;Family Income&quot;, &quot;Region&quot;, 
-    &quot;State&quot;, &quot;Weight&quot;, &quot;Voter Registration (new)&quot;, &quot;Is a voter?&quot;, 
+    &quot;Race&quot;, &quot;Education&quot;, &quot;Marital Status&quot;, &quot;Phone&quot;, &quot;Family Income&quot;, &quot;Region&quot;,
+    &quot;State&quot;, &quot;Weight&quot;, &quot;Voter Registration (new)&quot;, &quot;Is a voter?&quot;,
     &quot;Voter Registration (old)&quot;, &quot;Voter Registration&quot;))
 </code></pre>
 

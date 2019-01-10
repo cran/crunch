@@ -5,8 +5,6 @@
 \alias{ShojiOrder-slots}
 \alias{entities}
 \alias{entities<-}
-\alias{duplicates}
-\alias{duplicates<-}
 \alias{entities,OrderGroup-method}
 \alias{entities,ShojiOrder-method}
 \alias{entities,list-method}
@@ -17,12 +15,6 @@
 \alias{names,ShojiOrder-method}
 \alias{names,OrderGroup-method}
 \alias{names<-,ShojiOrder-method}
-\alias{duplicates,ShojiOrder-method}
-\alias{duplicates,OrderGroup-method}
-\alias{duplicates,VariableCatalog-method}
-\alias{duplicates<-,ShojiOrder,logical-method}
-\alias{duplicates<-,OrderGroup,logical-method}
-\alias{duplicates<-,VariableCatalog,logical-method}
 \title{Manipulate VariableGroup and VariableOrder}
 \usage{
 \S4method{entities}{OrderGroup}(x, simplify = FALSE)
@@ -44,18 +36,6 @@
 \S4method{names}{OrderGroup}(x)
 
 \S4method{names}{ShojiOrder}(x) <- value
-
-\S4method{duplicates}{ShojiOrder}(x)
-
-\S4method{duplicates}{OrderGroup}(x)
-
-\S4method{duplicates}{VariableCatalog}(x)
-
-\S4method{duplicates}{ShojiOrder,logical}(x) <- value
-
-\S4method{duplicates}{OrderGroup,logical}(x) <- value
-
-\S4method{duplicates}{VariableCatalog,logical}(x) <- value
 }
 \arguments{
 \item{x}{a VariableGroup or VariableOrder}
@@ -70,15 +50,12 @@ entities, either a character vector of variable URLs or a list containing a
 combination of variable URLs and VariableGroups. Note that group names must
 be unique, should be greater than 0 characters long, and "ungrouped" is a
 reserved group name.
-\item For duplicates, logical for whether duplicate
-variable entries should be allowed in the VariableOrder.
 }}
 }
 \value{
 \itemize{
 \item \code{entities} returns Variable references and VariableGroups;
 \item \code{names} returns group names;
-\item \code{duplicates} returns logical for whether duplicate variable entries should be allowed
 }
 }
 \description{

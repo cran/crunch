@@ -7,7 +7,7 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.24.0
+Version: 1.25.0
 Authors@R: c(
     person("Neal", "Richardson", role=c("aut", "cre"), email="neal@crunch.io"),
     person("Jonathan", "Keane", role="aut", email="jon.keane@crunch.io"),
@@ -19,12 +19,12 @@ Depends: R (>= 3.0.0)
 Imports: crayon, curl, grDevices, httr (>= 1.0.0), httpcache (>=
         0.1.4), jsonlite (>= 0.9.15), methods
 Suggests: covr, crunchy, devtools, haven, httptest (>= 3.0.0), knitr,
-        lintr, magrittr, miniUI, rmarkdown, rstudioapi, shiny,
-        spelling, styler, testthat (>= 2.0.0), withr
+        magrittr, rmarkdown, rstudioapi, spelling, styler, testthat (>=
+        2.0.0), withr
 VignetteBuilder: knitr
 Language: en-US
 Encoding: UTF-8
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 LazyData: true
 Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'R-to-variable.R' 'SO-survey.R' 'abstract-categories.R'
@@ -40,19 +40,18 @@ Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'cube-query.R' 'cube-residuals.R' 'cube-result.R'
         'cube-subset.R' 'cube-transforms.R' 'cube-variables.R' 'cut.R'
         'dataset-catalog.R' 'dataset-extract.R' 'dataset-order.R'
-        'dataset-stream.R' 'dataset-update.R' 'dataset.R'
+        'dataset-stream.R' 'dataset-update.R' 'dataset.R' 'decks.R'
         'dichotomize.R' 'drop-rows.R' 'edit-lock.R' 'export-dataset.R'
-        'expressions.R' 'filters.R' 'folders-projects.R' 'folders.R'
-        'fork-and-merge.R' 'formula.R' 'gadgets.R' 'geo.R'
-        'get-datasets.R' 'github.R' 'hide-variables.R' 'insertions.R'
-        'interact.R' 'join-dataset.R' 'json.R' 'make-array.R'
-        'members.R' 'merge-crunch-data-frame.R' 'misc.R'
-        'multitables.R' 'new-dataset.R' 'ordering.R'
+        'expressions.R' 'filters.R' 'folders.R' 'fork-and-merge.R'
+        'formula.R' 'gadgets.R' 'geo.R' 'get-datasets.R' 'github.R'
+        'hide-variables.R' 'insertions.R' 'interact.R' 'join-dataset.R'
+        'json.R' 'make-array.R' 'members.R' 'merge-crunch-data-frame.R'
+        'misc.R' 'multitables.R' 'new-dataset.R' 'ordering.R'
         'permission-catalog.R' 'pretty-print.R' 'progress.R'
         'project-folder.R' 'projects.R' 'search.R' 'session.R'
         'share.R' 'shoji-catalog.R' 'shoji-entity.R' 'shoji-folder.R'
         'shoji-order-slots.R' 'shoji-order.R' 'shoji.R' 'show.R'
-        'subtotals-and-headings.R' 'subvariables.R'
+        'slides.R' 'subtotals-and-headings.R' 'subvariables.R'
         'summary-insertions.R' 'tab-book.R' 'teams.R'
         'transform-calculate.R' 'transform.R' 'tuple.R' 'univariate.R'
         'user-info.R' 'user.R' 'variable-as-methods.R'
@@ -62,10 +61,10 @@ Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'variable-to-R.R' 'variable-type.R' 'variable-update.R'
         'variable.R' 'variables.R' 'versions.R' 'weight.R' 'zcl.R'
 NeedsCompilation: no
-Packaged: 2018-09-11 23:00:39 UTC; npr
+Packaged: 2019-01-10 17:56:06 UTC; npr
 Author: Neal Richardson [aut, cre],
   Jonathan Keane [aut],
   Gordon Shotwell [aut]
 Maintainer: Neal Richardson <neal@crunch.io>
 Repository: CRAN
-Date/Publication: 2018-09-12 21:00:03 UTC
+Date/Publication: 2019-01-10 18:40:04 UTC

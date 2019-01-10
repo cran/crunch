@@ -8,17 +8,14 @@
 #' combination of variable URLs and VariableGroups. Note that group names must
 #' be unique, should be greater than 0 characters long, and "ungrouped" is a
 #' reserved group name.
-#' 1. For duplicates, logical for whether duplicate
-#' variable entries should be allowed in the VariableOrder.
 #' @param simplify logical: should variable URLs inside of groups be flattened
 #' or preserved in their nested lists? Default is`FALSE`.
 #' @return
 #' * `entities` returns Variable references and VariableGroups;
 #' * `names` returns group names;
-#' * `duplicates` returns logical for whether duplicate variable entries should be allowed
 #' @name ShojiOrder-slots
 #' @seealso [`VariableOrder`] [`grouped`]
-#' @aliases entities entities<- duplicates duplicates<-
+#' @aliases entities entities<-
 NULL
 
 #' @rdname ShojiOrder-slots
@@ -111,44 +108,3 @@ setMethod(
         return(x)
     }
 )
-
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates", "ShojiOrder", function(x) x@duplicates)
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates", "OrderGroup", function(x) x@duplicates)
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates", "VariableCatalog", function(x) duplicates(x@order))
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates<-", c("ShojiOrder", "logical"), function(x, value) {
-    value <- isTRUE(value) ## To purge NA_logical_
-    x@duplicates <- value
-    grps <- vapply(x@graph, inherits, logical(1), what = "OrderGroup")
-    x@graph[grps] <- lapply(x@graph[grps], `duplicates<-`, value = value)
-    if (!value) {
-        ## We're setting duplicates: FALSE, so dedupe
-        x <- dedupeOrder(x)
-    }
-    return(x)
-})
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates<-", c("OrderGroup", "logical"), function(x, value) {
-    value <- isTRUE(value) ## To purge NA_logical_
-    x@duplicates <- value
-    grps <- vapply(x@entities, inherits, logical(1), what = "OrderGroup")
-    x@entities[grps] <- lapply(x@entities[grps], `duplicates<-`, value = value)
-    ## Note: not calling dedupeOrder here because it's most likely that this is
-    ## only called from within the duplicates<- method for ShojiOrder, which
-    ## does the deduping
-    return(x)
-})
-#' @rdname ShojiOrder-slots
-#' @export
-setMethod("duplicates<-", c("VariableCatalog", "logical"), function(x, value) {
-    duplicates(x@order) <- isTRUE(value) ## To purge NA_logical_
-    return(x)
-})

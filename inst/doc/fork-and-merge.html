@@ -201,9 +201,9 @@ hr {
 </head>
 
 <body>
-<p>One of the main benefits of Crunch is that it lets analysts and clients work with the same datasets. Instead of emailing datasets to clients, you can update the live dataset and ensure that they will see see the most up-to-date information. The potential problem with this setup is that it can become difficult to make provisional changes to the dataset without publishing it to the client. Sometimes an analyst wants to investigate or experiment with a dataset without the risk of sending incorrect or confusing information to the end user This is why we implemented a fork-edit-merge workflow for Crunch datasets. </p>
+<p>One of the main benefits of Crunch is that it lets analysts and clients work with the same datasets. Instead of emailing datasets to clients, you can update the live dataset and ensure that they will see see the most up-to-date information. The potential problem with this setup is that it can become difficult to make provisional changes to the dataset without publishing it to the client. Sometimes an analyst wants to investigate or experiment with a dataset without the risk of sending incorrect or confusing information to the end user This is why we implemented a fork-edit-merge workflow for Crunch datasets.</p>
 
-<p>&ldquo;Fork&rdquo; originates in computer version control systems and just means to take a copy of something with the intention of making some changes to the copy, and then incorporating those changes back into the original. A helpful mnemonic is to think of a path which forks off from the main road, but then rejoins it later on. To see how this works lets first upload a new dataset to Crunch. </p>
+<p>&ldquo;Fork&rdquo; originates in computer version control systems and just means to take a copy of something with the intention of making some changes to the copy, and then incorporating those changes back into the original. A helpful mnemonic is to think of a path which forks off from the main road, but then rejoins it later on. To see how this works lets first upload a new dataset to Crunch.</p>
 
 <pre><code class="r">library(crunch)
 login()
@@ -212,20 +212,20 @@ login()
 <pre><code class="r">ds &lt;- newDataset(SO_survey, &quot;stackoverflow_survey&quot;)
 </code></pre>
 
-<p>Imagine that this dataset is shared with several users, and you want to update it without affecting their usage. You might also want to consult with other analysts or decision makers to make sure that the data is accurate before sharing it with clients. To do this you call <code>forkDataset()</code> to create a copy of the dataset. </p>
+<p>Imagine that this dataset is shared with several users, and you want to update it without affecting their usage. You might also want to consult with other analysts or decision makers to make sure that the data is accurate before sharing it with clients. To do this you call <code>forkDataset()</code> to create a copy of the dataset.</p>
 
 <pre><code class="r">forked_ds &lt;- forkDataset(ds)
 </code></pre>
 
-<p>You now have a copied dataset which is identical to the original, and are free to make changes without fear of disrupting the client&#39;s experience. You can add or remove variables, delete records, or change the dataset&#39;s organization. These changes will be isolated to your fork and won&#39;t be visible to the end user until you decide to merge the fork back into the original dataset. This lets you edit the dataset with confidence because your work is isolated. </p>
+<p>You now have a copied dataset which is identical to the original, and are free to make changes without fear of disrupting the client&#39;s experience. You can add or remove variables, delete records, or change the dataset&#39;s organization. These changes will be isolated to your fork and won&#39;t be visible to the end user until you decide to merge the fork back into the original dataset. This lets you edit the dataset with confidence because your work is isolated.</p>
 
-<p>In this case, let&#39;s create a new categorical array variable. </p>
+<p>In this case, let&#39;s create a new categorical array variable.</p>
 
-<pre><code class="r">ds$ImportantHiringCA &lt;- makeArray(ds[, c(&quot;ImportantHiringTechExp&quot;, &quot;ImportantHiringPMExp&quot;)], 
-    name = &quot;importantCatArray&quot;) 
+<pre><code class="r">ds$ImportantHiringCA &lt;- makeArray(ds[, c(&quot;ImportantHiringTechExp&quot;, &quot;ImportantHiringPMExp&quot;)],
+    name = &quot;importantCatArray&quot;)
 </code></pre>
 
-<p>Our forked dataset has diverged from the original dataset. Which we can see by comparing their names. </p>
+<p>Our forked dataset has diverged from the original dataset. Which we can see by comparing their names.</p>
 
 <pre><code class="r">all(names(ds) %in% names(forked_ds))
 </code></pre>
@@ -233,14 +233,14 @@ login()
 <pre><code>## [1] FALSE
 </code></pre>
 
-<p>You can work with the forked dataset as long as you like, if you want to see it in the web App or share it with other analysts by you can do so by calling <code>webApp(forked_ds)</code>. You might create many forks and discard most of them without merging them into the original dataset. </p>
+<p>You can work with the forked dataset as long as you like, if you want to see it in the web App or share it with other analysts by you can do so by calling <code>webApp(forked_ds)</code>. You might create many forks and discard most of them without merging them into the original dataset.</p>
 
-<p>If you do end up with changes to the forked dataset that you want to include in the original dataset you can do so with the <code>mergeFork()</code> function. This function figures out what changes you made the fork, and then applies those changes to the original dataset. </p>
+<p>If you do end up with changes to the forked dataset that you want to include in the original dataset you can do so with the <code>mergeFork()</code> function. This function figures out what changes you made the fork, and then applies those changes to the original dataset.</p>
 
 <pre><code class="r">ds &lt;- mergeFork(ds, forked_ds)
 </code></pre>
 
-<p>After merging the original dataset includes the categorical array variable which we created on the fork. </p>
+<p>After merging the original dataset includes the categorical array variable which we created on the fork.</p>
 
 <pre><code class="r">ds$ImportantHiringCA
 </code></pre>
@@ -251,19 +251,19 @@ login()
 ##   $`ImportantHiringPMExp`
 </code></pre>
 
-<p>It&#39;s possible to to make changes to a fork which can&#39;t be easily merged into the original dataset. For instance if, while we were working on this fork someone added another variable called <code>ImportantHiringCA</code> to the original dataset the merge might fail because there&#39;s no safe way to reconcile the two forks. This is called a &ldquo;merge conflict&rdquo; and there are a couple best practices that you can follow to avoid this problem: </p>
+<p>It&#39;s possible to to make changes to a fork which can&#39;t be easily merged into the original dataset. For instance if, while we were working on this fork someone added another variable called <code>ImportantHiringCA</code> to the original dataset the merge might fail because there&#39;s no safe way to reconcile the two forks. This is called a &ldquo;merge conflict&rdquo; and there are a couple best practices that you can follow to avoid this problem:</p>
 
 <p>1) <strong>Make minimal changes to dataset forks.</strong> Instead of making lots of changes to a fork, make a couple of small change to the fork, merge it back into the original dataset, and a create a new fork for the next set of changes
-2) <strong>Have other analysts work on their own forks.</strong> It&#39;s easier to avoid conflicts if each member of the team makes changes to their own fork and then periodically merges those changes back into the original dataset. This lets you coordinate the order that you want to apply changes to the original dataset, and so avoid some merge conflicts. </p>
+2) <strong>Have other analysts work on their own forks.</strong> It&#39;s easier to avoid conflicts if each member of the team makes changes to their own fork and then periodically merges those changes back into the original dataset. This lets you coordinate the order that you want to apply changes to the original dataset, and so avoid some merge conflicts.</p>
 
 <h2>Appending data</h2>
 
-<p>Another good use of the fork-edit-merge workflow is when you want to append data to an existing dataset. When appending data you usually want to check that the append operation completed successfully before publishing the data to users. This might come up if you are adding a second wave of a survey, or including some additional data which came in after the dataset was initially sent to clients. The first step is to upload the second survey wave as its own dataset. </p>
+<p>Another good use of the fork-edit-merge workflow is when you want to append data to an existing dataset. When appending data you usually want to check that the append operation completed successfully before publishing the data to users. This might come up if you are adding a second wave of a survey, or including some additional data which came in after the dataset was initially sent to clients. The first step is to upload the second survey wave as its own dataset.</p>
 
 <pre><code class="r">wave2 &lt;- newDataset(SO_survey, &quot;SO_survey_wave2&quot;)
 </code></pre>
 
-<p>We then fork the original dataset and append the new wave onto the forked dataset. </p>
+<p>We then fork the original dataset and append the new wave onto the forked dataset.</p>
 
 <pre><code class="r">ds_fork &lt;- forkDataset(ds)
 ds_fork &lt;- appendDataset(ds_fork, wave2)
@@ -283,12 +283,12 @@ ds_fork &lt;- appendDataset(ds_fork, wave2)
 <pre><code>## [1] 3268
 </code></pre>
 
-<p>Once we&#39;ve confirmed that the append completed successfully we can merge the forked dataset back into the original one. </p>
+<p>Once we&#39;ve confirmed that the append completed successfully we can merge the forked dataset back into the original one.</p>
 
 <pre><code class="r">ds &lt;- mergeFork(ds, ds_fork)
 </code></pre>
 
-<p><code>ds</code> now has the additional rows. </p>
+<p><code>ds</code> now has the additional rows.</p>
 
 <pre><code class="r">nrow(ds)
 </code></pre>
@@ -298,7 +298,7 @@ ds_fork &lt;- appendDataset(ds_fork, wave2)
 
 <h2>Merging datasets</h2>
 
-<p>Merging two datasets together can often be the source of unexpected behavior like misaligning or overwriting variables, and so it&#39;s a good candidate for this workflow. Let&#39;s create a fake dataset with household size to merge onto the original one. </p>
+<p>Merging two datasets together can often be the source of unexpected behavior like misaligning or overwriting variables, and so it&#39;s a good candidate for this workflow. Let&#39;s create a fake dataset with household size to merge onto the original one.</p>
 
 <pre><code class="r">house_table &lt;- data.frame(Respondent = unique(as.vector(ds$Respondent)))
 house_table$HouseholdSize &lt;- sample(
@@ -309,13 +309,13 @@ house_table$HouseholdSize &lt;- sample(
 house_ds &lt;- newDataset(house_table, &quot;House Size&quot;)
 </code></pre>
 
-<p>There are a few reasons why we might not want to merge this new table onto our user facing data. For instance we might make a mistake in constructing the table, or have some category names which don&#39;t quite match up. Merging the data onto a forked dataset again gives us the safety to make changes and verify accuracy without affecting client-facing data. </p>
+<p>There are a few reasons why we might not want to merge this new table onto our user facing data. For instance we might make a mistake in constructing the table, or have some category names which don&#39;t quite match up. Merging the data onto a forked dataset again gives us the safety to make changes and verify accuracy without affecting client-facing data.</p>
 
 <pre><code class="r">ds_fork &lt;- forkDataset(ds)
 ds_fork &lt;- merge(ds_fork, house_ds, by = &quot;Respondent&quot;)
 </code></pre>
 
-<p>Before merging the fork back into the original dataset, we can check that everything went well with the join. </p>
+<p>Before merging the fork back into the original dataset, we can check that everything went well with the join.</p>
 
 <pre><code class="r">crtabs(~ TabsSpaces + HouseholdSize, ds_fork)
 </code></pre>
@@ -327,7 +327,7 @@ ds_fork &lt;- merge(ds_fork, house_ds, by = &quot;Respondent&quot;)
 ##     Tabs   131 121 143 158 145
 </code></pre>
 
-<p>And finally once we&#39;re comfortable that everything went as expected we can send the data to the client by merging the fork back to the original dataset. </p>
+<p>And finally once we&#39;re comfortable that everything went as expected we can send the data to the client by merging the fork back to the original dataset.</p>
 
 <pre><code class="r">ds &lt;- mergeFork(ds, ds_fork)
 ds$HouseholdSize
@@ -341,7 +341,7 @@ ds$HouseholdSize
 
 <h2>Conclusion</h2>
 
-<p>Forking and merging datasets is a great way to make changes to the data. It allows you to verify your work and get approval before putting the data in front of clients, and gives you the freedom to make changes and mistakes without worrying about disrupting production data. </p>
+<p>Forking and merging datasets is a great way to make changes to the data. It allows you to verify your work and get approval before putting the data in front of clients, and gives you the freedom to make changes and mistakes without worrying about disrupting production data.</p>
 
 </body>
 

@@ -17,8 +17,8 @@ forked_ds <- forkDataset(ds)
 change_state()
 
 ## ----create Multiple Response Variable-----------------------------------
-ds$ImportantHiringCA <- makeArray(ds[, c("ImportantHiringTechExp", "ImportantHiringPMExp")], 
-    name = "importantCatArray") 
+ds$ImportantHiringCA <- makeArray(ds[, c("ImportantHiringTechExp", "ImportantHiringPMExp")],
+    name = "importantCatArray")
 
 ## ----compare datasets----------------------------------------------------
 all(names(ds) %in% names(forked_ds))
