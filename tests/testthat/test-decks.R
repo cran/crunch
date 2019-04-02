@@ -92,10 +92,22 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/decks/8ad8/",
             '{"is_public":true}'
         )
+        expect_no_request(is.public(deck_cat[[2]]) <- FALSE)
     })
+
+    test_that("teams on decks", {
+        expect_null(team(deck_cat[[2]]))
+        expect_PATCH(team(deck_cat[[2]]) <- getTeams()[[1]],
+            'https://app.crunch.io/api/datasets/1/decks/8ad8/',
+            '{"team":"https://app.crunch.io/api/teams/team1/"}'
+        )
+        expect_no_request(team(deck_cat[[2]]) <- NULL)
+        expect_error(team(deck_cat[[2]]) <- 4.2,
+            "Team setting requires either a CrunchTeam entity, URL, or NULL")
+    })
+
     test_that("subset CrunchDecks", {
-        slide <- main_deck[[1]]
-        expect_is(slide, "CrunchSlide")
+        expect_is(main_deck[[1]], "CrunchSlide")
     })
     test_that("cube methods for crunch decks", {
         cube <- cube(main_deck[[1]])
@@ -105,13 +117,26 @@ with_mock_crunch({
         expect_identical(cube, cube_list[[1]])
     })
     test_that("export decks generates correct POST", {
-        expect_POST(
-            exportDeck(main_deck, format = "json"),
-            "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
+        expect_header(
+            expect_POST(
+                exportDeck(main_deck, format = "json"),
+                "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
+            ),
+            "Accept: application/json"
         )
-        expect_POST(
-            exportDeck(main_deck, format = "xlsx"),
-            "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
+        expect_header(
+            expect_POST(
+                exportDeck(main_deck, format = "xlsx"),
+                "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
+            ),
+            "Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        expect_header(
+            expect_POST(
+                exportDeck(main_deck, format = "pptx"),
+                "https://app.crunch.io/api/datasets/1/decks/8ad8/export/"
+            ),
+            "Accept: application/vnd.openxmlformats-officedocument.presentationml.presentation"
         )
     })
 

@@ -386,54 +386,6 @@ mr_items_margins <- function(margin,
 #' @export
 as.array.CrunchCube <- function(x, ...) cubeToArray(x, ...)
 
-#' @rdname cube-computing
-#' @export
-setMethod("prop.table", "CrunchCube", function(x, margin = NULL) {
-    out <- applyTransforms(x)
-    marg <- margin.table(x, margin)
-    actual_margin <- mr_items_margins(margin, cube = x, user_dims = TRUE)
-    # Check if there are any actual_margins and if the dims are identical, we
-    # don't need to sweep, and if we are MRxMR we can't sweep.
-    if (!is.null(actual_margin) & !identical(dim(out), dim(marg))) {
-        out <- sweep(out, actual_margin, marg, "/", check.margin = FALSE)
-    } else {
-        ## Don't just divide by sum(out) like the default does.
-        ## cubeMarginTable handles missingness, any/none, etc.
-        out <- out / marg
-    }
-    class(out) <- class(marg)
-    attr(out, "dims") <- x@dims[!is.selectedDimension(x)]
-    attr(out, "type") <- "proportion"
-    return(out)
-})
-
-#' @rdname cube-computing
-#' @export
-setMethod("round", "CrunchCube", function(x, digits = 0) {
-    return(round(applyTransforms(x), digits))
-})
-
-#' @rdname cube-computing
-#' @export
-setMethod("bases", "CrunchCube", function(x, margin = NULL) {
-    if (length(margin) == 1 && margin == 0) {
-        ## Unlike margin.table. This just returns the "bases", without reducing
-        return(applyTransforms(x, array = cubeToArray(x, ".unweighted_counts")))
-    } else if (length(dimensions(x)) == 0) {
-        ## N dims == 0 is for univariate stats
-        if (!is.null(margin)) {
-            halt(
-                "Margin ", max(margin),
-                " exceeds Cube's number of dimensions (0)"
-            )
-        }
-        return(applyTransforms(x, array = cubeToArray(x, ".unweighted_counts")))
-    } else {
-        return(cubeMarginTable(x, margin, measure = ".unweighted_counts"))
-    }
-})
-
-
 
 #' Work with CrunchCubes, MultitableResults, and TabBookResults
 #'
@@ -470,7 +422,59 @@ setMethod("bases", "CrunchCube", function(x, margin = NULL) {
 #' @name cube-computing
 #' @aliases cube-computing margin.table prop.table bases round
 #' @seealso [base::margin.table()] [base::prop.table()]
-NULL
+setGeneric("margin.table")
+#' @rdname cube-computing
+setGeneric("prop.table")
+setGeneric("round")
+#' @rdname cube-computing
+setGeneric("bases", function(x, margin = NULL) standardGeneric("bases"))
+
+#' @rdname cube-computing
+#' @export
+setMethod("prop.table", "CrunchCube", function(x, margin = NULL) {
+    out <- applyTransforms(x)
+    marg <- margin.table(x, margin)
+    actual_margin <- mr_items_margins(margin, cube = x, user_dims = TRUE)
+    # Check if there are any actual_margins and if the dims are identical, we
+    # don't need to sweep, and if we are MRxMR we can't sweep.
+    if (!is.null(actual_margin) & !identical(dim(out), dim(marg))) {
+        out <- sweep(out, actual_margin, marg, "/", check.margin = FALSE)
+    } else {
+        ## Don't just divide by sum(out) like the default does.
+        ## cubeMarginTable handles missingness, any/none, etc.
+        out <- out / marg
+    }
+    class(out) <- c("CrunchCubeCalculation", "array")
+    attr(out, "dims") <- x@dims[!is.selectedDimension(x)]
+    attr(out, "type") <- "proportion"
+    return(out)
+})
+
+#' @rdname cube-computing
+#' @export
+setMethod("round", "CrunchCube", function(x, digits = 0) {
+    return(round(applyTransforms(x), digits))
+})
+
+#' @rdname cube-computing
+#' @export
+setMethod("bases", "CrunchCube", function(x, margin = NULL) {
+    if (length(margin) == 1 && margin == 0) {
+        ## Unlike margin.table. This just returns the "bases", without reducing
+        return(applyTransforms(x, array = cubeToArray(x, ".unweighted_counts")))
+    } else if (length(dimensions(x)) == 0) {
+        ## N dims == 0 is for univariate stats
+        if (!is.null(margin)) {
+            halt(
+                "Margin ", max(margin),
+                " exceeds Cube's number of dimensions (0)"
+            )
+        }
+        return(applyTransforms(x, array = cubeToArray(x, ".unweighted_counts")))
+    } else {
+        return(cubeMarginTable(x, margin, measure = ".unweighted_counts"))
+    }
+})
 
 #' @rdname cube-computing
 #' @export

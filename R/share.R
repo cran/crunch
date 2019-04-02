@@ -1,35 +1,3 @@
-#' See who has access to a dataset
-#'
-#' @param x CrunchDataset
-#' @return A PermissionCatalog containing information on the users and teams
-#' that have access to this dataset.
-#' @name permissions
-#' @aliases permissions
-NULL
-
-#' @rdname permissions
-#' @export
-setMethod("permissions", "CrunchDataset", function(x) {
-    perm_url <- shojiURL(x, "catalogs", "permissions")
-    return(PermissionCatalog(crGET(perm_url)))
-})
-
-#' @rdname is.editor
-#' @export
-setMethod("is.editor", "PermissionCatalog", function(x) {
-    out <- vapply(index(x), function(a) {
-        isTRUE(a[["dataset_permissions"]][["edit"]])
-    }, logical(1), USE.NAMES = FALSE)
-    names(out) <- emails(x) ## Drop this
-    return(out)
-})
-
-#' @rdname is.editor
-#' @export
-setMethod("is.editor", "PermissionTuple", function(x) {
-    isTRUE(x[["dataset_permissions"]][["edit"]])
-})
-
 #' Share a dataset
 #'
 #' @param dataset a CrunchDataset
@@ -93,27 +61,3 @@ unshare <- function(dataset, users) {
     crPATCH(shojiURL(dataset, "catalogs", "permissions"), body = toJSON(payload))
     invisible(dataset)
 }
-
-## TODO: test and release this
-# shareDataset <- function (x, emails, notify=TRUE) {
-#     ## Share one more more datasets without loading them
-#     dscat <- active(datasets())
-#     if (!is.numeric(x)) {
-#         x <- selectDatasetFromCatalog(x, dscat, strict=TRUE)
-#     }
-#     dsurls <- urls(dscat)[x]
-#     perm_urls <- vapply(dsurls, function (x) absoluteURL("permissions/", x),
-#         character(1))
-#
-#     payload <- sapply(emails,
-#             function (x) list(dataset_permissions=list(edit=FALSE, view=TRUE)),
-#             simplify=FALSE)
-#     payload$send_notification <- notify
-#     payload <- toJSON(payload)
-#
-#     out <- lapply(perm_urls, function (x) {
-#         message("Sharing ", x)
-#         crPATCH(x, body=payload)
-#     })
-#     invisible(out)
-# }
