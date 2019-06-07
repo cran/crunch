@@ -23,11 +23,6 @@ setMethod("active", "VariableCatalog", function(x) {
     return(x)
 })
 
-setMethod("hidden", "VariableCatalog", function(x) {
-    index(x) <- Filter(.discardedTuple, index(x))
-    return(x)
-})
-
 #' @rdname crunch-extract
 #' @export
 setMethod("[[", c("VariableCatalog", "numeric"), function(x, i, ...) {
@@ -35,7 +30,8 @@ setMethod("[[", c("VariableCatalog", "numeric"), function(x, i, ...) {
 })
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("VariableCatalog", "character", "missing", "VariableTuple"),
+setMethod(
+    "[[<-", c("VariableCatalog", "character", "missing", "VariableTuple"),
     function(x, i, j, value) {
         index(x)[[i]] <- value@body
         return(x)
@@ -43,7 +39,8 @@ setMethod("[[<-", c("VariableCatalog", "character", "missing", "VariableTuple"),
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable"),
+setMethod(
+    "[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable"),
     function(x, i, j, value) {
         stopifnot(i == self(value))
         x[[i]] <- tuple(value)

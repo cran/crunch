@@ -44,7 +44,8 @@ setMethod("[[", "SlideCatalog", function(x, i, ...) {
 
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
+setMethod(
+    "[[<-", c("SlideCatalog", "numeric", "missing", "CrunchSlide"),
     function(x, i, j, value) {
         if (length(i) > 1) {
             # TODO, allow assignment of more than one slide
@@ -139,10 +140,10 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' \dontrun{
 #' newSlide(
 #'     main_deck,
-#'     ~cyl + wt,
+#'     ~ cyl + wt,
 #'     title = "Cyl and Weight",
 #'     subtitle = "2017 Data"
-#'     )
+#' )
 #' }
 newSlide <- function(deck,
                      query,
@@ -274,10 +275,14 @@ setMethod("[[", "AnalysisCatalog", function(x, i, ...) {
 })
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"),
+setMethod(
+    "[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"),
     function(x, i, j, value) {
         if (i > length(x)) {
-            halt("Index out of bounds, you can only assign a formula to an existing analysis.")
+            halt(
+                "Index out of bounds, you can only assign a formula to an ",
+                "existing analysis."
+            )
         }
         analysis <- x[[i]]
         query(analysis) <- value
@@ -286,7 +291,8 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"),
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
+setMethod(
+    "[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
     function(x, i, j, value) {
         if (length(i) > 1) {
             # TODO, recurse through i
@@ -308,7 +314,8 @@ setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "Analysis"),
 )
 #' @rdname crunch-extract
 #' @export
-setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "list"),
+setMethod(
+    "[[<-", c("AnalysisCatalog", "numeric", "missing", "list"),
     function(x, i, j, value) {
         all_fmla <- vapply(value, function(x) inherits(x, "formula"), logical(1))
         if (any(!all_fmla)) {

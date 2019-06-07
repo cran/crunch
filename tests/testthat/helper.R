@@ -5,7 +5,7 @@ set.seed(666)
 
 skip_on_jenkins <- function(...) {
     if (nchar(Sys.getenv("JENKINS_HOME"))) {
-        skip(...)
+        skip(...) # nolint
     }
 }
 
@@ -50,11 +50,6 @@ newDatasetFromFixture <- function(filename) {
         m,
         file.path("dataset-fixtures", paste0(filename, ".csv"))
     )))
-}
-
-releaseAndReload <- function(dataset) {
-    .releaseDataset(dataset)
-    return(refresh(dataset))
 }
 
 ## Data frames to make datasets with

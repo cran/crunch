@@ -12,7 +12,7 @@ with_mock_crunch({
             '{"derivation":{"function":"select_categories","args":',
             '[{"function":"array","args":[{"function":"select","args":',
             '[{"map":{"1":{"variable":"https://app.crunch.io/api/datasets',
-            '/1/variables/gender/"}}},{"value":["1"]}]}]},{"value":',
+            '/1/variables/gender/"}}},{"value":["1"]}]}]},{"value":', # nolint
             '["Female"]}]},"name":"derivedMR","alias":"derived_mr"}'
         )
     })
@@ -43,20 +43,23 @@ with_test_authentication({
     test_that("Sending a derived array vardef creates a derived array", {
         expect_true(is.CA(ds$derivedarray))
         expect_identical(names(subvariables(ds$derivedarray)), c("Pet", "Home"))
-        expect_identical(
+        expect_identical_temp_nodata(
             names(categories(ds$derivedarray)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
         expect_identical(as.vector(ds$derivedarray[[1]]), q1.values)
     })
 
-    ds$derivedmr <- deriveArray(list(ds$q1, ds$petloc$petloc_home), selections = "Dog", name = "Derived pets MR") # cat dog has id 2
+    ds$derivedmr <- deriveArray(
+        list(ds$q1, ds$petloc$petloc_home),
+        selections = "Dog", name = "Derived pets MR"
+    ) # cat dog has id 2
     test_that("deriveArray can also derive MRs", {
         expect_true(is.MR(ds$derivedmr))
         expect_identical(names(subvariables(ds$derivedmr)), c("Pet", "Home"))
-        expect_identical(
+        expect_identical_temp_nodata(
             names(categories(ds$derivedmr)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
         expect_identical(as.vector(ds$derivedmr[[1]]), q1.values)
         expect_true(is.selected(categories(ds$derivedmr)[[2]]))
@@ -69,18 +72,18 @@ with_test_authentication({
             c("dsub1", "dsub2")
         )
         names(categories(ds$derivedarray))[1:2] <- c("one", "two")
-        expect_identical(
+        expect_identical_temp_nodata(
             names(categories(ds$derivedarray)),
-            c("one", "two", "Bird", "Skipped", "Not Asked")
+            c("one", "two", "Bird", "Skipped", "Not Asked", "No Data")
         )
         ds <- refresh(ds)
         expect_identical(
             aliases(subvariables(ds$derivedarray)),
             c("dsub1", "dsub2")
         )
-        expect_identical(
+        expect_identical_temp_nodata(
             names(categories(ds$derivedarray)),
-            c("one", "two", "Bird", "Skipped", "Not Asked")
+            c("one", "two", "Bird", "Skipped", "Not Asked", "No Data")
         )
         expect_equivalent(
             table(ds$derivedarray$dsub2),
@@ -92,9 +95,9 @@ with_test_authentication({
         )
         ## Parent unaffected
         expect_true(is.Categorical(ds$q1))
-        expect_identical(
+        expect_identical_temp_nodata(
             names(categories(ds$q1)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
     })
 
@@ -139,9 +142,9 @@ with_test_authentication({
             names(subvariables(ds$metapetloc)),
             c("Home", "Copy", "Copy", "Home")
         )
-        expect_identical(
+        expect_identical_temp_nodata(
             names(categories(ds$metapetloc)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "one", "two")
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data", "one", "two")
         )
 
         t1 <- table(ds$metapetloc[[1]])
@@ -165,9 +168,9 @@ with_test_authentication({
             names(subvariables(ds$metapet_combined)),
             c("Home", "Copy", "Copy", "Home")
         )
-        expect_identical(
+        expect_identical_temp_nodata(
             names(categories(ds$metapet_combined)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked")
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data")
         )
 
         t1 <- table(ds$metapet_combined[[1]])
@@ -183,9 +186,17 @@ with_test_authentication({
     ds <- appendDataset(ds, part2)
     test_that("When appending, derived arrays get data (or missing, as appropriate)", {
         ## No Data is added to the categories here
-        expect_identical(
-            names(categories(ds$metapetloc)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "one", "two", "No Data")
+        # Replace this `expect_true(identical(new) || identical(old))`
+        # construction with `expect_identical(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
+        expect_true(
+            identical(
+                names(categories(ds$metapetloc)),
+                c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "one", "two", "No Data")
+            ) || identical(
+                names(categories(ds$metapetloc)),
+                c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data", "one", "two")
+            )
         )
         ## metapetloc: subvar 1 is derived from petloc$petloc_home
         expect_identical(
@@ -242,9 +253,9 @@ with_test_authentication({
             aliases(subvariables(ds$derivedarray)),
             c("dsub1", "dsub2")
         )
-        expect_identical(
+        expect_identical_temp_nodata(
             names(categories(ds$derivedarray)),
-            c("one", "two", "Bird", "Skipped", "Not Asked")
+            c("one", "two", "Bird", "Skipped", "Not Asked", "No Data")
         )
         ## This is the data we should see in metapetloc[[4]]. It's correct here.
         expect_equivalent(
@@ -270,9 +281,17 @@ with_test_authentication({
             c("petloc_home", "petloc_work", "petloc_school")
         )
         ## No Data comes in after appending because petloc_work and petloc_school have data gaps
-        expect_identical(
-            names(categories(ds$petloc)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "Beaver", "No Data")
+        # Replace this `expect_true(identical(new) || identical(old))`
+        # construction with `expect_identical(new)` once the "default values"
+        # ticket https://www.pivotaltracker.com/story/show/164939686 is released.
+        expect_true(
+            identical(
+                names(categories(ds$petloc)),
+                c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "Beaver", "No Data")
+            ) || identical(
+                names(categories(ds$petloc)),
+                c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data", "Beaver")
+            )
         )
     })
 
@@ -345,5 +364,6 @@ with_test_authentication({
     #         c(15, 6, 9, 3))
     # })
 
-    ## TODO: more things (filter entities, drop rows, etc., edit values of base variables; edit values of derived array?)
+    ## TODO: more things (filter entities, drop rows, etc., edit values of base
+    ## variables; edit values of derived array?)
 })

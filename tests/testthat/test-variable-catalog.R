@@ -22,14 +22,15 @@ with_mock_crunch({
     })
 
     test_that("active/hidden getters", {
+        expect_is(hidden(varcat), "VariableFolder")
+        expect_length(hidden(varcat), 0)
         expect_identical(
             index(active(varcat)),
             index(varcat)[urls(ordering(varcat))]
         )
-        expect_equivalent(index(hidden(varcat)), list())
         index(varcat)[[1]]$discarded <- TRUE
         expect_is(active(varcat), "VariableCatalog")
-        expect_is(hidden(varcat), "VariableCatalog")
+        # Specific behavior of "hidden" is tested in test-hide-variables.R
         expect_identical(
             urls(active(varcat)),
             c(
@@ -42,13 +43,6 @@ with_mock_crunch({
             )
         )
         expect_length(active(varcat), 6)
-        expect_identical(
-            urls(hidden(varcat)),
-            "https://app.crunch.io/api/datasets/1/variables/birthyr/"
-        )
-        expect_length(hidden(varcat), 1)
-        expect_length(varcat, 7)
-        expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
 
     gender.url <- "https://app.crunch.io/api/datasets/1/variables/gender/"
@@ -107,23 +101,27 @@ with_mock_crunch({
         expect_PATCH(
             names(varcat)[1:4] <- c("Year of birth", "Gender", "Loc", "Start time"),
             "https://app.crunch.io/api/datasets/1/variables/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/birthyr/":{"name":"Year of birth"},',
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/1/variables/birthyr/":{"name":"Year of birth"},',
             '"https://app.crunch.io/api/datasets/1/variables/location/":{"name":"Loc"},',
             '"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"name":"Start time"}}}'
         )
         expect_PATCH(
             notes(varcat)[1:4] <- c("Asked instead of age", "", "", "ms"),
             "https://app.crunch.io/api/datasets/1/variables/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"notes":"ms"}}}'
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/1/variables/mymrset/":{"notes":"ms"}}}'
         )
     })
     test_that("attribute setters with duplication", {
         ## In the first case, the first element is duplicated, but it's getting
         ## the same value, so we can ignore it
+        names <- c("Year of birth", "Year of birth", "Gender", "Loc", "Start time")
         expect_PATCH(
-            names(varcat[c(1, 1:4)]) <- c("Year of birth", "Year of birth", "Gender", "Loc", "Start time"),
+            names(varcat[c(1, 1:4)]) <- names,
             "https://app.crunch.io/api/datasets/1/variables/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/birthyr/":{"name":"Year of birth"},',
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/1/variables/birthyr/":{"name":"Year of birth"},',
             '"https://app.crunch.io/api/datasets/1/variables/location/":{"name":"Loc"},',
             '"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"name":"Start time"}}}'
         )
@@ -220,7 +218,10 @@ with_mock_crunch({
     test_that("As.data.frame method errors correctly", {
         expect_error(
             as.data.frame(varcat[1:3], keys = "Not a field at all"),
-            paste(dQuote("Not a field at all"), "is an invalid key for catalogs of class VariableCatalog.")
+            paste(
+                dQuote("Not a field at all"),
+                "is an invalid key for catalogs of class VariableCatalog."
+            )
         )
         expect_error(
             as.data.frame(varcat[1:3], keys = c("banana", "fooey")),

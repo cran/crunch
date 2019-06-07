@@ -30,14 +30,18 @@ with_mock_crunch({
         expect_PATCH(
             names(subvariables(mr))[1:2] <- c("Uno", "Due"),
             "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
-            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}}'
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
+            '"https://app.crunch.io/api/datasets/1/variables/mymrset/',
+            'subvariables/subvar1/":{"name":"Due"}}}'
         )
         expect_PATCH(
             aliases(subvariables(mr))[1:2] <- c("uno", "due"),
             "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/":{"alias":"uno"},',
-            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"alias":"due"}}}'
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/1/variables/mymrset/subvariables/subvar2/":{"alias":"uno"},',
+            '"https://app.crunch.io/api/datasets/1/variables/mymrset/',
+            'subvariables/subvar1/":{"alias":"due"}}}'
         )
         expect_error(
             aliases(subvariables(mr)[c("Second", "NOTASUBVAR")]) <- c("uno", "due"),
@@ -46,14 +50,18 @@ with_mock_crunch({
         expect_PATCH(
             names(subvariables(mr)[1:2]) <- c("Uno", "Due"),
             "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
-            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}}'
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
+            '"https://app.crunch.io/api/datasets/1/variables/mymrset/',
+            'subvariables/subvar1/":{"name":"Due"}}}'
         )
         expect_PATCH(
             names(subvariables(mr)[c("First", "Second")]) <- c("Uno", "Due"),
             "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/",
-            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
-            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}}'
+            '{"element":"shoji:catalog","index":{"https://app.crunch.io/api/',
+            'datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
+            '"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables',
+            '/subvar1/":{"name":"Due"}}}' # nolint
         )
     })
 
@@ -120,7 +128,8 @@ with_mock_crunch({
         expect_PATCH(
             name(subvariables(mr)$Second) <- "Due",
             "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/",
-            '{"https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}'
+            '{"https://app.crunch.io/api/datasets/1/variables/mymrset/',
+            'subvariables/subvar1/":{"name":"Due"}}'
         )
     })
 
@@ -288,23 +297,6 @@ with_test_authentication({
         )
     })
 
-    ## Check that that persisted on release/reload
-    ds <- releaseAndReload(ds)
-    test_that("Reordering of subvars persists on release", {
-        expect_identical(
-            names(subvariables(ds$MR)),
-            c("mr_3", "mr_1", "M.R. Two")
-        )
-        expect_equivalent(
-            table(ds$MR),
-            structure(array(c(1, 2, 1),
-                dimnames = list(MR = c("mr_3", "mr_1", "M.R. Two"))
-            ),
-            class = "table"
-            )
-        )
-    })
-
     subvariables(ds$MR)[1:2] <- subvariables(ds$MR)[c(2, 1)]
     test_that("Can reorder a subset of subvariables", {
         expect_identical(
@@ -357,22 +349,6 @@ with_test_authentication({
 
     subvariables(ds$MRcopy) <- subvariables(ds$MRcopy)[c(2, 3, 1)]
     test_that("Can reorder the copy", {
-        expect_equivalent(
-            as.array(crtabs(~MR, data = ds)),
-            structure(array(c(2, 1, 1),
-                dimnames = list(MR = c("mr_1", "mr_2", "mr_3"))
-            ))
-        )
-        expect_equivalent(
-            as.array(crtabs(~MRcopy, data = ds)),
-            structure(array(c(1, 1, 2),
-                dimnames = list(MR = c("mr_2", "mr_3", "mr_1"))
-            ))
-        )
-    })
-
-    ds <- releaseAndReload(ds)
-    test_that("Still reordered on release", {
         expect_equivalent(
             as.array(crtabs(~MR, data = ds)),
             structure(array(c(2, 1, 1),
