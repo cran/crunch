@@ -2,12 +2,20 @@
 % Please edit documentation in R/decks.R
 \name{decks}
 \alias{decks}
+\alias{decks<-}
+\alias{decks,CrunchDataset-method}
 \title{Get a dataset's DeckCatalog}
 \usage{
-decks(dataset)
+decks(x)
+
+decks(x) <- value
+
+\S4method{decks}{CrunchDataset}(x)
 }
 \arguments{
-\item{dataset}{a Crunch Dataset}
+\item{x}{a Crunch Dataset}
+
+\item{value}{a \code{CrunchDeck} to add}
 }
 \value{
 a DeckCatalog

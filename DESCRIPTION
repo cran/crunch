@@ -7,12 +7,13 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.26.1
+Version: 1.26.2
 Authors@R: c(
-    person("Neal", "Richardson", role="aut", email="neal.p.richardson@gmail.com"),
+    person("Greg", "Freedman Ellis", role = c("aut", "cre"), email = "greg@crunch.io"),
     person("Jonathan", "Keane", role="aut", email="jkeane@gmail.com"),
-    person("Gordon", "Shotwell", role="aut", email="gordon.shotwell@gmail.com"),
-    person("Mike", "Malecki", role=c("aut", "cre"), email="mike@crunch.io"))
+    person("Mike", "Malecki", role="aut", email="mike@crunch.io"),
+    person("Neal", "Richardson", role="aut", email="neal.p.richardson@gmail.com"),
+    person("Gordon", "Shotwell", role="aut", email="gordon.shotwell@gmail.com"))
 URL: https://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)
@@ -25,7 +26,7 @@ Suggests: covr, crunchy, devtools, haven, httptest (>= 3.0.0), knitr,
 VignetteBuilder: knitr
 Language: en-US
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 LazyData: true
 Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'R-to-variable.R' 'SO-survey.R' 'abstract-categories.R'
@@ -65,11 +66,12 @@ Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'variable-type.R' 'variable-update.R' 'variable.R'
         'variables.R' 'versions.R' 'weight.R' 'zcl.R'
 NeedsCompilation: no
-Packaged: 2019-06-07 13:48:59 UTC; jkeane
-Author: Neal Richardson [aut],
+Packaged: 2020-02-10 16:37:40 UTC; greg
+Author: Greg Freedman Ellis [aut, cre],
   Jonathan Keane [aut],
-  Gordon Shotwell [aut],
-  Mike Malecki [aut, cre]
-Maintainer: Mike Malecki <mike@crunch.io>
+  Mike Malecki [aut],
+  Neal Richardson [aut],
+  Gordon Shotwell [aut]
+Maintainer: Greg Freedman Ellis <greg@crunch.io>
 Repository: CRAN
-Date/Publication: 2019-06-07 17:30:03 UTC
+Date/Publication: 2020-02-10 21:00:08 UTC

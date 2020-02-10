@@ -25,7 +25,10 @@
 #' projects).
 #' @return `x`, with the folder at `path` guaranteed to be created, and for
 #' `mv`, containing `what` moved into it.
-#' @seealso [cd()] to select a folder by path; [rmdir()] to delete a folder; [folder()] to identify and set an object's parent folder; [base::dir.create()] if you literally want to create a directory in your local file system, which `mkdir()` does not do
+#' @seealso [cd()] to select a folder by path; [rmdir()] to delete a folder;
+#' [folder()] to identify and set an object's parent folder; [base::dir.create()]
+#' if you literally want to create a directory in your local file system, which
+#' `mkdir()` does not do
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("Example survey")
@@ -120,7 +123,9 @@ setName <- function(object, nm) {
 #' the folder exists. You can call `cd` directly with `create=TRUE`, though that
 #' seems unnatural.
 #' @return A `Folder` (`VariableFolder` or `ProjectFolder`)
-#' @seealso [mv()] to move entities to a folder; [rmdir()] to delete a folder; [base::setwd()] if you literally want to change your working directory in your local file system, which `cd()` does not do
+#' @seealso [mv()] to move entities to a folder; [rmdir()] to delete a folder;
+#' [base::setwd()] if you literally want to change your working directory in your
+#' local file system, which `cd()` does not do
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("Example survey")
@@ -174,7 +179,9 @@ cd <- function(x, path, create = FALSE) {
 #'
 #' @inheritParams mv
 #' @return `NULL`
-#' @seealso [mv()] to move entities to a folder; [cd()] to select a folder; [base::file.remove()] if you literally want to delete a directory from your local file system, which `rmdir()` does not do
+#' @seealso [mv()] to move entities to a folder; [cd()] to select a folder;
+#' [base::file.remove()] if you literally want to delete a directory from your local
+#' file system, which `rmdir()` does not do
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("Example survey")
@@ -199,9 +206,11 @@ rmdir <- function(x, path) {
 
 #' Find and move entities to a new folder
 #'
-#' @param x For `folder`, a Variable to find. For folder assignment, a Variable, selection of variables in a
+#' @param x For `folder`, a Variable to find. For folder assignment, a Variable,
+#' selection of variables in a
 #' Dataset, or any other object that can be moved to a folder.
-#' @return `folder` returns the parent folder of `x`, or `NULL` if the `x` is the root level. `folder<-` returns the
+#' @return `folder` returns the parent folder of `x`, or `NULL` if the `x` is the root
+#' level. `folder<-` returns the
 #' `x` input, having been moved to the requested location.
 #' @export
 #' @examples
@@ -302,4 +311,74 @@ folder <- function(x) {
         folder <- refresh(folder)
     }
     return(invisible(folder))
+}
+
+
+# recursively go through folders returning folder names or variables. This should
+# be used sparingly since it will take a while to touch each node in the tree.
+folder_recurse <- function(folder) {
+    # can't just use lapply(folder, ...) because we don't have a bespoke lapply
+    # for folders
+    out <- lapply(seq_along(folder), function(i) {
+        dir <- folder[[i]]
+        if (is.folder(dir)) {
+            out <- list(folder_recurse(dir))
+            names(out) <- name(dir)
+            return(out)
+        }
+        # otherwise, this is a variable, return the alias
+        return(alias(dir))
+    })
+}
+
+# take a folder/var tree (from folder_recurse) and copy it to dataset
+plant_tree <- function(tree, dataset, folder_position = folders(dataset)) {
+    lapply(seq_along(tree), function(i) {
+        item <- tree[[i]]
+        if(!is.null(names(item))) {
+            # we have a folder!
+            make_folder_continue(item, dataset, folder_position)
+        } else {
+            # deal with the variables we have
+            vars <- Filter(Negate(is.list), item)
+            # make sure the vars are in dataset
+            vars <- vars[vars %in% aliases(allVariables(dataset))]
+            if (length(vars) > 0) {
+                mv(dataset, unlist(vars), folder_position)
+                # TODO: this should be possible without refreshing here.
+                folder_position <- refresh(folder_position)
+                setOrder(folder_position, unlist(vars))
+            }
+
+            folders <- Filter(is.list, item)
+            if (length(folders) > 0) {
+                lapply(folders, make_folder_continue, dataset, folder_position)
+            }
+        }
+    })
+}
+
+# make a folder, then continue down the tree specified in items (if it exists)
+make_folder_continue <- function(item, dataset, folder_position) {
+    position <- cd(mkdir(cd(dataset, folder_position), names(item)), names(item))
+    plant_tree(item, dataset, folder_position = position)
+}
+
+#' Copy the folder structure from one dataset to another.
+#'
+#' @param source the dataset you want to copy the order from
+#' @param target the dataset you want to copy the order to
+#' @return returns the target dataset with source's folder structure
+#' @examples
+#' \dontrun{
+#' ds <- copyFolders(ds1, ds)
+#' }
+#' @export
+copyFolders <- function(source, target) {
+    if (!is.dataset(source) | !is.dataset(target)) {
+        halt("Both source and target must be Crunch datasets.")
+    }
+    source_tree <- folder_recurse(folders(source))
+    plant_tree(list(source_tree), target)
+    return(invisible(refresh(target)))
 }

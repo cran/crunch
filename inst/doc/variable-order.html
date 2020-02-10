@@ -1,394 +1,454 @@
 <!DOCTYPE html>
-<html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>File-system like</title>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Variable Folders and Organization</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
   }
-};
-</script>
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 
-<!-- Styles for R syntax highlighter -->
-<style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
-
-   pre .literal {
-     color: #990073
-   }
-
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
 </style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
 </script>
 
 
 
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
 }
-
-body {
-  max-width: 800px;
-  margin: auto;
-  padding: 1em;
-  line-height: 20px;
+#header {
+text-align: center;
 }
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
 }
-
-h1 {
-   font-size:2.2em;
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
 }
-
-h2 {
-   font-size:1.8em;
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
 }
-
-h3 {
-   font-size:1.4em;
+#TOC ul ul {
+margin-left: -2em;
 }
-
-h4 {
-   font-size:1.0em;
+#TOC li {
+line-height: 16px;
 }
-
-h5 {
-   font-size:0.9em;
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
 }
-
-h6 {
-   font-size:0.8em;
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
 }
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
 }
-
-pre, img {
-  max-width: 100%;
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
 }
 pre {
-  overflow-x: auto;
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
 }
-pre code {
-   display: block; padding: 0.5em;
+pre:not([class]) {
+background-color: #f7f7f7;
 }
-
 code {
-  font-size: 92%;
-  border: 1px solid #ccc;
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
 }
-
-code[class] {
-  background-color: #F8F8F8;
+p > code, li > code {
+padding: 2px 0px;
 }
-
-table, td, th {
-  border: none;
+div.figure {
+text-align: center;
 }
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
 }
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
 }
-
-@media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
 }
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
+
 
 
 
 </head>
 
 <body>
+
+
+
+
+<h1 class="title toc-ignore">Variable Folders and Organization</h1>
+
+
+
 <p><a href="array-variables.html">Previous: array variables</a></p>
-
 <p>In the web application, variables in a dataset are displayed in a list on the left side of the screen.</p>
-
 <!-- screenshot -->
-
 <p>Typically, when you import a dataset, the variable list is flat, but it can be organized into an accordion-like hierarchy. The variable organizer in the Crunch GUI allows you to organize your variables visually, but you can also manage this metadata from R using the <code>crunch</code> package.</p>
-
+<div id="file-system-like" class="section level2">
 <h2>File-system like</h2>
-
 <p>This variable hierarchy can be thought of like a file system on your computer, with files (variables) organized into directories (folders). As such, the main functions you use to manage it are reminiscent of a file system.</p>
-
 <ul>
-<li><code>cd()</code>, changes directories, i.e. selects a folder</li>
-<li><code>mkdir()</code> makes a directory, i.e. creates a folder</li>
+<li><code>cd()</code>, changes directories, i.e. selects a folder</li>
+<li><code>mkdir()</code> makes a directory, i.e. creates a folder</li>
 <li><code>mv()</code> moves variables and folders to a different folder</li>
-<li><code>rmdir()</code> removes a directory, i.e. deletes a folder</li>
+<li><code>rmdir()</code> removes a directory, i.e. deletes a folder</li>
 </ul>
-
-<p>Like a file system, you can express the &ldquo;path&rdquo; to a folder as a string separated by a &ldquo;/&rdquo; delimiter, like this:</p>
-
-<pre><code class="r">mkdir(ds, &quot;Brands/Cars and Trucks/Domestic&quot;)
-</code></pre>
-
-<p>If your folder names should legitimately have a &ldquo;/&rdquo; in them, you can set a different character to be the path separator. See <code>?mkdir</code> or any of the other functions&#39; help files for details.</p>
-
-<p>Paths can be expressed relative to the current object&mdash;a folder, or in this case, the dataset, which translates to its top-level <code>&quot;/&quot;</code> root folder in path specification&mdash;and the file system&#39;s special path segments <code>&quot;..&quot;</code> (go up a level) and <code>&quot;.&quot;</code> (this level) are also supported. We&#39;ll use those in examples below.</p>
-
+<p>Like a file system, you can express the “path” to a folder as a string separated by a “/” delimiter, like this:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">mkdir</span>(ds, <span class="st">&quot;Brands/Cars and Trucks/Domestic&quot;</span>)</a></code></pre></div>
+<p>If your folder names should legitimately have a “/” in them, you can set a different character to be the path separator. See <code>?mkdir</code> or any of the other functions’ help files for details.</p>
+<p>Paths can be expressed relative to the current object—a folder, or in this case, the dataset, which translates to its top-level <code>&quot;/&quot;</code> root folder in path specification—and the file system’s special path segments <code>&quot;..&quot;</code> (go up a level) and <code>&quot;.&quot;</code> (this level) are also supported. We’ll use those in examples below.</p>
 <p>You can also specify paths as a vector of path segments, like</p>
-
-<pre><code class="r">mkdir(ds, c(&quot;Brands&quot;, &quot;Cars and Trucks&quot;, &quot;Domestic&quot;))
-</code></pre>
-
-<p>which is equivalent to the previous example. One or the other way may be more convenient, depending on what you&#39;re trying to accomplish.</p>
-
-<p>These four functions all take a dataset or a folder as the first argument, and they return the same object passed to it, except for <code>cd</code>, which returns the selected folder. As such, they are designed to work with <code>magrittr</code>-style piping (<code>%&gt;%</code>) for convenience in chaining together steps, though they don&#39;t require that you do.</p>
-
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">mkdir</span>(ds, <span class="kw">c</span>(<span class="st">&quot;Brands&quot;</span>, <span class="st">&quot;Cars and Trucks&quot;</span>, <span class="st">&quot;Domestic&quot;</span>))</a></code></pre></div>
+<p>which is equivalent to the previous example. One or the other way may be more convenient, depending on what you’re trying to accomplish.</p>
+<p>These four functions all take a dataset or a folder as the first argument, and they return the same object passed to it, except for <code>cd</code>, which returns the selected folder. As such, they are designed to work with <code>magrittr</code>-style piping (<code>%&gt;%</code>) for convenience in chaining together steps, though they don’t require that you do.</p>
+</div>
+<div id="viewing-the-folders" class="section level2">
 <h2>Viewing the folders</h2>
-
-<p>To get started, let&#39;s pick up the dataset we used in the <a href="array-variables.html">array variables vignette</a> and view its starting layout. We can do that by selecting the root folder (&ldquo;/&rdquo;) and printing it</p>
-
-<pre><code class="r">library(magrittr)
-ds %&gt;%
-    cd(&quot;/&quot;) %&gt;%
-    print()
-</code></pre>
-
-<p>(The <code>print()</code> isn&#39;t strictly necessary here as <code>cd</code> will return the folder and thus it will print by default, but we&#39;ll use different <code>print</code> arguments later, so it&#39;s included here both for explicitness and illustration.)</p>
-
-<p>It&#39;s flat&mdash;there are no folders here, only variables. If you&#39;re importing data from a <code>data.frame</code> or a file, like an SPSS file, this is where you&#39;ll begin.</p>
-
+<p>To get started, let’s pick up the dataset we used in the <a href="array-variables.html">array variables vignette</a> and view its starting layout. We can do that by selecting the root folder (“/”) and printing it</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">library</span>(magrittr)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="st">    </span><span class="kw">print</span>()</a></code></pre></div>
+<p>(The <code>print()</code> isn’t strictly necessary here as <code>cd</code> will return the folder and thus it will print by default, but we’ll use different <code>print</code> arguments later, so it’s included here both for explicitness and illustration.)</p>
+<p>It’s flat—there are no folders here, only variables. If you’re importing data from a <code>data.frame</code> or a file, like an SPSS file, this is where you’ll begin.</p>
+</div>
+<div id="creating-folders" class="section level2">
 <h2>Creating folders</h2>
-
-<p>Let&#39;s make some folders and move some variables into them. To start, I know that the demographic variables are at the back of the dataset, so let&#39;s make a &ldquo;Demos&rdquo; folder and move variables 21 to 37 into it:</p>
-
-<pre><code class="r">ds %&gt;%
-    mkdir(&quot;Demos&quot;) %&gt;%
-    mv(21:37, &quot;Demos&quot;)
-</code></pre>
-
-<p>Now when I print the top-level directory again, I see a &ldquo;Demos&rdquo; folder and don&#39;t see those demographic variables:</p>
-
-<pre><code class="r">ds %&gt;%
-    cd(&quot;/&quot;)
-</code></pre>
-
-<p><code>mv()</code> can reference variables or folders within a level in several ways. Numeric indices like we just did probably won&#39;t be the most common way you&#39;ll do it: names work just as well and are more transparent. Let&#39;s move the first variable, <code>perc_skipped</code>, into &ldquo;Demos&rdquo; as well</p>
-
-<pre><code class="r">ds %&gt;%
-    mv(&quot;perc_skipped&quot;, &quot;Demos&quot;) %&gt;%
-    cd(&quot;Demos&quot;) ## To print the folder contents
-</code></pre>
-
+<p>Let’s make some folders and move some variables into them. To start, I know that the demographic variables are at the back of the dataset, so let’s make a “Demos” folder and move variables 21 to 37 into it:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">    </span><span class="kw">mkdir</span>(<span class="st">&quot;Demos&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="st">    </span><span class="kw">mv</span>(<span class="dv">21</span><span class="op">:</span><span class="dv">37</span>, <span class="st">&quot;Demos&quot;</span>)</a></code></pre></div>
+<p>Now when I print the top-level directory again, I see a “Demos” folder and don’t see those demographic variables:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>)</a></code></pre></div>
+<p><code>mv()</code> can reference variables or folders within a level in several ways. Numeric indices like we just did probably won’t be the most common way you’ll do it: names work just as well and are more transparent. Let’s move the first variable, <code>perc_skipped</code>, into “Demos” as well</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">    </span><span class="kw">mv</span>(<span class="st">&quot;perc_skipped&quot;</span>, <span class="st">&quot;Demos&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="co">## To print the folder contents</span></a></code></pre></div>
 <blockquote>
-<p>A side note: although the last step of that chain was <code>cd()</code>, we haven&#39;t changed state in our R session. There is no &ldquo;working folder&rdquo; set globally. <code>cd()</code> is a function that returns a folder; if we had assigned the return from the function (pipeline) to some object, we could then pass that in to another function to &ldquo;start&rdquo; in that folder.</p>
+<p>A side note: although the last step of that chain was <code>cd()</code>, we haven’t changed state in our R session. There is no “working folder” set globally. <code>cd()</code> is a function that returns a folder; if we had assigned the return from the function (pipeline) to some object, we could then pass that in to another function to “start” in that folder.</p>
 </blockquote>
-
-<p>Another way we can identify variables is by using the <code>dplyr</code>-like functions <code>starts_with</code>, <code>ends_with</code>, <code>matches</code>, and <code>contains</code>. Let&#39;s use <code>matches</code> to move all of the questions about Edward Snowden or Bradley (Chelsea) Manning to a folder for the topical questions in this week&#39;s survey:</p>
-
-<pre><code class="r">ds %&gt;%
-    mkdir(&quot;This week&quot;) %&gt;%
-    mv(matches(&quot;manning|snowden&quot;, ignore.case = TRUE), &quot;This week&quot;)
-</code></pre>
-
-<p>We can also select all variables in a folder using the <code>variables</code> function (or all folders within a folder using <code>folders</code>). Let&#39;s move all remaining variables from the top level folder to a folder called &ldquo;Tracking questions&rdquo;. To do this, we do need to explicitly change to the top level folder.</p>
-
-<pre><code class="r">ds %&gt;%
-    cd(&quot;/&quot;)
-    mkdir(&quot;Tracking questions&quot;) %&gt;%
-    mv(., variables(.), &quot;Tracking questions&quot;)
-</code></pre>
-
+<p>Another way we can identify variables is by using the <code>dplyr</code>-like functions <code>starts_with</code>, <code>ends_with</code>, <code>matches</code>, and <code>contains</code>. Let’s use <code>matches</code> to move all of the questions about Edward Snowden or Bradley (Chelsea) Manning to a folder for the topical questions in this week’s survey:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="st">    </span><span class="kw">mkdir</span>(<span class="st">&quot;This week&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="st">    </span><span class="kw">mv</span>(<span class="kw">matches</span>(<span class="st">&quot;manning|snowden&quot;</span>, <span class="dt">ignore.case =</span> <span class="ot">TRUE</span>), <span class="st">&quot;This week&quot;</span>)</a></code></pre></div>
+<p>We can also select all variables in a folder using the <code>variables</code> function (or all folders within a folder using <code>folders</code>). Let’s move all remaining variables from the top level folder to a folder called “Tracking questions”. To do this, we do need to explicitly change to the top level folder.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>)</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">    <span class="kw">mkdir</span>(<span class="st">&quot;Tracking questions&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">    </span><span class="kw">mv</span>(., <span class="kw">variables</span>(.), <span class="st">&quot;Tracking questions&quot;</span>)</a></code></pre></div>
 <blockquote>
-<p>(Curious about the &ldquo;dot&rdquo; notation? See the <a href="http://magrittr.tidyverse.org/articles/magrittr.html">magrittr docs</a>.)</p>
+<p>(Curious about the “dot” notation? See the <a href="http://magrittr.tidyverse.org/articles/magrittr.html">magrittr docs</a>.)</p>
 </blockquote>
-
-<p>The reason we change to the top level folder here is that there is a subtle difference between passing <code>ds</code> to <code>mv()</code> versus <code>cd(ds, &quot;/&quot;)</code>. Whatever object, dataset or folder, that is passed into <code>mv()</code> determines the scope from which the objects to move are selected. If you pass the dataset in, you can select any variables in the dataset, regardless of what folder they&#39;re in. If you pass in a folder, you&#39;re selecting just from that folder&#39;s contents. It can be convenient to find all variables that match some criteria across the whole dataset to move them, but sometimes we don&#39;t want that. In this case, we wanted only the variables sitting in the top level folder, not nested in other folders, so we wanted <code>variables(cd(ds, &quot;/&quot;))</code> and not <code>variables(ds)</code>.</p>
-
-<p>Now, our variable tree has some structure. Let&#39;s use <code>print(folder, depth = 1)</code> to see these folders and their contents one level deep:</p>
-
-<pre><code class="r">ds %&gt;%
-    cd(&quot;/&quot;) %&gt;%
-    print(depth = 1)
-</code></pre>
-
+<p>The reason we change to the top level folder here is that there is a subtle difference between passing <code>ds</code> to <code>mv()</code> versus <code>cd(ds, &quot;/&quot;)</code>. Whatever object, dataset or folder, that is passed into <code>mv()</code> determines the scope from which the objects to move are selected. If you pass the dataset in, you can select any variables in the dataset, regardless of what folder they’re in. If you pass in a folder, you’re selecting just from that folder’s contents. It can be convenient to find all variables that match some criteria across the whole dataset to move them, but sometimes we don’t want that. In this case, we wanted only the variables sitting in the top level folder, not nested in other folders, so we wanted <code>variables(cd(ds, &quot;/&quot;))</code> and not <code>variables(ds)</code>.</p>
+<p>Now, our variable tree has some structure. Let’s use <code>print(folder, depth = 1)</code> to see these folders and their contents one level deep:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="st">    </span><span class="kw">print</span>(<span class="dt">depth =</span> <span class="dv">1</span>)</a></code></pre></div>
+</div>
+<div id="nested-folders" class="section level2">
 <h2>Nested folders</h2>
-
-<p>We can create folders within folders as well. In the &ldquo;This week&rdquo; folder, we have a set of questions about Edward Snowden. Let&#39;s nest them inside their own subfolder inside &ldquo;This week&rdquo;:</p>
-
-<pre><code class="r">ds %&gt;%
-    cd(&quot;This week&quot;) %&gt;%
-    mkdir(&quot;Snowden&quot;) %&gt;%
-    mv(matches(&quot;snowden&quot;, ignore.case = TRUE), &quot;Snowden&quot;) %&gt;%
-    cd(&quot;..&quot;) %&gt;%
-    print(depth = 2)
-</code></pre>
-
+<p>We can create folders within folders as well. In the “This week” folder, we have a set of questions about Edward Snowden. Let’s nest them inside their own subfolder inside “This week”:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;This week&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="st">    </span><span class="kw">mkdir</span>(<span class="st">&quot;Snowden&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="st">    </span><span class="kw">mv</span>(<span class="kw">matches</span>(<span class="st">&quot;snowden&quot;</span>, <span class="dt">ignore.case =</span> <span class="ot">TRUE</span>), <span class="st">&quot;Snowden&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;..&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="st">    </span><span class="kw">print</span>(<span class="dt">depth =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p>Note how we used <code>&quot;..&quot;</code> to change folders up a level, as you can in a file system . We did that just so we can print the folder structure at the top level (and to illustrate that you can specify relative paths :).</p>
-
 <p>You could also do this using the full path segments. <code>mkdir</code> will recursively make all path segments it needs in order to ensure that the target folder exists.</p>
-
-<pre><code class="r">ds %&gt;%
-    mkdir(&quot;This week/Snowden&quot;) %&gt;%
-    mv(matches(&quot;snowden&quot;, ignore.case = TRUE), &quot;This week/Snowden&quot;) %&gt;%
-    cd(&quot;/&quot;) %&gt;%
-    print(depth = 2)
-</code></pre>
-
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="st">    </span><span class="kw">mkdir</span>(<span class="st">&quot;This week/Snowden&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="st">    </span><span class="kw">mv</span>(<span class="kw">matches</span>(<span class="st">&quot;snowden&quot;</span>, <span class="dt">ignore.case =</span> <span class="ot">TRUE</span>), <span class="st">&quot;This week/Snowden&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="st">    </span><span class="kw">print</span>(<span class="dt">depth =</span> <span class="dv">2</span>)</a></code></pre></div>
+</div>
+<div id="renaming-folders-and-folder-contents" class="section level2">
 <h2>Renaming folders and folder contents</h2>
-
 <p>Folders themselves have names, which we can set with <code>setName()</code>:</p>
-
-<pre><code class="r">ds %&gt;%
-    cd(&quot;Demos&quot;) %&gt;%
-    setNames(c(&quot;Birth Year&quot;, &quot;Gender&quot;, &quot;Political Ideo. (3 category)&quot;,
-    &quot;Political Ideo. (7 category)&quot;,  &quot;Political Ideo. (7 category; other)&quot;,  
-    &quot;Race&quot;, &quot;Education&quot;, &quot;Marital Status&quot;, &quot;Phone&quot;, &quot;Family Income&quot;, &quot;Region&quot;,
-    &quot;State&quot;, &quot;Weight&quot;, &quot;Voter Registration (new)&quot;, &quot;Is a voter?&quot;,
-    &quot;Voter Registration (old)&quot;, &quot;Voter Registration&quot;))
-</code></pre>
-
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">    </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">&quot;Birth Year&quot;</span>, <span class="st">&quot;Gender&quot;</span>, <span class="st">&quot;Political Ideo. (3 category)&quot;</span>,</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">    <span class="st">&quot;Political Ideo. (7 category)&quot;</span>,  <span class="st">&quot;Political Ideo. (7 category; other)&quot;</span>,  </a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">    <span class="st">&quot;Race&quot;</span>, <span class="st">&quot;Education&quot;</span>, <span class="st">&quot;Marital Status&quot;</span>, <span class="st">&quot;Phone&quot;</span>, <span class="st">&quot;Family Income&quot;</span>, <span class="st">&quot;Region&quot;</span>,</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">    <span class="st">&quot;State&quot;</span>, <span class="st">&quot;Weight&quot;</span>, <span class="st">&quot;Voter Registration (new)&quot;</span>, <span class="st">&quot;Is a voter?&quot;</span>,</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">    <span class="st">&quot;Voter Registration (old)&quot;</span>, <span class="st">&quot;Voter Registration&quot;</span>))</a></code></pre></div>
 <p>We can also set the names of the objects contained in a folder with <code>setNames()</code>:</p>
-
-<pre><code class="r">ds %&gt;%
-    cd(&quot;Demos&quot;) %&gt;%
-    setName(&quot;Demographics&quot;)
-</code></pre>
-
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="st">    </span><span class="kw">setName</span>(<span class="st">&quot;Demographics&quot;</span>)</a></code></pre></div>
+</div>
+<div id="ordering-within-folders" class="section level2">
 <h2>Ordering within folders</h2>
-
 <p>Unlike files in a file system, variables within folders are ordered.</p>
-
-<p>Let&#39;s move &ldquo;Demographics&rdquo; to the end. One way to do that is with the <code>setOrder</code> function. This lets you provide a specific order, but it requires you to specify all of the folder&#39;s contents. Let&#39;s use that function to put &ldquo;Tracking questions&rdquo; first:</p>
-
-<pre><code class="r">ds %&gt;%
-    cd(&quot;/&quot;) %&gt;%
-    setOrder(c(&quot;Tracking questions&quot;, &quot;This week&quot;, &quot;Demographics&quot;))
-</code></pre>
-
+<p>Let’s move “Demographics” to the end. One way to do that is with the <code>setOrder</code> function. This lets you provide a specific order, but it requires you to specify all of the folder’s contents. Let’s use that function to put “Tracking questions” first:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="st">    </span><span class="kw">setOrder</span>(<span class="kw">c</span>(<span class="st">&quot;Tracking questions&quot;</span>, <span class="st">&quot;This week&quot;</span>, <span class="st">&quot;Demographics&quot;</span>))</a></code></pre></div>
 <!--
 We can do that a couple of ways. One is using `mv()`, giving it the "after" argument
 
 ```r
 ds %>%
-    cd(&ldquo;/&rdquo;) %>%
-    mv(&ldquo;Demographics&rdquo;, &ldquo;.&rdquo;, after=&ldquo;Tracking questions&rdquo;)
-&ldquo;
+    cd("/") %>%
+    mv("Demographics", ".", after="Tracking questions")
+```
 
-This uses the &rdquo;.&ldquo; folder &quot;path&rdquo; to indicate that you&rsquo;re &ldquo;moving&rdquo; the object to be in the current folder. Note that &ldquo;.&rdquo; (the current folder) and . (the magrittr special value) aren&rsquo;t the same thing, though in this particular context, they would have similar implications.
+This uses the `"."` folder "path" to indicate that you're "moving" the object to be in the current folder. Note that `"."` (the current folder) and `.` (the `magrittr` special value) aren't the same thing, though in this particular context, they would have similar implications.
 
  Note that order of things to mv is preserved, so that does set order
 
-## Finding a variable&rsquo;s folder
+## Finding a variable's folder
 
-folder(ds$var); can also mv to wherever that var is &ndash;>
-
+folder(ds$var); can also mv to wherever that var is -->
+</div>
+<div id="deleting-folders" class="section level2">
 <h2>Deleting folders</h2>
-
 <p>The cleanest way to delete a folder is with <code>rmdir()</code>:</p>
-
-<pre><code class="r">ds %&gt;%
-    rmdir(&quot;This week/Snowden&quot;)
-</code></pre>
-
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="st">    </span><span class="kw">rmdir</span>(<span class="st">&quot;This week/Snowden&quot;</span>)</a></code></pre></div>
 <p>This deletes the folder and all variables contained within it.</p>
-
 <p><a href="derive.html">Next: transforming and deriving</a></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 </body>
-
 </html>
