@@ -1,44 +1,57 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
 
 <title>Filtering Data</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -47,9 +60,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -116,9 +129,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -287,7 +297,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -311,8 +322,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>As we’ve seen in previous vignettes, making logical expressions with Crunch datasets and variables is natural. We showed how to <a href="derive.html">update a selection of values</a> on the server, as well as how to <a href="analyze.html">crosstab in a subset of a dataset</a>. Other applications work just as intuitively.</p>
 <!-- Add links with anchors to "Updating values" and to "Subsetting data" -->
 <p>Filtering like this works by creating a dataset or variable object that has the filter embedded in it:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">dems &lt;-<span class="st"> </span>ds[ds<span class="op">$</span>pid3 <span class="op">==</span><span class="st"> &quot;Democrat&quot;</span>,]</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">dems</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>dems &lt;-<span class="st"> </span>ds[ds<span class="op">$</span>pid3 <span class="op">==</span><span class="st"> &quot;Democrat&quot;</span>,]</span>
+<span id="cb1-2"><a href="#cb1-2"></a>dems</span></code></pre></div>
 <pre><code>## Dataset “Economist/YouGov Weekly Survey”
 ## 
 ## Contains 96 rows of 38 variables:
@@ -334,7 +345,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## $manningfavorability: manningfavorability (categorical)
 ## $manningguilt: manningguilt (categorical)
 ## $snowdenfav: Favorability of Edward Snowden (categorical)
-## $snowdenleakapp: Approval of Snowden's Leak (categorical)
+## $snowdenleakapp: Approval of Snowden&#39;s Leak (categorical)
 ## $snowdenpros: Support for Prosecution of Snowden (categorical)
 ## $snowdenpenalty: Penalty for Snowden (categorical)
 ## $perc_skipped: perc_skipped (numeric)
@@ -356,7 +367,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## $votereg_old: votereg_old (numeric)
 ## $votereg: votereg (numeric)
 ## $age: age (numeric)</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">round</span>(<span class="kw">crtabs</span>(<span class="kw">mean</span>(track) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>dems), <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">round</span>(<span class="kw">crtabs</span>(<span class="kw">mean</span>(track) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>dems), <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                    Male Female
 ##   No HS                  NaN   1.00
@@ -366,70 +377,70 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##   4-year               -0.12   0.40
 ##   Post-grad             0.33   0.12</code></pre>
 <p>When you extract a variable from a filtered dataset, it too is filtered. So</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">table</span>(dems<span class="op">$</span>educ)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">table</span>(dems<span class="op">$</span>educ)</span></code></pre></div>
 <pre><code>## educ
 ##                No HS High school graduate         Some college               2-year               4-year 
 ##             5.990781            23.817206            19.000165             4.962549            18.238301 
 ##            Post-grad 
 ##             6.278870</code></pre>
 <p>is the same as</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">table</span>(ds<span class="op">$</span>educ[ds<span class="op">$</span>pid3 <span class="op">==</span><span class="st"> &quot;Democrat&quot;</span>,])</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">table</span>(ds<span class="op">$</span>educ[ds<span class="op">$</span>pid3 <span class="op">==</span><span class="st"> &quot;Democrat&quot;</span>,])</span></code></pre></div>
 <pre><code>## educ
 ##                No HS High school graduate         Some college               2-year               4-year 
 ##             5.990781            23.817206            19.000165             4.962549            18.238301 
 ##            Post-grad 
 ##             6.278870</code></pre>
 <p>As an aside, if you prefer using the <code>subset</code> function, that works just the same as the <code>[</code> extract method on datasets:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">identical</span>(<span class="kw">subset</span>(ds, ds<span class="op">$</span>pid3 <span class="op">==</span><span class="st"> &quot;Democrat&quot;</span>), dems)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">identical</span>(<span class="kw">subset</span>(ds, ds<span class="op">$</span>pid3 <span class="op">==</span><span class="st"> &quot;Democrat&quot;</span>), dems)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 </div>
 <div id="filter-entities" class="section level2">
 <h2>Filter entities</h2>
 <p>In the web application, you can save filter definitions with names for easy reuse. You can also share these filter definitions with other viewers of the dataset.</p>
 <p>To do so, we work with the dataset’s filter catalog. To start, our filter catalog will be empty:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">filters</span>(ds)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">filters</span>(ds)</span></code></pre></div>
 <pre><code>## data frame with 0 columns and 0 rows</code></pre>
 <p>Create a filter by assigning a Crunch logical expression to the catalog by the name we want to give it, using <code>$</code> or <code>[[</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]] &lt;-<span class="st"> </span>ds<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;Male&quot;</span> <span class="op">&amp;</span><span class="st"> </span>ds<span class="op">$</span>age <span class="op">&lt;</span><span class="st"> </span><span class="dv">30</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]]</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]] &lt;-<span class="st"> </span>ds<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;Male&quot;</span> <span class="op">&amp;</span><span class="st"> </span>ds<span class="op">$</span>age <span class="op">&lt;</span><span class="st"> </span><span class="dv">30</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]]</span></code></pre></div>
 <pre><code>## Crunch filter “Young males”
 ## Expression: gender == &quot;Male&quot; &amp; age &lt; 30</code></pre>
 <p>This new filter now appears in our filter catalog.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">filters</span>(ds)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">filters</span>(ds)</span></code></pre></div>
 <pre><code>##          name                               id is_public
 ## 1 Young males fe5a713cbb2043a4ab88237da5ea6cb6     FALSE</code></pre>
 <p>You could also have made the filter with the <code>newFilter</code> function:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">f &lt;-<span class="st"> </span><span class="kw">newFilter</span>(<span class="st">&quot;Young males&quot;</span>, ds<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;Male&quot;</span> <span class="op">&amp;</span><span class="st"> </span>ds<span class="op">$</span>age <span class="op">&lt;</span><span class="st"> </span><span class="dv">30</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>f &lt;-<span class="st"> </span><span class="kw">newFilter</span>(<span class="st">&quot;Young males&quot;</span>, ds<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;Male&quot;</span> <span class="op">&amp;</span><span class="st"> </span>ds<span class="op">$</span>age <span class="op">&lt;</span><span class="st"> </span><span class="dv">30</span>)</span></code></pre></div>
 <p>This filter is now available for you to use in the web application. If you want to make the filter available to all viewers of the dataset, make it “public”:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">is.public</span>(<span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]]) &lt;-<span class="st"> </span><span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="kw">filters</span>(ds)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">is.public</span>(<span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]]) &lt;-<span class="st"> </span><span class="ot">TRUE</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="kw">filters</span>(ds)</span></code></pre></div>
 <pre><code>##          name                               id is_public
 ## 1 Young males fe5a713cbb2043a4ab88237da5ea6cb6      TRUE</code></pre>
 <p>You can also edit the filter expressions by assigning a new one in, like:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]] &lt;-<span class="st"> </span>ds<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;Male&quot;</span> <span class="op">&amp;</span><span class="st"> </span>ds<span class="op">$</span>age <span class="op">&lt;</span><span class="st"> </span><span class="dv">35</span></a>
-<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]]</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]] &lt;-<span class="st"> </span>ds<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;Male&quot;</span> <span class="op">&amp;</span><span class="st"> </span>ds<span class="op">$</span>age <span class="op">&lt;</span><span class="st"> </span><span class="dv">35</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]]</span></code></pre></div>
 <pre><code>## Crunch filter “Young males”
 ## Expression: gender == &quot;Male&quot; &amp; age &lt; 35</code></pre>
 </div>
 <div id="exclusion-filters" class="section level2">
 <h2>Exclusion filters</h2>
 <p>One other application for filtering is the dataset exclusion filter. The exclusion allows you to suppress from view rows that match a certain condition. Exclusions are set on the dataset with a Crunch logical expression:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">dim</span>(ds)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">dim</span>(ds)</span></code></pre></div>
 <pre><code>## [1] 250  38</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">exclusion</span>(ds) &lt;-<span class="st"> </span>ds<span class="op">$</span>perc_skipped <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span></a>
-<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="kw">exclusion</span>(ds)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">exclusion</span>(ds) &lt;-<span class="st"> </span>ds<span class="op">$</span>perc_skipped <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a><span class="kw">exclusion</span>(ds)</span></code></pre></div>
 <pre><code>## Crunch logical expression: perc_skipped &gt; 15</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">dim</span>(ds)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">dim</span>(ds)</span></code></pre></div>
 <pre><code>## [1] 229  38</code></pre>
 <p>All viewers of the dataset will see the dataset as if those rows do not exist; however, as the editor of the dataset, you can remove the exclusion filter to see them if you need:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">exclusion</span>(ds) &lt;-<span class="st"> </span><span class="ot">NULL</span></a>
-<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="kw">dim</span>(ds)</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">exclusion</span>(ds) &lt;-<span class="st"> </span><span class="ot">NULL</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a><span class="kw">dim</span>(ds)</span></code></pre></div>
 <pre><code>## [1] 250  38</code></pre>
 <div id="alternative-droprows" class="section level3">
 <h3>Alternative: <code>dropRows</code></h3>
 <p>If you do know that you never want to see those rows again, you can permanently delete them with <code>dropRows</code>:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="co">## Not run</span></a>
-<a class="sourceLine" id="cb30-2" data-line-number="2">ds &lt;-<span class="st"> </span><span class="kw">dropRows</span>(ds, ds<span class="op">$</span>perc_skipped <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="co">## Not run</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a>ds &lt;-<span class="st"> </span><span class="kw">dropRows</span>(ds, ds<span class="op">$</span>perc_skipped <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span>)</span></code></pre></div>
 <p><a href="export.html">Next: exporting data</a></p>
 </div>
 </div>

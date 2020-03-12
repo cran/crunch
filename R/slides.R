@@ -194,7 +194,14 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #' @param deck A Crunch Deck
 #' @param query A formula definition of a query to be used by the slide. This is
 #' similar to CrunchCube query
-#' @param display_settings (optional) A list of display settings, if om
+#' @param display_settings (optional) A list of display settings. If omitted,
+#' slide will be a table of column percentages with hypothesis test highlighting
+#' enabled. The most common setting used is `vizType`, which can be:
+#' `table`, `groupedBarPlot`, `stackedBarPlot`, `horizontalBarPlot`,
+#' `horizontalStackedBarPlot`, `donut`, and (if the second variable in the
+#' query formula is a wave variable) `timeplot`.
+#' In addition, `showValueLabels` (logical) controls whether the web app and
+#' exports show labels on bars or arcs of donuts.
 #' @param title The slide's title
 #' @param subtitle The slide's subtitle
 #' @param ... Further options to be passed on to the API
@@ -208,6 +215,41 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     main_deck,
 #'     ~ cyl + wt,
 #'     title = "Cyl and Weight",
+#'     subtitle = "2017 Data"
+#' )
+#'
+#' # Grouped bar plot
+#' newSlide(
+#'     main_deck,
+#'     ~ approval + age4,
+#'     title = "Approval by age group",
+#'     display_settings = list(
+#'         vizType = "groupedBarPlot",
+#'         showValueLabels = TRUE
+#'     ),
+#'     subtitle = "2017 Data"
+#' )
+#'
+#' # Horizontal stacked bars
+#' newSlide(
+#'     main_deck,
+#'     ~ approval + age4,
+#'     title = "Approval by age group",
+#'     display_settings = list(
+#'         vizType = "horizontalStackedBarPlot"
+#'     ),
+#'     subtitle = "2017 Data"
+#' )
+#'
+#' # A donut is only suitable for a single variable
+#' newSlide(
+#'     main_deck,
+#'     ~ approval,
+#'     title = "Approval of new feature",
+#'     display_settings = list(
+#'         vizType = "donut",
+#'         showValueLabels = FALSE
+#'     ),
 #'     subtitle = "2017 Data"
 #' )
 #' }

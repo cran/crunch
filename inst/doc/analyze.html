@@ -1,44 +1,57 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
 
 <title>Analyzing Crunch Data</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -47,9 +60,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -116,9 +129,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -287,7 +297,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -313,16 +324,16 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="basic-examples" class="section level3">
 <h3>Basic examples</h3>
 <p>Like <code>xtabs</code>, <code>crtabs</code> takes a formula and a data argument. Dimensions of your crosstab go on the right side of the <code>~</code>. For a univariate table of frequencies by education, we can do</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">tab1 &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>educ, <span class="dt">data=</span>ds)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">tab1</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>tab1 &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>educ, <span class="dt">data=</span>ds)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>tab1</span></code></pre></div>
 <pre><code>## educ
 ##                No HS High school graduate         Some college               2-year               4-year 
 ##                   12                   71                   61                   24                   57 
 ##            Post-grad 
 ##                   25</code></pre>
 <p>Additional dimensions are added with <code>+</code>. For a two-way table of education and gender,</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">tab2 &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">tab2</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>tab2 &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</span>
+<span id="cb3-2"><a href="#cb3-2"></a>tab2</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
 ##   No HS                   6      6
@@ -335,12 +346,12 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="weighting" class="section level3">
 <h3>Weighting</h3>
 <p><code>crtabs</code> takes advantage of several Crunch features that <code>xtabs</code> does not support. First, it respects weight variables that have been set on the server. This dataset is not currently weighted</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">weight</span>(ds)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">weight</span>(ds)</span></code></pre></div>
 <pre><code>## NULL</code></pre>
 <p>but we can very easily change that. Let’s use the “weight” variable that already exists in the dataset:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">weight</span>(ds) &lt;-<span class="st"> </span>ds<span class="op">$</span>weight</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">weight</span>(ds) &lt;-<span class="st"> </span>ds<span class="op">$</span>weight</span></code></pre></div>
 <p>Now, if we request the same two-way table as before, we’ll get weighted results:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                        Male    Female
 ##   No HS                12.628200  8.698227
@@ -350,7 +361,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##   4-year               16.492669 22.581293
 ##   Post-grad             8.935983  8.647220</code></pre>
 <p>If we want unweighted data, that’s easy enough:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds, <span class="dt">weight=</span><span class="ot">NULL</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds, <span class="dt">weight=</span><span class="ot">NULL</span>)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
 ##   No HS                   6      6
@@ -363,14 +374,14 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="proportion-tables" class="section level3">
 <h3>Proportion tables</h3>
 <p>As with any <code>array</code> data type, we can compute margin tables, and the <code>prop.table</code> function in R provides a convenient way for sweeping a table by a margin. These work on the output of <code>crtabs</code>, too:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">prop.table</span>(tab1)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">prop.table</span>(tab1)</span></code></pre></div>
 <pre><code>## educ
 ##                No HS High school graduate         Some college               2-year               4-year 
 ##                0.048                0.284                0.244                0.096                0.228 
 ##            Post-grad 
 ##                0.100</code></pre>
 <p>For column proportions, specify margin=2 (by rows, margin=1):</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">prop.table</span>(tab2, <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">prop.table</span>(tab2, <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                         Male     Female
 ##   No HS                0.05405405 0.04316547
@@ -380,7 +391,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##   4-year               0.22522523 0.23021583
 ##   Post-grad            0.13513514 0.07194245</code></pre>
 <p>Let’s make that more readable:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">round</span>(<span class="dv">100</span><span class="op">*</span><span class="kw">prop.table</span>(tab2, <span class="dv">2</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">round</span>(<span class="dv">100</span><span class="op">*</span><span class="kw">prop.table</span>(tab2, <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
 ##   No HS                   5      4
@@ -393,8 +404,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="complex-data-types" class="section level3">
 <h3>Complex data types</h3>
 <p><code>crtabs</code> also comfortably handles the more complex data types that Crunch supports, including categorical array and multiple response variables. In the <a href="array-variables.html">array variables vignette</a>, we created a categorical array, “imiss”, for “Important issues”. We can crosstab with arrays just as we do non-arrays.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">tab3 &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">tab3</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>tab3 &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</span>
+<span id="cb18-2"><a href="#cb18-2"></a>tab3</span></code></pre></div>
 <pre><code>## , , gender = Male
 ## 
 ##                         imiss
@@ -432,10 +443,10 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##   The war in Afghanistan       48.27161           48.41640          17.997678   13.762882</code></pre>
 <p>Note that even though we specified two variables in our formula, because “imiss” itself is two dimensional, our result is a three-dimensional array.</p>
 <p>To illustrate working with multiple response variables, let’s convert “imiss” to multiple response, selecting its positive categories as indicating selection:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">ds<span class="op">$</span>imiss &lt;-<span class="st"> </span><span class="kw">dichotomize</span>(ds<span class="op">$</span>imiss, <span class="kw">c</span>(<span class="st">&quot;Very Important&quot;</span>, <span class="st">&quot;Somewhat Important&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>ds<span class="op">$</span>imiss &lt;-<span class="st"> </span><span class="kw">dichotomize</span>(ds<span class="op">$</span>imiss, <span class="kw">c</span>(<span class="st">&quot;Very Important&quot;</span>, <span class="st">&quot;Somewhat Important&quot;</span>))</span></code></pre></div>
 <p>Now, when we crosstab it, we’ll get a two-dimensional table because multiple response variables present a one-dimensional interface:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">tab3mr &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2">tab3mr</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>tab3mr &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</span>
+<span id="cb21-2"><a href="#cb21-2"></a>tab3mr</span></code></pre></div>
 <pre><code>##                         gender
 ## imiss                          Male     Female
 ##   Abortion                58.649930  97.610008
@@ -454,12 +465,12 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##   &lt;NA&gt;                     1.059559   5.867937
 ##   &lt;NA&gt;                   120.491874 122.580631</code></pre>
 <p>It’s worth noting here that the result of <code>crtabs</code> isn’t an <code>array</code> object but a <code>CrunchCube</code> object.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">class</span>(tab3mr)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">class</span>(tab3mr)</span></code></pre></div>
 <pre><code>## [1] &quot;CrunchCube&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;crunch&quot;</code></pre>
 <p>This allows us to do the appropriate calculations on arrays and multiple response variables when <code>prop.table</code> is called. To compute a margin table over a multiple response variable, summing along the dimension would give an incorrect value because the responses in a multiple response are not mutually exclusive–they can’t be assumed to sum to 100 percent. However, the <code>margin.table</code> method on <code>CrunchCubes</code> can compute the correct margin, so <code>prop.table</code> gives correct proportions:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">round</span>(<span class="dv">100</span><span class="op">*</span><span class="kw">prop.table</span>(tab3mr, <span class="dv">2</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">round</span>(<span class="dv">100</span><span class="op">*</span><span class="kw">prop.table</span>(tab3mr, <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##                         gender
 ## imiss                    Male Female
 ##   Abortion                  5      7
@@ -477,7 +488,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##   The war in Afghanistan    6      7
 ##   &lt;NA&gt;                      9      8</code></pre>
 <p>Finally, just as we saw in the <a href="array-variables.html">array variables</a> vignette, we can grab individual subvariables and crosstab with them:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss<span class="op">$</span>imiss_f <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss<span class="op">$</span>imiss_f <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</span></code></pre></div>
 <pre><code>##                     gender
 ## imiss_f                  Male   Female
 ##   Very Important     45.64391 63.89258
@@ -488,7 +499,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="n-way-tables" class="section level3">
 <h3>N-way tables</h3>
 <p>It’s worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">round</span>(<span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss <span class="op">+</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds))</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">round</span>(<span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss <span class="op">+</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds))</span></code></pre></div>
 <pre><code>## , , gender = Male
 ## 
 ##                         educ
@@ -536,7 +547,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="numeric-aggregations" class="section level3">
 <h3>Numeric aggregations</h3>
 <p><code>crtabs</code> can also compute quantities other than counts. Using the left-hand side of the formula, we can specify other aggregations to put in the cells of the table. For example, in the <a href="derive.html">deriving variables vignette</a>, we created an “age” variable. We can easily compute the average age by gender and education:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw">crtabs</span>(<span class="kw">mean</span>(age) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">crtabs</span>(<span class="kw">mean</span>(age) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                       Male   Female
 ##   No HS                54.00829 56.02205
@@ -546,7 +557,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##   4-year               50.14993 40.75736
 ##   Post-grad            50.85838 48.64874</code></pre>
 <p>Other supported aggregations include <code>min</code>, <code>max</code>, <code>sd</code>, and <code>sum</code>. For the minimum age by gender and education,</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="kw">crtabs</span>(<span class="kw">min</span>(age) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="kw">crtabs</span>(<span class="kw">min</span>(age) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
 ##   No HS                  42     45
@@ -556,17 +567,17 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##   4-year                 32     24
 ##   Post-grad              26     27</code></pre>
 <p>We can get unconditional (univariate) statistics by making the right-hand side of your formula be just the number <code>1</code>:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">crtabs</span>(<span class="kw">min</span>(age) <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data=</span>ds)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="kw">crtabs</span>(<span class="kw">min</span>(age) <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data=</span>ds)</span></code></pre></div>
 <pre><code>## [1] 22</code></pre>
 <p>Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the <a href="variables.html">variables vignette</a>, we worked with the “On the right track” question and set some numeric values:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="kw">categories</span>(ds<span class="op">$</span>track)</a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="kw">categories</span>(ds<span class="op">$</span>track)</span></code></pre></div>
 <pre><code>##   id                                    name value missing
 ## 1  1 Generally headed in the right direction     1   FALSE
 ## 2  3                                Not sure     0    TRUE
 ## 3  2                             Wrong track    -1   FALSE
 ## 4 -1                                 No Data    NA    TRUE</code></pre>
 <p>We can use these numeric values to compute an “on the right track index” by averaging them. If the index is greater than zero, more people thing things are going well, and if it is negative, more respondents are pessimistic.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="kw">round</span>(<span class="kw">crtabs</span>(<span class="kw">mean</span>(track) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds), <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="kw">round</span>(<span class="kw">crtabs</span>(<span class="kw">mean</span>(track) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds), <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                    Male Female
 ##   No HS                -0.39  -0.05
@@ -580,7 +591,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="subsetting-data" class="section level3">
 <h3>Subsetting data</h3>
 <p>We can also specify a subset of <code>ds</code> to analyze, just as if it were a data.frame. Let’s do the same calculation for Democrats only:</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="kw">round</span>(<span class="kw">crtabs</span>(<span class="kw">mean</span>(track) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds[ds<span class="op">$</span>pid3 <span class="op">==</span><span class="st"> &quot;Democrat&quot;</span>,]), <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="kw">round</span>(<span class="kw">crtabs</span>(<span class="kw">mean</span>(track) <span class="op">~</span><span class="st"> </span>educ <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds[ds<span class="op">$</span>pid3 <span class="op">==</span><span class="st"> &quot;Democrat&quot;</span>,]), <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                    Male Female
 ##   No HS                  NaN   1.00
@@ -598,8 +609,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <h2>Statistical modeling</h2>
 <p>Any statistical modeling function that takes a <code>data</code> argument should happily accept a <code>CrunchDataset</code> and just do the right thing–no extra effort or thought required.</p>
 <p>Let’s fit a basic Ordinary Least Squares (OLS) model. In our dataset, we have a few questions about Edward Snowden, such as:</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1">ds<span class="op">$</span>snowdenleakapp</a></code></pre></div>
-<pre><code>## Approval of Snowden's Leak (categorical)
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a>ds<span class="op">$</span>snowdenleakapp</span></code></pre></div>
+<pre><code>## Approval of Snowden&#39;s Leak (categorical)
 ## 
 ##                        Count
 ## Strongly disapprove 86.00644
@@ -608,9 +619,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## Somewhat disapprove 40.26587
 ## Strongly approve    24.70842</code></pre>
 <p>We can use <code>lm</code> to fit our model. Let’s explore the relationship between approval of Snowden’s leak and respondents’ interest in current events, party identification, gender, and age.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1">ols1 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">I</span>(snowdenleakapp <span class="op">==</span><span class="st"> &quot;Strongly approve&quot;</span>) <span class="op">~</span><span class="st"> </span>newsint2 <span class="op">+</span><span class="st"> </span>pid3 <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>age,</a>
-<a class="sourceLine" id="cb45-2" data-line-number="2">    <span class="dt">data=</span>ds)</a>
-<a class="sourceLine" id="cb45-3" data-line-number="3"><span class="kw">summary</span>(ols1)</a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a>ols1 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">I</span>(snowdenleakapp <span class="op">==</span><span class="st"> &quot;Strongly approve&quot;</span>) <span class="op">~</span><span class="st"> </span>newsint2 <span class="op">+</span><span class="st"> </span>pid3 <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>age,</span>
+<span id="cb45-2"><a href="#cb45-2"></a>    <span class="dt">data=</span>ds)</span>
+<span id="cb45-3"><a href="#cb45-3"></a><span class="kw">summary</span>(ols1)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = I(snowdenleakapp == &quot;Strongly approve&quot;) ~ newsint2 + 
@@ -638,9 +649,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## F-statistic: 0.6931 on 9 and 240 DF,  p-value: 0.7149</code></pre>
 <p>Looks like partisanship is weakly associated with approval of the NSA leak, but overall the model isn’t a great fit, given our data. (For what it’s worth, we’re working on a randomly drawn subset of the survey so that the size of data included with package is small. Results are more meaningful with the full dataset.) Nevertheless, this example illustrates how straightforward it is to do statistical analysis with data in Crunch. Even though your dataset lives on the server, you can think of it like a local <code>data.frame</code>. Note, for example, that our categorical variables (News Interest, Party ID, and Gender) expand their categories out as dichotomous indicators, just as if they were <code>factor</code> variables in a <code>data.frame</code>.</p>
 <p>Given that we’re estimating a model with a dichotomous dependent variable, perhaps a logit would be more appropriate than a strict linear predictor. We can use <code>glm</code> instead:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1">logit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(<span class="kw">I</span>(snowdenleakapp <span class="op">==</span><span class="st"> &quot;Strongly approve&quot;</span>) <span class="op">~</span><span class="st"> </span>newsint2 <span class="op">+</span><span class="st"> </span>pid3 <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>age,</a>
-<a class="sourceLine" id="cb47-2" data-line-number="2">    <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&quot;logit&quot;</span>), <span class="dt">data=</span>ds)</a>
-<a class="sourceLine" id="cb47-3" data-line-number="3"><span class="kw">summary</span>(logit1)</a></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>logit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(<span class="kw">I</span>(snowdenleakapp <span class="op">==</span><span class="st"> &quot;Strongly approve&quot;</span>) <span class="op">~</span><span class="st"> </span>newsint2 <span class="op">+</span><span class="st"> </span>pid3 <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>age,</span>
+<span id="cb47-2"><a href="#cb47-2"></a>    <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&quot;logit&quot;</span>), <span class="dt">data=</span>ds)</span>
+<span id="cb47-3"><a href="#cb47-3"></a><span class="kw">summary</span>(logit1)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## glm(formula = I(snowdenleakapp == &quot;Strongly approve&quot;) ~ newsint2 + 
@@ -663,7 +674,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## genderFemale              -0.176401   0.410364  -0.430   0.6673  
 ## age                        0.003547   0.015024   0.236   0.8134  
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 

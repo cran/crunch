@@ -1,44 +1,57 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
 
 <title>Variable Folders and Organization</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -47,9 +60,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -116,9 +129,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -287,7 +297,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -318,97 +329,97 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <li><code>rmdir()</code> removes a directory, i.e. deletes a folder</li>
 </ul>
 <p>Like a file system, you can express the “path” to a folder as a string separated by a “/” delimiter, like this:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">mkdir</span>(ds, <span class="st">&quot;Brands/Cars and Trucks/Domestic&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">mkdir</span>(ds, <span class="st">&quot;Brands/Cars and Trucks/Domestic&quot;</span>)</span></code></pre></div>
 <p>If your folder names should legitimately have a “/” in them, you can set a different character to be the path separator. See <code>?mkdir</code> or any of the other functions’ help files for details.</p>
 <p>Paths can be expressed relative to the current object—a folder, or in this case, the dataset, which translates to its top-level <code>&quot;/&quot;</code> root folder in path specification—and the file system’s special path segments <code>&quot;..&quot;</code> (go up a level) and <code>&quot;.&quot;</code> (this level) are also supported. We’ll use those in examples below.</p>
 <p>You can also specify paths as a vector of path segments, like</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">mkdir</span>(ds, <span class="kw">c</span>(<span class="st">&quot;Brands&quot;</span>, <span class="st">&quot;Cars and Trucks&quot;</span>, <span class="st">&quot;Domestic&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">mkdir</span>(ds, <span class="kw">c</span>(<span class="st">&quot;Brands&quot;</span>, <span class="st">&quot;Cars and Trucks&quot;</span>, <span class="st">&quot;Domestic&quot;</span>))</span></code></pre></div>
 <p>which is equivalent to the previous example. One or the other way may be more convenient, depending on what you’re trying to accomplish.</p>
 <p>These four functions all take a dataset or a folder as the first argument, and they return the same object passed to it, except for <code>cd</code>, which returns the selected folder. As such, they are designed to work with <code>magrittr</code>-style piping (<code>%&gt;%</code>) for convenience in chaining together steps, though they don’t require that you do.</p>
 </div>
 <div id="viewing-the-folders" class="section level2">
 <h2>Viewing the folders</h2>
 <p>To get started, let’s pick up the dataset we used in the <a href="array-variables.html">array variables vignette</a> and view its starting layout. We can do that by selecting the root folder (“/”) and printing it</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">library</span>(magrittr)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="st">    </span><span class="kw">print</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">library</span>(magrittr)</span>
+<span id="cb3-2"><a href="#cb3-2"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="st">    </span><span class="kw">print</span>()</span></code></pre></div>
 <p>(The <code>print()</code> isn’t strictly necessary here as <code>cd</code> will return the folder and thus it will print by default, but we’ll use different <code>print</code> arguments later, so it’s included here both for explicitness and illustration.)</p>
 <p>It’s flat—there are no folders here, only variables. If you’re importing data from a <code>data.frame</code> or a file, like an SPSS file, this is where you’ll begin.</p>
 </div>
 <div id="creating-folders" class="section level2">
 <h2>Creating folders</h2>
 <p>Let’s make some folders and move some variables into them. To start, I know that the demographic variables are at the back of the dataset, so let’s make a “Demos” folder and move variables 21 to 37 into it:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">    </span><span class="kw">mkdir</span>(<span class="st">&quot;Demos&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="st">    </span><span class="kw">mv</span>(<span class="dv">21</span><span class="op">:</span><span class="dv">37</span>, <span class="st">&quot;Demos&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="st">    </span><span class="kw">mkdir</span>(<span class="st">&quot;Demos&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="st">    </span><span class="kw">mv</span>(<span class="dv">21</span><span class="op">:</span><span class="dv">37</span>, <span class="st">&quot;Demos&quot;</span>)</span></code></pre></div>
 <p>Now when I print the top-level directory again, I see a “Demos” folder and don’t see those demographic variables:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>)</span></code></pre></div>
 <p><code>mv()</code> can reference variables or folders within a level in several ways. Numeric indices like we just did probably won’t be the most common way you’ll do it: names work just as well and are more transparent. Let’s move the first variable, <code>perc_skipped</code>, into “Demos” as well</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">    </span><span class="kw">mv</span>(<span class="st">&quot;perc_skipped&quot;</span>, <span class="st">&quot;Demos&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="co">## To print the folder contents</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="st">    </span><span class="kw">mv</span>(<span class="st">&quot;perc_skipped&quot;</span>, <span class="st">&quot;Demos&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="co">## To print the folder contents</span></span></code></pre></div>
 <blockquote>
 <p>A side note: although the last step of that chain was <code>cd()</code>, we haven’t changed state in our R session. There is no “working folder” set globally. <code>cd()</code> is a function that returns a folder; if we had assigned the return from the function (pipeline) to some object, we could then pass that in to another function to “start” in that folder.</p>
 </blockquote>
 <p>Another way we can identify variables is by using the <code>dplyr</code>-like functions <code>starts_with</code>, <code>ends_with</code>, <code>matches</code>, and <code>contains</code>. Let’s use <code>matches</code> to move all of the questions about Edward Snowden or Bradley (Chelsea) Manning to a folder for the topical questions in this week’s survey:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="st">    </span><span class="kw">mkdir</span>(<span class="st">&quot;This week&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="st">    </span><span class="kw">mv</span>(<span class="kw">matches</span>(<span class="st">&quot;manning|snowden&quot;</span>, <span class="dt">ignore.case =</span> <span class="ot">TRUE</span>), <span class="st">&quot;This week&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="st">    </span><span class="kw">mkdir</span>(<span class="st">&quot;This week&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="st">    </span><span class="kw">mv</span>(<span class="kw">matches</span>(<span class="st">&quot;manning|snowden&quot;</span>, <span class="dt">ignore.case =</span> <span class="ot">TRUE</span>), <span class="st">&quot;This week&quot;</span>)</span></code></pre></div>
 <p>We can also select all variables in a folder using the <code>variables</code> function (or all folders within a folder using <code>folders</code>). Let’s move all remaining variables from the top level folder to a folder called “Tracking questions”. To do this, we do need to explicitly change to the top level folder.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>)</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">    <span class="kw">mkdir</span>(<span class="st">&quot;Tracking questions&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">    </span><span class="kw">mv</span>(., <span class="kw">variables</span>(.), <span class="st">&quot;Tracking questions&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    <span class="kw">mkdir</span>(<span class="st">&quot;Tracking questions&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="st">    </span><span class="kw">mv</span>(., <span class="kw">variables</span>(.), <span class="st">&quot;Tracking questions&quot;</span>)</span></code></pre></div>
 <blockquote>
 <p>(Curious about the “dot” notation? See the <a href="http://magrittr.tidyverse.org/articles/magrittr.html">magrittr docs</a>.)</p>
 </blockquote>
 <p>The reason we change to the top level folder here is that there is a subtle difference between passing <code>ds</code> to <code>mv()</code> versus <code>cd(ds, &quot;/&quot;)</code>. Whatever object, dataset or folder, that is passed into <code>mv()</code> determines the scope from which the objects to move are selected. If you pass the dataset in, you can select any variables in the dataset, regardless of what folder they’re in. If you pass in a folder, you’re selecting just from that folder’s contents. It can be convenient to find all variables that match some criteria across the whole dataset to move them, but sometimes we don’t want that. In this case, we wanted only the variables sitting in the top level folder, not nested in other folders, so we wanted <code>variables(cd(ds, &quot;/&quot;))</code> and not <code>variables(ds)</code>.</p>
 <p>Now, our variable tree has some structure. Let’s use <code>print(folder, depth = 1)</code> to see these folders and their contents one level deep:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="st">    </span><span class="kw">print</span>(<span class="dt">depth =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="st">    </span><span class="kw">print</span>(<span class="dt">depth =</span> <span class="dv">1</span>)</span></code></pre></div>
 </div>
 <div id="nested-folders" class="section level2">
 <h2>Nested folders</h2>
 <p>We can create folders within folders as well. In the “This week” folder, we have a set of questions about Edward Snowden. Let’s nest them inside their own subfolder inside “This week”:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;This week&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="st">    </span><span class="kw">mkdir</span>(<span class="st">&quot;Snowden&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="st">    </span><span class="kw">mv</span>(<span class="kw">matches</span>(<span class="st">&quot;snowden&quot;</span>, <span class="dt">ignore.case =</span> <span class="ot">TRUE</span>), <span class="st">&quot;Snowden&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;..&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="st">    </span><span class="kw">print</span>(<span class="dt">depth =</span> <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;This week&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="st">    </span><span class="kw">mkdir</span>(<span class="st">&quot;Snowden&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="st">    </span><span class="kw">mv</span>(<span class="kw">matches</span>(<span class="st">&quot;snowden&quot;</span>, <span class="dt">ignore.case =</span> <span class="ot">TRUE</span>), <span class="st">&quot;Snowden&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;..&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="st">    </span><span class="kw">print</span>(<span class="dt">depth =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p>Note how we used <code>&quot;..&quot;</code> to change folders up a level, as you can in a file system . We did that just so we can print the folder structure at the top level (and to illustrate that you can specify relative paths :).</p>
 <p>You could also do this using the full path segments. <code>mkdir</code> will recursively make all path segments it needs in order to ensure that the target folder exists.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="st">    </span><span class="kw">mkdir</span>(<span class="st">&quot;This week/Snowden&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="st">    </span><span class="kw">mv</span>(<span class="kw">matches</span>(<span class="st">&quot;snowden&quot;</span>, <span class="dt">ignore.case =</span> <span class="ot">TRUE</span>), <span class="st">&quot;This week/Snowden&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="st">    </span><span class="kw">print</span>(<span class="dt">depth =</span> <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="st">    </span><span class="kw">mkdir</span>(<span class="st">&quot;This week/Snowden&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="st">    </span><span class="kw">mv</span>(<span class="kw">matches</span>(<span class="st">&quot;snowden&quot;</span>, <span class="dt">ignore.case =</span> <span class="ot">TRUE</span>), <span class="st">&quot;This week/Snowden&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="st">    </span><span class="kw">print</span>(<span class="dt">depth =</span> <span class="dv">2</span>)</span></code></pre></div>
 </div>
 <div id="renaming-folders-and-folder-contents" class="section level2">
 <h2>Renaming folders and folder contents</h2>
 <p>Folders themselves have names, which we can set with <code>setName()</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">    </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">&quot;Birth Year&quot;</span>, <span class="st">&quot;Gender&quot;</span>, <span class="st">&quot;Political Ideo. (3 category)&quot;</span>,</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4">    <span class="st">&quot;Political Ideo. (7 category)&quot;</span>,  <span class="st">&quot;Political Ideo. (7 category; other)&quot;</span>,  </a>
-<a class="sourceLine" id="cb12-5" data-line-number="5">    <span class="st">&quot;Race&quot;</span>, <span class="st">&quot;Education&quot;</span>, <span class="st">&quot;Marital Status&quot;</span>, <span class="st">&quot;Phone&quot;</span>, <span class="st">&quot;Family Income&quot;</span>, <span class="st">&quot;Region&quot;</span>,</a>
-<a class="sourceLine" id="cb12-6" data-line-number="6">    <span class="st">&quot;State&quot;</span>, <span class="st">&quot;Weight&quot;</span>, <span class="st">&quot;Voter Registration (new)&quot;</span>, <span class="st">&quot;Is a voter?&quot;</span>,</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7">    <span class="st">&quot;Voter Registration (old)&quot;</span>, <span class="st">&quot;Voter Registration&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="st">    </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">&quot;Birth Year&quot;</span>, <span class="st">&quot;Gender&quot;</span>, <span class="st">&quot;Political Ideo. (3 category)&quot;</span>,</span>
+<span id="cb12-4"><a href="#cb12-4"></a>    <span class="st">&quot;Political Ideo. (7 category)&quot;</span>,  <span class="st">&quot;Political Ideo. (7 category; other)&quot;</span>,  </span>
+<span id="cb12-5"><a href="#cb12-5"></a>    <span class="st">&quot;Race&quot;</span>, <span class="st">&quot;Education&quot;</span>, <span class="st">&quot;Marital Status&quot;</span>, <span class="st">&quot;Phone&quot;</span>, <span class="st">&quot;Family Income&quot;</span>, <span class="st">&quot;Region&quot;</span>,</span>
+<span id="cb12-6"><a href="#cb12-6"></a>    <span class="st">&quot;State&quot;</span>, <span class="st">&quot;Weight&quot;</span>, <span class="st">&quot;Voter Registration (new)&quot;</span>, <span class="st">&quot;Is a voter?&quot;</span>,</span>
+<span id="cb12-7"><a href="#cb12-7"></a>    <span class="st">&quot;Voter Registration (old)&quot;</span>, <span class="st">&quot;Voter Registration&quot;</span>))</span></code></pre></div>
 <p>We can also set the names of the objects contained in a folder with <code>setNames()</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="st">    </span><span class="kw">setName</span>(<span class="st">&quot;Demographics&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="st">    </span><span class="kw">setName</span>(<span class="st">&quot;Demographics&quot;</span>)</span></code></pre></div>
 </div>
 <div id="ordering-within-folders" class="section level2">
 <h2>Ordering within folders</h2>
 <p>Unlike files in a file system, variables within folders are ordered.</p>
 <p>Let’s move “Demographics” to the end. One way to do that is with the <code>setOrder</code> function. This lets you provide a specific order, but it requires you to specify all of the folder’s contents. Let’s use that function to put “Tracking questions” first:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="st">    </span><span class="kw">setOrder</span>(<span class="kw">c</span>(<span class="st">&quot;Tracking questions&quot;</span>, <span class="st">&quot;This week&quot;</span>, <span class="st">&quot;Demographics&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="st">    </span><span class="kw">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="st">    </span><span class="kw">setOrder</span>(<span class="kw">c</span>(<span class="st">&quot;Tracking questions&quot;</span>, <span class="st">&quot;This week&quot;</span>, <span class="st">&quot;Demographics&quot;</span>))</span></code></pre></div>
 <!--
 We can do that a couple of ways. One is using `mv()`, giving it the "after" argument
 
@@ -429,8 +440,8 @@ folder(ds$var); can also mv to wherever that var is -->
 <div id="deleting-folders" class="section level2">
 <h2>Deleting folders</h2>
 <p>The cleanest way to delete a folder is with <code>rmdir()</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">ds <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="st">    </span><span class="kw">rmdir</span>(<span class="st">&quot;This week/Snowden&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>ds <span class="op">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="st">    </span><span class="kw">rmdir</span>(<span class="st">&quot;This week/Snowden&quot;</span>)</span></code></pre></div>
 <p>This deletes the folder and all variables contained within it.</p>
 <p><a href="derive.html">Next: transforming and deriving</a></p>
 </div>
