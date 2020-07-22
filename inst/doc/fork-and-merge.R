@@ -6,6 +6,7 @@
 library(crunch)
 library(httptest)
 start_vignette("fork-and-merge")
+login()
 
 ## ----message=FALSE, results='hide'------------------------------------------------------------------------------------
 ds <- newDataset(SO_survey, "stackoverflow_survey")
@@ -75,10 +76,13 @@ house_ds <- newDataset(house_table, "House Size")
 ds_fork <- forkDataset(ds)
 ds_fork <- merge(ds_fork, house_ds, by = "Respondent")
 
+## ----state change7, include=FALSE-------------------------------------------------------------------------------------
+change_state()
+
 ## ----check new data---------------------------------------------------------------------------------------------------
 crtabs(~ TabsSpaces + HouseholdSize, ds_fork)
 
-## ----state change7, include=FALSE-------------------------------------------------------------------------------------
+## ----state change8, include=FALSE-------------------------------------------------------------------------------------
 change_state()
 
 ## ----final mergeFork--------------------------------------------------------------------------------------------------

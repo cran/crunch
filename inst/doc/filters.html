@@ -27,6 +27,22 @@ document.addEventListener('DOMContentLoaded', function(e) {
   }
 });
 </script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -408,14 +424,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>This new filter now appears in our filter catalog.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">filters</span>(ds)</span></code></pre></div>
 <pre><code>##          name                               id is_public
-## 1 Young males fe5a713cbb2043a4ab88237da5ea6cb6     FALSE</code></pre>
+## 1 Young males 257567b10b4d46e19c703cf2de0b7cd4     FALSE</code></pre>
 <p>You could also have made the filter with the <code>newFilter</code> function:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>f &lt;-<span class="st"> </span><span class="kw">newFilter</span>(<span class="st">&quot;Young males&quot;</span>, ds<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;Male&quot;</span> <span class="op">&amp;</span><span class="st"> </span>ds<span class="op">$</span>age <span class="op">&lt;</span><span class="st"> </span><span class="dv">30</span>)</span></code></pre></div>
 <p>This filter is now available for you to use in the web application. If you want to make the filter available to all viewers of the dataset, make it “public”:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">is.public</span>(<span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]]) &lt;-<span class="st"> </span><span class="ot">TRUE</span></span>
 <span id="cb18-2"><a href="#cb18-2"></a><span class="kw">filters</span>(ds)</span></code></pre></div>
 <pre><code>##          name                               id is_public
-## 1 Young males fe5a713cbb2043a4ab88237da5ea6cb6      TRUE</code></pre>
+## 1 Young males 257567b10b4d46e19c703cf2de0b7cd4      TRUE</code></pre>
 <p>You can also edit the filter expressions by assigning a new one in, like:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]] &lt;-<span class="st"> </span>ds<span class="op">$</span>gender <span class="op">==</span><span class="st"> &quot;Male&quot;</span> <span class="op">&amp;</span><span class="st"> </span>ds<span class="op">$</span>age <span class="op">&lt;</span><span class="st"> </span><span class="dv">35</span></span>
 <span id="cb20-2"><a href="#cb20-2"></a><span class="kw">filters</span>(ds)[[<span class="st">&quot;Young males&quot;</span>]]</span></code></pre></div>

@@ -27,6 +27,22 @@ document.addEventListener('DOMContentLoaded', function(e) {
   }
 });
 </script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -378,16 +394,16 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>TabsSpaces <span class="op">+</span><span class="st"> </span>HouseholdSize, ds_fork)</span></code></pre></div>
 <pre><code>##           HouseholdSize
 ## TabsSpaces   1   2   3   4   5
-##     Both    54  55  53  66  65
-##     Spaces 132 121 136 103 139
-##     Tabs   131 121 143 158 145</code></pre>
+##     Both   124 142  98 116 106
+##     Spaces 244 246 252 240 280
+##     Tabs   280 278 244 290 304</code></pre>
 <p>And finally once we’re comfortable that everything went as expected we can send the data to the client by merging the fork back to the original dataset.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>ds &lt;-<span class="st"> </span><span class="kw">mergeFork</span>(ds, ds_fork)</span>
 <span id="cb23-2"><a href="#cb23-2"></a>ds<span class="op">$</span>HouseholdSize</span></code></pre></div>
 <pre><code>## HouseholdSize (numeric)
 ## 
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
-##   1.000   2.000   3.000   3.057   4.000   5.000    1634</code></pre>
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   1.000   2.000   3.000   3.018   4.000   5.000</code></pre>
 </div>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>

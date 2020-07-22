@@ -2,6 +2,9 @@ library(httptest)
 
 run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 
+if (crunch::envOrOption("test.verify.ssl", TRUE) == FALSE) {
+    crunch::set_crunch_config(httr::config(ssl_verifyhost = FALSE, ssl_verifypeer = FALSE), update = TRUE)
+}
 
 skip_on_local_backend <- function(message) {
     # if we are trying to skip when the backend is local
@@ -23,12 +26,12 @@ skip_on_local_env <- function(message) {
 }
 
 decompress_fixtures <- function(dest = tempdir()) {
-    untar(find_file("cubes.tgz"), exdir = tempdir())
+    untar(system.file("mocks.tgz", package = "crunch"), exdir = tempdir())
 }
 
 cubePath <- function(filename) {
     # check the temp place
-    file <- file.path(tempdir(), filename)
+    file <- file.path(tempdir(), "mocks", filename)
 
     # if it's not there, see if it's in the package this should only be needed
     # for backwards compatibility wit hchild packages
@@ -79,7 +82,7 @@ cubify <- function(..., dims) {
 with_mock_crunch <- function(expr) {
     opts <- temp.options(
         crunch.api = "https://app.crunch.io/api/",
-        httptest.mock.paths = c(".", "../inst/", system.file(package = "crunch"))
+        httptest.mock.paths = c(".", "../mocks/", file.path(tempdir(), "mocks"))
     )
     with(
         opts,
@@ -117,7 +120,8 @@ test_options <- temp.options(
 
     crunch.email = crunch::envOrOption("test.user"),
     crunch.pw = crunch::envOrOption("test.pw"),
-    crunch.show.progress = FALSE
+    crunch.show.progress = FALSE,
+    crunch.verify_ssl = crunch::envOrOption("test.verify_ssl", TRUE)
 )
 
 with_test_authentication <- function(expr) {
@@ -242,3 +246,6 @@ crunch_test_teardown_check <- function() {
     cat("Total teardown: ")
     print(get("cleanup.runtime", envir = globalenv()))
 }
+
+# Make compressed fixtures available to downstream packages
+decompress_fixtures()

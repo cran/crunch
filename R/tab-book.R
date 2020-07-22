@@ -8,17 +8,29 @@
 #' workbook, you'll get a TabBookResult object, containing nested CrunchCube
 #' results. You can then further format these and construct custom tab reports.
 #' @param multitable a `Multitable` object
-#' @param dataset CrunchDataset, which may have been subsetted with a filter
-#' expression on the rows and a selection of variables on the columns.
+#' @param dataset CrunchDataset, which may be subset with a filter expression
+#' on the rows, and a selection of variables to use on the columns.
 #' @param weight a CrunchVariable that has been designated as a potential
 #' weight variable for `dataset`, or `NULL` for unweighted results.
 #' Default is the currently applied [`weight`].
-#' @param format character export format: currently supported values are "json"
+#' @param output_format character export format: currently supported values are "json"
 #' (default) and "xlsx".
 #' @param file character local filename to write to. A default filename will be
 #' generated from the `multitable`'s name if one is not supplied and the
 #' "xlsx" format is requested. Not required for "json" format export.
+#' @param filter a Crunch `filter` object or a vector of names
+#' of \code{\link{filters}} defined in the dataset.
+#' @param use_legacy_endpoint Logical, indicating whether to use a 'legacy'
+#' endpoint for compatibility (this endpoint will be removed in the future).
+#' Defaults to `FALSE`, but can be set in the function, or with the environment
+#' variable `R_USE_LEGACY_TABBOOK_ENDPOINT` or R option
+#' `use.legacy.tabbook.endpoint`.
 #' @param ... Additional "options" passed to the tab book POST request.
+#' More details can be found
+#' [in the crunch API documentation](
+#' https://docs.crunch.io/endpoint-reference/endpoint-multitable.html#options)
+#' or [for the legacy endpoint](
+#' https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options)
 #' @return If "json" format is requested, the function returns an object of
 #' class `TabBookResult`, containing a list of `MultitableResult`
 #' objects, which themselves contain `CrunchCube`s. If "xlsx" is requested,
@@ -29,38 +41,61 @@
 #' @examples
 #' \dontrun{
 #' m <- newMultitable(~ gender + age4 + marstat, data = ds)
-#' tabBook(m, ds[ds$income > 1000000, ], format = "xlsx", file = "wealthy-tab-book.xlsx")
+#' tabBook(m, ds, format = "xlsx", file = "wealthy-tab-book.xlsx", filter = "wealthy")
 #' book <- tabBook(m, ds) # Returns a TabBookResult
 #' tables <- prop.table(book, 2)
 #' }
 #' @importFrom jsonlite fromJSON
 #' @export
 tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
-                    format = c("json", "xlsx"), file, ...) {
-    f <- match.arg(format)
-    accept <- extToContentType(f)
+                    output_format = c("json", "xlsx"), file, filter = NULL,
+                    use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
+                    ...) {
+    dots <- list(...)
+    if ("format" %in% names(dots) && is.character(dots$format)) {
+        warning(
+            "Passing string to `format` is deprecated in `tabBook()`. Use `output_format` instead."
+        )
+        fmt <- match.arg(dots$format, c("json", "xlsx"))
+        dots$format <- NULL
+    } else {
+        fmt <- match.arg(output_format)
+    }
+
+    accept <- extToContentType(fmt)
     if (missing(file)) {
-        if (f == "json") {
+        if (fmt == "json") {
             ## We don't need a file.
             file <- NULL
         } else {
             ## Generate a reasonable filename in the current working dir
-            file <- paste(name(multitable), f, sep = ".")
+            file <- paste(name(multitable), fmt, sep = ".")
         }
     }
 
     if (!is.null(weight)) {
         weight <- self(weight)
     }
+
+    filter <- standardize_tabbook_filter(dataset, filter)
+
     body <- list(
-        filter = zcl(activeFilter(dataset)),
+        filter = filter,
         weight = weight,
-        options = list(...)
+        options = dots
     )
     ## Add this after so that if it is NULL, the "where" key isn't present
     body$where <- variablesFilter(dataset)
 
-    tabbook_url <- shojiURL(multitable, "views", "tabbook")
+    if (use_legacy_endpoint) {
+        warning(
+            "The legacy tabbook endpoint has been deprecated and will be removed in the future."
+        )
+        tabbook_url <- shojiURL(multitable, "views", "tabbook")
+    } else {
+        tabbook_url <- shojiURL(multitable, "views", "export")
+    }
+
     ## POST the query, which (after progress polling) returns a URL to download
     result <- crPOST(tabbook_url,
         config = add_headers(`Accept` = accept),
@@ -68,12 +103,7 @@ tabBook <- function(multitable, dataset, weight = crunch::weight(dataset),
     )
     if (is.null(file)) {
         ## Read in the tab book content and turn it into useful objects
-        out <- retry(crGET(result))
-        if (is.raw(out)) {
-            ## TODO: fix the content-type header from the server
-            ## See https://www.pivotaltracker.com/story/show/148554039
-            out <- fromJSON(rawToChar(out), simplifyVector = FALSE)
-        }
+        out <- retry(crGET(result), wait = 0.5) #nocov
         return(TabBookResult(out))
     } else {
         file <- crDownload(result, file)
@@ -89,6 +119,35 @@ extToContentType <- function(ext) {
         pptx = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
     )
     return(mapping[[ext]])
+}
+
+# Possibly went a little overboard allowing different filter options in tabbook
+# extract out the logic here
+standardize_tabbook_filter <- function(dataset, filter) {
+    if (!is.null(filter) & all(is.character(filter))) {
+        filter_name <- filter
+        available <- filter_name %in% names(filters(dataset))
+        if (any(!available)) {
+            halt("Could not find filter named: ", paste(filter_name[!available], collapse = ", "))
+        }
+        filter <- filters(dataset)[filter]
+    }
+    if (inherits(filter, "FilterCatalog")) filter <- lapply(urls(filter), function(x) {
+        list(filter = x)
+    })
+    if (inherits(filter, "CrunchFilter")) filter <- list(list(filter = self(filter)))
+
+    expr_filter <- activeFilter(dataset)
+    if (is.CrunchExpr(expr_filter)) {
+        expr_filter <- list(c(zcl(expr_filter), name = formatExpression(expr_filter)))
+    }
+
+    if(length(filter) > 0 && !is.null(expr_filter)) {
+        filter <- unname(c(filter, expr_filter))
+    } else if (!is.null(expr_filter)) {
+        filter <- expr_filter
+    }
+    filter
 }
 
 #' TabBookResult and MultitableResult dimension

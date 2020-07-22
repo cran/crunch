@@ -8,29 +8,43 @@ tabBook(
   multitable,
   dataset,
   weight = crunch::weight(dataset),
-  format = c("json", "xlsx"),
+  output_format = c("json", "xlsx"),
   file,
+  filter = NULL,
+  use_legacy_endpoint = envOrOption("use.legacy.tabbook.endpoint", FALSE),
   ...
 )
 }
 \arguments{
 \item{multitable}{a \code{Multitable} object}
 
-\item{dataset}{CrunchDataset, which may have been subsetted with a filter
-expression on the rows and a selection of variables on the columns.}
+\item{dataset}{CrunchDataset, which may be subset with a filter expression
+on the rows, and a selection of variables to use on the columns.}
 
 \item{weight}{a CrunchVariable that has been designated as a potential
 weight variable for \code{dataset}, or \code{NULL} for unweighted results.
 Default is the currently applied \code{\link{weight}}.}
 
-\item{format}{character export format: currently supported values are "json"
+\item{output_format}{character export format: currently supported values are "json"
 (default) and "xlsx".}
 
 \item{file}{character local filename to write to. A default filename will be
 generated from the \code{multitable}'s name if one is not supplied and the
 "xlsx" format is requested. Not required for "json" format export.}
 
-\item{...}{Additional "options" passed to the tab book POST request.}
+\item{filter}{a Crunch \code{filter} object or a vector of names
+of \code{\link{filters}} defined in the dataset.}
+
+\item{use_legacy_endpoint}{Logical, indicating whether to use a 'legacy'
+endpoint for compatibility (this endpoint will be removed in the future).
+Defaults to \code{FALSE}, but can be set in the function, or with the environment
+variable \code{R_USE_LEGACY_TABBOOK_ENDPOINT} or R option
+\code{use.legacy.tabbook.endpoint}.}
+
+\item{...}{Additional "options" passed to the tab book POST request.
+More details can be found
+\href{https://docs.crunch.io/endpoint-reference/endpoint-multitable.html#options}{in the crunch API documentation}
+or \href{https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options}{for the legacy endpoint}}
 }
 \value{
 If "json" format is requested, the function returns an object of
@@ -54,7 +68,7 @@ results. You can then further format these and construct custom tab reports.
 \examples{
 \dontrun{
 m <- newMultitable(~ gender + age4 + marstat, data = ds)
-tabBook(m, ds[ds$income > 1000000, ], format = "xlsx", file = "wealthy-tab-book.xlsx")
+tabBook(m, ds, format = "xlsx", file = "wealthy-tab-book.xlsx", filter = "wealthy")
 book <- tabBook(m, ds) # Returns a TabBookResult
 tables <- prop.table(book, 2)
 }

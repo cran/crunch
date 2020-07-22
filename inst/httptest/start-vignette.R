@@ -17,8 +17,9 @@ set_redactor(function(response) {
     response %>%
         redact_auth() %>%
         gsub_response("([0-9a-f]{6})[0-9a-f]{26}", "\\1") %>% ## Prune UUIDs
+        httptest::gsub_response("[0-9A-Za-z]{22}([0-9]{6})", "\\1") %>% # UUIDs in variables now too
         gsub_response(
-            "https.//app.crunch.io/api/progress/.*?/",
+            "https.//app.crunch.io/api/progress/[^\"].*?/",
             "https://app.crunch.io/api/progress/"
         ) %>% ## Progress is meaningless in mocks
         gsub_response("https.//app.crunch.io", "") %>% ## Shorten URL

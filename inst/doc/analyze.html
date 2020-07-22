@@ -27,6 +27,22 @@ document.addEventListener('DOMContentLoaded', function(e) {
   }
 });
 </script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -448,22 +464,20 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>tab3mr &lt;-<span class="st"> </span><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</span>
 <span id="cb21-2"><a href="#cb21-2"></a>tab3mr</span></code></pre></div>
 <pre><code>##                         gender
-## imiss                          Male     Female
-##   Abortion                58.649930  97.610008
-##   Education               93.984044 115.081178
-##   Gay rights              39.508173  68.216167
-##   Health care            115.130638 120.278828
-##   Immigration             86.656706  96.907961
-##   Medicare               107.807040 110.614461
-##   Social security        109.958090 109.202235
-##   Taxes                  106.606438 108.921595
-##   Terrorism               88.265235 101.577497
-##   The budget deficit      89.380602 104.021909
-##   The economy            108.381784 119.169762
-##   The environment         90.328080  97.054830
-##   The war in Afghanistan  73.624791  96.688008
-##   &lt;NA&gt;                     1.059559   5.867937
-##   &lt;NA&gt;                   120.491874 122.580631</code></pre>
+## imiss                         Male    Female
+##   Abortion                58.64993  97.61001
+##   Education               93.98404 115.08118
+##   Gay rights              39.50817  68.21617
+##   Health care            115.13064 120.27883
+##   Immigration             86.65671  96.90796
+##   Medicare               107.80704 110.61446
+##   Social security        109.95809 109.20223
+##   Taxes                  106.60644 108.92159
+##   Terrorism               88.26523 101.57750
+##   The budget deficit      89.38060 104.02191
+##   The economy            108.38178 119.16976
+##   The environment         90.32808  97.05483
+##   The war in Afghanistan  73.62479  96.68801</code></pre>
 <p>It’s worth noting here that the result of <code>crtabs</code> isn’t an <code>array</code> object but a <code>CrunchCube</code> object.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">class</span>(tab3mr)</span></code></pre></div>
 <pre><code>## [1] &quot;CrunchCube&quot;
@@ -473,20 +487,19 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">round</span>(<span class="dv">100</span><span class="op">*</span><span class="kw">prop.table</span>(tab3mr, <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##                         gender
 ## imiss                    Male Female
-##   Abortion                  5      7
-##   Education                 7      8
-##   Gay rights                3      5
-##   Health care               9      8
-##   Immigration               7      7
-##   Medicare                  8      8
-##   Social security           9      7
-##   Taxes                     8      7
-##   Terrorism                 7      7
-##   The budget deficit        7      7
-##   The economy               8      8
-##   The environment           7      7
-##   The war in Afghanistan    6      7
-##   &lt;NA&gt;                      9      8</code></pre>
+##   Abortion                 48     77
+##   Education                77     90
+##   Gay rights               33     53
+##   Health care              95     94
+##   Immigration              71     77
+##   Medicare                 89     87
+##   Social security          90     85
+##   Taxes                    88     85
+##   Terrorism                74     79
+##   The budget deficit       74     81
+##   The economy              89     93
+##   The environment          74     78
+##   The war in Afghanistan   61     75</code></pre>
 <p>Finally, just as we saw in the <a href="array-variables.html">array variables</a> vignette, we can grab individual subvariables and crosstab with them:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">crtabs</span>(<span class="op">~</span><span class="st"> </span>imiss<span class="op">$</span>imiss_f <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data=</span>ds)</span></code></pre></div>
 <pre><code>##                     gender
@@ -517,7 +530,6 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##   The economy               13                   32           31      9     16         9
 ##   The environment           12                   31           24      7      9         8
 ##   The war in Afghanistan    11                   17           24      2     13         6
-##   &lt;NA&gt;                      13                   43           31      9     16         9
 ## 
 ## , , gender = Female
 ## 
@@ -535,8 +547,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##   The budget deficit         6                   34           23     14     19         7
 ##   The economy                9                   37           27     15     23         9
 ##   The environment            6                   29           19     14     21         8
-##   The war in Afghanistan     8                   27           27     13     15         7
-##   &lt;NA&gt;                       9                   38           29     15     23         9</code></pre>
+##   The war in Afghanistan     8                   27           27     13     15         7</code></pre>
 <!--
 ### Special functions
 #### bin

@@ -8,7 +8,16 @@ test_that("default name for formula", {
 with_mock_crunch({
     ds <- loadDataset("test ds") ## Has 2 multitables
     ds2 <- loadDataset("ECON.sav") ## Has no multitables
-
+    with_POST("https://app.crunch.io/api/datasets/1/filters/filter1/", {
+        ## Mock the return of that creation
+        f1 <- newFilter("A filter", ds$gender == "Male", catalog = filters(ds))
+        expect_is(f1, "CrunchFilter")
+    })
+    with_POST("https://app.crunch.io/api/datasets/1/filters/filter2/", {
+        ## Mock the return of that creation
+        f2 <- newFilter("A filter", ds$gender == "Male", catalog = filters(ds))
+        expect_is(f2, "CrunchFilter")
+    })
     test_that("multitables() getter", {
         expect_is(multitables(ds), "MultitableCatalog")
         expect_is(multitables(ds2), "MultitableCatalog")
@@ -104,7 +113,8 @@ with_mock_crunch({
         expect_POST(
             newMultitable(~ gender + mymrset,
                 data = ds,
-                name = "New multitable"
+                name = "New multitable",
+                is_public = TRUE
             ),
             "https://app.crunch.io/api/datasets/1/multitables/",
             '{"element":"shoji:entity","body":{',
@@ -114,7 +124,7 @@ with_mock_crunch({
             '{"function":"as_selected","args":[{"variable":"https://app.crunch.io/',
             'api/datasets/1/variables/mymrset/"}]}',
             "]}]",
-            ',"name":"New multitable"}}'
+            ',"name":"New multitable","is_public":true}}'
         )
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset,
@@ -145,23 +155,6 @@ with_mock_crunch({
             )
             expect_is(mtable, "Multitable")
         })
-    })
-
-    test_that("importMultitable", {
-        with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
-            mtable <- newMultitable(~ gender + mymrset,
-                data = ds,
-                name = "New multitable"
-            )
-            expect_is(mtable, "Multitable")
-        })
-        expect_POST(
-            importMultitable(ds, mtable, name = "copied_multitable"),
-            "https://app.crunch.io/api/datasets/1/multitables/",
-            '{"element":"shoji:entity","body":{',
-            '"multitable":"https://app.crunch.io/api/datasets/1/multitables/4de322/",',
-            '"name":"copied_multitable"}}'
-        )
     })
 
     test_that("multitable show method", {
@@ -260,17 +253,87 @@ with_mock_crunch({
     test_that("tabBook sets the right request header", {
         expect_header(
             expect_POST(
-                tabBook(mults[[1]], data = ds, format = "xlsx"),
-                "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/"
+                tabBook(mults[[1]], data = ds, output_format = "xlsx"),
+                "https://app.crunch.io/api/datasets/1/multitables/ed30c4/export/"
             ),
             "Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
         expect_header(
             expect_POST(
-                tabBook(mults[[1]], data = ds, format = "json"),
-                "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/"
+                tabBook(mults[[1]], data = ds, output_format = "json"),
+                "https://app.crunch.io/api/datasets/1/multitables/ed30c4/export/"
             ),
             "Accept: application/json"
+        )
+    })
+    filts <- filters(ds)
+    test_that("tabBook with no filter of any kind", {
+        expect_equivalent(
+            as.character(toJSON(standardize_tabbook_filter(ds, NULL))),
+            "{}"
+        )
+    })
+    test_that("tabBook filter argument with chr name", {
+        expect_equivalent(
+            as.character(toJSON(standardize_tabbook_filter(ds, "Public filter"))),
+            '[{"filter":"https://app.crunch.io/api/datasets/1/filters/filter2/"}]'
+        )
+    })
+
+    test_that("tabBook filter argument with filter expression", {
+        expect_equivalent(
+            as.character(toJSON(standardize_tabbook_filter(ds[ds$gender == "Male",], NULL))),
+            paste0(
+                '[{\"function\":\"==\",\"args\":',
+                '[{\"variable\":\"https://app.crunch.io/api/datasets/1/variables/gender/\"},',
+                '{\"value\":1}],\"name\":\"gender == \\\"Male\\\"\"}]'
+            )
+        )
+    })
+
+    test_that("tabBook filter argument with filter object", {
+        expect_equivalent(
+            as.character(toJSON(standardize_tabbook_filter(ds, f1))), #f1 mock created at top
+            '[{"filter":"https://app.crunch.io/api/datasets/1/filters/filter1/"}]'
+        )
+    })
+
+    test_that("tabBook filter argument with two chr filter names", {
+        expect_equivalent(
+            as.character(toJSON(standardize_tabbook_filter(
+                ds,
+                c("Occasional Political Interest", "Public filter")
+            ))),
+            paste0(
+                '[{"filter":"https://app.crunch.io/api/datasets/1/filters/filter1/"},',
+                '{"filter":"https://app.crunch.io/api/datasets/1/filters/filter2/"}]'
+            )
+        )
+    })
+
+    test_that("tabBook filter argument with chr and filter expression", {
+        expect_equivalent(
+            as.character(toJSON(standardize_tabbook_filter(
+                ds[ds$gender == "Male",], "Public filter"
+            ))),
+            paste0(
+                '[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter2/\"},',
+                '{\"function\":\"==\",\"args\":[{\"variable\":',
+                '\"https://app.crunch.io/api/datasets/1/variables/gender/\"},',
+                '{\"value\":1}],\"name\":\"gender == \\\"Male\\\"\"}]'
+            )
+        )
+    })
+
+    test_that("tabBook filter argument with filter object and filter expression", {
+        expect_equal(
+            as.character(toJSON(standardize_tabbook_filter(ds[ds$gender == "Male",], f1))),
+            paste0(
+                '[{\"filter\":\"https://app.crunch.io/api/datasets/1/filters/filter1/\"},',
+                '{\"function\":\"==\",\"args\":[{\"variable\":',
+                '\"https://app.crunch.io/api/datasets/1/variables/gender/\"},{\"value\":1}],',
+                '\"name\":\"gender == \\\"Male\\\"\"}]'
+            )
         )
     })
 
@@ -280,16 +343,59 @@ with_mock_crunch({
         expect_header(
             expect_POST(
                 tabBook(m, data = ds2[c("gender", "starttime")]),
-                "https://app.crunch.io/api/datasets/3/multitables/ed30c4/tabbook/"
+                "https://app.crunch.io/api/datasets/3/multitables/ed30c4/export/",
+                '{\"filter\":null,',
+                '\"weight\":"https://app.crunch.io/api/datasets/3/variables/birthyr/",',
+                '\"options\":[],"where":{"function":"select","args":[{"map":',
+                '{"66ae9881e3524f7db84970d556c34552":',
+                '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
+                '"d7c21314ca9e453c93069168681a285c"',
+                ':{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]}'
             ),
             "Accept: application/json"
         )
     })
 
-    ## TODO: test the query shape
+    test_that("tabBook with options", {
+        expect_POST(
+            tabBook(mults[[1]],
+                    data = ds, output_format = "json", format = list(pval_colors = TRUE))
+            ,
+            "https://app.crunch.io/api/datasets/1/multitables/ed30c4/export/",
+            '{\"filter\":null,\"weight\":null,\"options\":{"format":{"pval_colors":true}}}'
+        )
+    })
+
+    test_that("tabBook warning when using format argument", {
+        expect_warning(
+            expect_POST(
+                tabBook(mults[[1]],
+                        data = ds, format = "json")
+                ,
+                "https://app.crunch.io/api/datasets/1/multitables/ed30c4/export/",
+                '{\"filter\":null,\"weight\":null,\"options\":{}}'
+            ),
+            "Use `output_format`"
+        )
+    })
+
+    test_that("tabBook warning when using legacy endpoint", {
+        with(temp.option(use.legacy.tabbook.endpoint = TRUE), {
+            expect_warning(
+                expect_POST(
+                    tabBook(mults[[1]],
+                            data = ds, output_format = "json")
+                    ,
+                    "https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/",
+                    '{\"filter\":null,\"weight\":null,\"options\":[]}'
+                ),
+                "The legacy tabbook endpoint has been deprecated and will be removed in the future."
+            )
+        })
+    })
 
     with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
-        book <- tabBook(mults[[1]], data = ds, format = "json")
+        book <- tabBook(mults[[1]], data = ds, output_format = "json")
         test_that("tabBook JSON returns TabBookResult", {
             expect_is(book, "TabBookResult")
         })
@@ -338,7 +444,7 @@ with_mock_crunch({
 
         with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-mr-ca-tabbook/", {
             ## This mock was taken from the integration test below
-            book <- tabBook(mults[[1]], data = ds, format = "json")
+            book <- tabBook(mults[[1]], data = ds, output_format = "json")
             test_that("tabBook JSON returns TabBookResult", {
                 expect_is(book, "TabBookResult")
             })
@@ -373,7 +479,7 @@ with_mock_crunch({
 
         with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-ca-mr-tabbook/", {
             ## This mock was taken from the integration test below
-            book <- tabBook(mults[[1]], data = ds, format = "json")
+            book <- tabBook(mults[[1]], data = ds, output_format = "json")
             test_that("tabBook JSON returns TabBookResult", {
                 expect_is(book, "TabBookResult")
             })
@@ -534,38 +640,23 @@ with_test_authentication({
         expect_identical(names(refresh(multitables(ds))), "Yet another name")
     })
 
-    test_that("Can copy the multitable to a new multitable", {
-        m <- importMultitable(ds2, mult, name = "copied_multitable")
-        expect_identical(name(m), "copied_multitable")
-        is.public(multitables(ds2))[1] <- TRUE
-        expect_true(is.public(refresh(m)))
-        expect_identical(getShowContent(m), c(
-            paste0("Multitable ", dQuote("copied_multitable")),
-            "Column variables:",
-            "  allpets",
-            "  q1"
-        ))
-    })
 
-    test_that("importMultitable works without a name", {
-        m <- importMultitable(ds2, mult)
-        expect_identical(name(m), "Yet another name")
-    })
-
+    multitables(ds2)[["new mt"]] <- ~ country + q1
+    multitables(ds2)[["Yet another name"]] <- ~ country + q3
     mults <- multitables(ds2)
     with(consent(), {
         test_that("Multitable delete", {
             delete(mults[["Yet another name"]])
             expect_equal(length(multitables(refresh(ds2))), 1)
             expect_true(!"Yet another name" %in% names(multitables(ds2)))
-            expect_equal(names(multitables(ds2)), "copied_multitable")
+            expect_equal(names(multitables(ds2)), "new mt")
         })
     })
 
     test_that("We can get an xlsx tab book", {
         skip_on_local_backend("Vagrant host doesn't serve files correctly")
         f <- tempfile()
-        out <- tabBook(mult, data = ds, format = "xlsx", file = f)
+        out <- tabBook(mult, data = ds, output_format = "xlsx", file = f)
         expect_true(file.exists(out))
     })
 
