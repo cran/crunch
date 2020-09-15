@@ -69,6 +69,8 @@ DatetimeVariable
 DeckCatalog
 deduplicated
 DELETEing
+Deprivatize
+deprivatize
 deserialization
 Devs
 df
@@ -112,6 +114,7 @@ json
 JSON
 JSONing
 Jupyter
+keyring
 libcurl
 magrittr
 makeWeight
@@ -156,6 +159,7 @@ sav
 SAV
 savepoints
 Savepoints
+ScriptCatalog
 SearchResults
 selectable
 shoji
@@ -172,6 +176,7 @@ Snowden's
 spss
 subclasses
 subfolder
+subreferences
 subtyped
 subtypes
 subvariable
@@ -213,7 +218,7 @@ vectorized
 votereg
 weightVariables
 writePreparedData
+WXX
 xlsx
 xtabs
-Deprivatize
-deprivatize
+YYYY

@@ -2,7 +2,7 @@
 % Please edit documentation in R/R-to-variable.R
 \name{toVariable}
 \alias{toVariable}
-\alias{toVariable,CrunchExpr-method}
+\alias{toVariable,CrunchVarOrExpr-method}
 \alias{toVariable,character-method}
 \alias{toVariable,numeric-method}
 \alias{toVariable,factor-method}
@@ -19,7 +19,7 @@
 \usage{
 toVariable(x, ...)
 
-\S4method{toVariable}{CrunchExpr}(x, ...)
+\S4method{toVariable}{CrunchVarOrExpr}(x, ...)
 
 \S4method{toVariable}{character}(x, ...)
 
@@ -49,7 +49,7 @@ toVariable(x, ...)
 \item{x}{An R vector you want to turn into a Crunch variable}
 
 \item{...}{Additional metadata fields for the variable, such as "name" and
-"description". See the \href{http://docs.crunch.io/endpoint-reference/endpoint-variable.html#post-catalog}{API documentation}
+"description". See the \href{https://docs.crunch.io/endpoint-reference/endpoint-variable.html#post-catalog}{API documentation}
 for a complete list of valid attributes.}
 }
 \value{

@@ -20,7 +20,7 @@
 #' @return Getters return the character object in the specified slot; setters
 #' return `x` duly modified.
 #' @aliases describe-catalog aliases aliases<- descriptions descriptions<-
-#' types emails timestamps names names<-
+#' types emails timestamps scriptBody names names<-
 #' @seealso [`Subvariables`] [`Categories`] [base::names()]
 #' `vignette("variables", package="crunch")`
 #' @rdname describe-catalog
@@ -51,6 +51,14 @@ setGeneric("ids<-", function(x, value) standardGeneric("ids<-"))
 setGeneric("values", function(x) standardGeneric("values"))
 #' @rdname describe-catalog
 setGeneric("values<-", function(x, value) standardGeneric("values<-"))
+#' @rdname describe-catalog
+setGeneric("scriptBody", function(x) standardGeneric("scriptBody"))
+
+#' @rdname describe-catalog
+#' @export
+setGeneric("dates", function(x) standardGeneric("dates"))
+#' @rdname describe-catalog
+setGeneric("dates<-", function(x, value) standardGeneric("dates<-"), signature = "x")
 
 setGeneric("names")
 setGeneric("names<-")
@@ -120,10 +128,15 @@ setGeneric("notes<-", function(x, value) standardGeneric("notes<-"),
     signature = "x"
 )
 
+#' @rdname population
 setGeneric("popSize", function(x) standardGeneric("popSize"))
+#' @rdname population
 setGeneric("popMagnitude", function(x) standardGeneric("popMagnitude"))
+#' @rdname population
 setGeneric("popSize<-", function(x, value) standardGeneric("popSize<-"))
+#' @rdname population
 setGeneric("popMagnitude<-", function(x, value) standardGeneric("popMagnitude<-"))
+#' @rdname population
 setGeneric("setPopulation", function(x, size, magnitude) standardGeneric("setPopulation"))
 
 setGeneric("expr", function(x) standardGeneric("expr"))
@@ -137,36 +150,59 @@ setGeneric("expr<-", function(x, value) standardGeneric("expr<-"),
 #' @return a character string of the user's email
 #' @rdname user-email
 setGeneric("email", function(x) standardGeneric("email"))
+#' @rdname geo
 setGeneric("geo", function(x) standardGeneric("geo"))
+#' @rdname geo
 setGeneric("geo<-", function(x, value) standardGeneric("geo<-"))
 setGeneric("fetchGeoFile", function(x) standardGeneric("fetchGeoFile"))
+#' @rdname Insertions
 setGeneric("anchor", function(x, ...) standardGeneric("anchor"))
+#' @rdname Insertions
 setGeneric("anchors", function(x) standardGeneric("anchors"))
+#' @rdname Insertions
 setGeneric("anchor<-", function(x, value) standardGeneric("anchor<-"))
+#' @rdname Insertions
 setGeneric("arguments", function(x, ...) standardGeneric("arguments"))
+#' @rdname Insertions
 setGeneric("arguments<-", function(x, value) standardGeneric("arguments<-"))
+#' @rdname Insertions
 setGeneric("func", function(x) standardGeneric("func"))
+#' @rdname Insertions
 setGeneric("funcs", function(x) standardGeneric("funcs"))
-setGeneric("subtotals", function(x, ...) standardGeneric("subtotals"))
+#' @rdname SubtotalsHeadings
+setGeneric("subtotals", function(x) standardGeneric("subtotals"))
+#' @rdname SubtotalsHeadings
 setGeneric("subtotals<-", function(x, value) standardGeneric("subtotals<-"))
 setGeneric("makeInsertion", function(x, var_categories) standardGeneric("makeInsertion"))
+#' @rdname applyTransforms
 setGeneric("subtotalArray", function(x, ...) standardGeneric("subtotalArray"))
 
+#' @rdname type
 setGeneric("type", function(x) standardGeneric("type"))
+#' @rdname type
 setGeneric("type<-", function(x, value) standardGeneric("type<-"))
 
+#' @rdname hide
 setGeneric("hiddenFolder", function(x) standardGeneric("hiddenFolder"))
+#' @rdname hide
 setGeneric("privateFolder", function(x) standardGeneric("privateFolder"))
+#' @rdname hide
 setGeneric("hide", function(x) standardGeneric("hide"))
+#' @rdname hide
 setGeneric("unhide", function(x) standardGeneric("unhide"))
+#' @rdname hide
 setGeneric("privatize", function(x) standardGeneric("privatize"))
+#' @rdname hide
 setGeneric("deprivatize", function(x) standardGeneric("deprivatize"))
 
+#' @rdname derivations
 setGeneric("derivation", function(x) standardGeneric("derivation"))
+#' @rdname derivations
 setGeneric("derivation<-", function(x, value) standardGeneric("derivation<-"))
 
 
 setGeneric("urls", function(x) standardGeneric("urls"))
+#' @rdname self
 setGeneric("self", function(x) standardGeneric("self"))
 
 #' Get a fresh copy from the server
@@ -188,17 +224,24 @@ setGeneric("entities", function(x, ...) standardGeneric("entities"))
 setGeneric("entities<-", function(x, value) standardGeneric("entities<-"))
 setGeneric("tuple", function(x) standardGeneric("tuple"))
 setGeneric("tuple<-", function(x, value) standardGeneric("tuple<-"))
+#' @rdname tuple-methods
 setGeneric("entity", function(x) standardGeneric("entity"))
+#' @rdname shoji-index
 setGeneric("index", function(x) standardGeneric("index"))
+#' @rdname shoji-index
 setGeneric("index<-", function(x, value) standardGeneric("index<-"))
 setGeneric("active", function(x) standardGeneric("active"))
 setGeneric("archived", function(x) standardGeneric("archived"))
 setGeneric("imported", function(x) standardGeneric("imported"))
 setGeneric("pending", function(x) standardGeneric("pending"))
 
+#' @rdname multitable-catalog
 setGeneric("multitables", function(x) standardGeneric("multitables"))
+#' @rdname multitable-catalog
 setGeneric("multitables<-", function(x, value) standardGeneric("multitables<-"))
+#' @rdname filter-catalog
 setGeneric("filters", function(x) standardGeneric("filters"))
+#' @rdname filter-catalog
 setGeneric("filters<-", function(x, value) standardGeneric("filters<-"))
 setGeneric("appliedFilters", function(x) standardGeneric("appliedFilters"))
 setGeneric(
@@ -210,11 +253,17 @@ setGeneric(
     "activeFilter<-",
     function(x, value) standardGeneric("activeFilter<-")
 )
+#' @rdname derivations
 setGeneric("is.derived", function(x) standardGeneric("is.derived"))
+#' @rdname derivations
 setGeneric("is.derived<-", function(x, value) standardGeneric("is.derived<-"))
+#' @rdname variable-as-methods
 setGeneric("as.Text", function(x, ...) standardGeneric("as.Text"))
+#' @rdname variable-as-methods
 setGeneric("as.Numeric", function(x) standardGeneric("as.Numeric"))
+#' @rdname variable-as-methods
 setGeneric("as.Categorical", function(x, ...) standardGeneric("as.Categorical"))
+#' @rdname variable-as-methods
 setGeneric("as.Datetime", function(x,
                                    format = "%Y-%m-%d %H:%M:%S",
                                    resolution,
@@ -227,31 +276,87 @@ setGeneric("entitiesInitializer", function(x) standardGeneric("entitiesInitializ
 setGeneric("folderExtraction", function(x, tuple) standardGeneric("folderExtraction"))
 setGeneric("personalFolder", function(x) standardGeneric("personalFolder"))
 setGeneric("rootFolder", function(x) standardGeneric("rootFolder"))
-setGeneric("weightVariables", function(x) standardGeneric("weightVariables"))
-setGeneric("weightVariables<-", function(x, value) standardGeneric("weightVariables<-"))
-setGeneric("is.weightVariable<-", function(x, value) standardGeneric("is.weightVariable<-"))
-setGeneric("is.weight<-", function(x, value) standardGeneric("is.weight<-"))
-setGeneric("whichCatalogEntry", function(x, i, ...) standardGeneric("whichCatalogEntry"))
 
+#' Get a dataset's weightVariables
+#'
+#' @param x a CrunchDataset
+#' @return `weightVariables` returns a character vector of the aliases of the
+#' variables that are eligible to be used as weights.
+#' @seealso [weight()] [makeWeight()] [modifyWeightVariables()]
+#'
+#' @export
+setGeneric("weightVariables", function(x) standardGeneric("weightVariables"))
+
+#' @rdname modifyWeightVariables
+setGeneric("weightVariables<-", function(x, value) standardGeneric("weightVariables<-"))
+#' @rdname modifyWeightVariables
+setGeneric("is.weightVariable<-", function(x, value) standardGeneric("is.weightVariable<-"))
+
+#' @rdname weight
+setGeneric("is.weight<-", function(x, value) standardGeneric("is.weight<-"))
+
+setGeneric("whichCatalogEntry", function(x, i, ...) standardGeneric("whichCatalogEntry"))
+#' @rdname script-catalog
+setGeneric("scripts", function(x) standardGeneric("scripts"))
+
+#' Undo behavior of a Crunch Automation Script
+#'
+#' There are two ways to revert the output of a script:
+#' - `undoScript()` - A "softer" delete of a script's created artifacts and variables, or
+#' - `revertScript()` - A "harder" revert that returns the dataset to the state it was before
+#'   running such script.
+#'
+#' The difference between both is that a hard revert restores the dataset, as it drops all
+#' ensuing scripts and their output (artifacts and variables), while an undo only deletes the
+#' artifacts and variables created by this script, but changes made by other scripts and this
+#' script's record will remain in place.
+#'
+#' The function `scriptSavepoint()` gets the version object
+#'
+#' @param dataset A `CrunchDataset`
+#' @param x A `Script` or index for a `ScriptCatalog` (generally a number)
+#' @return For `undoScript()` and `revertSctipt()`, invisibly return the updated dataset.
+#' For `scriptSavePoint()` a version list object that can be used in [`restoreVersion()`].
+#' @name automation-undo
+#' @aliases undoScript
+#' @seealso [`runCrunchAutomation()`] & [`script-catalog`]
+#' @export
+setGeneric("undoScript", function(dataset, x) standardGeneric("undoScript"))
+#' @rdname automation-undo
+setGeneric("revertScript", function(dataset, x) standardGeneric("revertScript"))
+#' @rdname automation-undo
+setGeneric("scriptSavepoint", function(x) standardGeneric("scriptSavepoint"))
+
+#' @rdname dataset-owner
 setGeneric("owner", function(x) standardGeneric("owner"))
+#' @rdname dataset-owner
 setGeneric("owner<-", function(x, value) standardGeneric("owner<-"))
 
+#' @rdname cube-missingness
 setGeneric("showMissing", function(cube) standardGeneric("showMissing"))
+#' @rdname cube-missingness
 setGeneric("hideMissing", function(cube) standardGeneric("hideMissing"))
+#' @rdname cube-missingness
 setGeneric("showIfAny", function(cube) standardGeneric("showIfAny"))
 
 setGeneric("dim")
+#' @rdname dim-dataset
 setGeneric("ncol")
+#' @rdname na-omit-categories
 setGeneric("na.omit")
 setGeneric("as.environment")
 setGeneric("dimnames")
 
+#' @rdname cube-methods
 setGeneric("dimensions", function(x) standardGeneric("dimensions"))
+#' @rdname cube-methods
 setGeneric("dimensions<-", function(x, value) standardGeneric("dimensions<-"))
+#' @rdname cube-methods
 setGeneric("measures", function(x) standardGeneric("measures"))
 
 setGeneric("subset")
 setGeneric("which", signature = "x")
+
 
 #' Extract and modify Crunch objects
 #'
@@ -300,6 +405,7 @@ setGeneric("lapply")
 setGeneric("is.na")
 setGeneric("is.na<-")
 setGeneric("write.csv", function(x, ...) utils::write.csv(x, ...))
+#' @rdname duplicated
 setGeneric("duplicated")
 
 setGeneric("zcl", function(x) standardGeneric("zcl"))
@@ -335,6 +441,12 @@ setGeneric(
     halt(paste("Cannot update", class(x), "with type", class(value)))
 }
 
+#' @rdname analysis-methods
+#' @export
+setGeneric("filter", function(x, ...) standardGeneric("filter"))
+#' @rdname analysis-methods
+#' @export
+setGeneric("filter<-", function(x, value) standardGeneric("filter<-"))
 #' @rdname weight
 #' @export
 setGeneric("weight", function(x) standardGeneric("weight"))

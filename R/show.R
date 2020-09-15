@@ -190,6 +190,31 @@ showOrderGroup <- function(x, index, key = "name") {
 
 formatVersionCatalog <- function(x, from = Sys.time()) {
     ts <- timestamps(x)
+    ts <- .ts_format(ts, from)
+    return(data.frame(Name = names(x), Timestamp = ts, stringsAsFactors = FALSE))
+}
+
+formatScriptCatalog <- function(x, from = Sys.time(), body_width = 20) {
+    ts <- timestamps(x)
+    ts <- .ts_format(ts, from)
+
+    scriptBody <- vapply(scriptBody(x), function(script) {
+        if (nchar(script) > body_width) {
+            paste0(strtrim(script, max(body_width - 3, 0)), "...")
+        } else {
+            script
+        }
+    }, character(1))
+
+    return(data.frame(
+        Timestamp = ts,
+        scriptBody = scriptBody,
+        stringsAsFactors = FALSE,
+        row.names = NULL
+    ))
+}
+
+.ts_format <- function(ts, from = NULL) {
     if (!is.null(from)) {
         ts <- vapply(seq_along(ts), function(a) {
             ## Grab dates by sequence because POSIXt is a list internally
@@ -205,16 +230,17 @@ formatVersionCatalog <- function(x, from = Sys.time()) {
             return(out)
         }, character(1))
     }
-    return(data.frame(Name = names(x), Timestamp = ts, stringsAsFactors = FALSE))
+    return(ts)
 }
 
-.operators <- c("+", "-", "*", "/", "<", ">", ">=", "<=", "==", "!=", "&", "|", "%in%")
+.operators <- c("+", "-", "*", "/", "<", ">", ">=", "<=", "==", "!=", "&", "|", "%in%", "%ornm%")
 .funcs.z2r <- list(
     and = "&",
     or = "|",
     is_missing = "is.na",
     `in` = "%in%",
-    duplicates = "duplicated"
+    duplicates = "duplicated",
+    ornm = "%ornm%"
 )
 
 formatExpression <- function(expr) {
@@ -293,7 +319,9 @@ formatExpressionArgs <- function(args) {
 formatExpressionValue <- function(val, cats = NULL) {
     val <- expressionValue(val)
     if (length(cats)) {
-        val <- i2n(val, cats)
+        val_id_replace <- try(i2n(val, cats), silent = TRUE)
+        if (!inherits(val_id_replace, "try-error")) val <- val_id_replace
+        val
     } else {
         ## TODO: iterate over, replace {?:-1} with NA
     }
@@ -390,6 +418,7 @@ setMethod(
 )
 setMethod("getShowContent", "ShojiCatalog", function(x) as.data.frame(x))
 setMethod("getShowContent", "VersionCatalog", formatVersionCatalog)
+setMethod("getShowContent", "ScriptCatalog", formatScriptCatalog)
 setMethod(
     "getShowContent", "MemberCatalog",
     function(x) {
