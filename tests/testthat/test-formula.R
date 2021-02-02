@@ -32,4 +32,89 @@ with_mock_crunch({
         expect_is(ftq_without_data, "list")
         expect_equal(ftq_with_data, ftq_without_data)
     })
+
+    test_that("registerCubeFunctions work within formulaToQuery - mean", {
+        expect_equal(
+            formulaToQuery(mean(ds$birthyr)~1),
+            list(
+                dimensions = list(),
+                measures = list(
+                    mean = list(
+                        `function` = "cube_mean",
+                        args = list(list(variable = self(ds$birthyr)))
+                    )
+                )
+            )
+        )
+    })
+
+    test_that("registerCubeFunctions work within formulaToQuery - as_selected", {
+        expect_equal(
+            formulaToQuery(~as_selected(ds$mymrset)),
+            list(
+                dimensions = list(list(
+                    list(`function` = "dimension", args = list(
+                         list(
+                             `function` = "as_selected",
+                             args = list(list(variable = self(ds$mymrset)))
+                         ),
+                         list(value = "subvariables")
+                    )),
+                    list(
+                        `function` = "as_selected",
+                        args = list(list(variable = self(ds$mymrset)))
+                    )
+                )),
+                measures = list(count = list(`function` = "cube_count", args = list()))
+            )
+        )
+    })
+
+    test_that("registerCubeFunctions work within formulaToQuery - as_array", {
+        expect_equal(
+            formulaToQuery(~as_array(ds$mymrset)),
+            list(
+                dimensions = list(list(
+                    list(
+                        "function" = "dimension",
+                        args = list(
+                            list(variable = self(ds$mymrset)), list(value = "subvariables")
+                        )
+                    ),
+                    list(variable = self(ds$mymrset))
+                )),
+                measures = list(count = list(`function` = "cube_count", args = list()))
+            )
+        )
+    })
+
+    test_that("registerCubeFunctions work within formulaToQuery - categories", {
+        expect_equal(
+            formulaToQuery(~categories(ds$catarray)),
+            list(
+                dimensions = list(list(
+                    list(variable = self(ds$catarray))
+                )),
+                measures = list(count = list(`function` = "cube_count", args = list()))
+            )
+        )
+    })
+
+    test_that("registerCubeFunctions work within formulaToQuery - subvariables", {
+        expect_equal(
+            formulaToQuery(~subvariables(ds$catarray)),
+            list(
+                dimensions = list(list(
+                    list(
+                        `function` = "dimension",
+                        args = list(
+                            list(variable = self(ds$catarray)),
+                            zcl("subvariables")
+                        )
+                    )
+                )),
+                measures = list(count = list(`function` = "cube_count", args = list()))
+            )
+        )
+    })
 })

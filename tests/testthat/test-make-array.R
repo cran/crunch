@@ -12,6 +12,16 @@ with_mock_crunch({
             )
         )
     })
+    test_that("makeArray creates a VariableDefinition with list of variables", {
+        expect_json_equivalent(
+            makeArray(list(ds$gender), name = "Gender array"),
+            list(
+                name = "Gender array",
+                subvariables = I("https://app.crunch.io/api/datasets/1/variables/gender/"),
+                type = "categorical_array"
+            )
+        )
+    })
     test_that("makeArray creates a VariableDefinition with variables subset", {
         expect_json_equivalent(
             makeArray(variables(ds)[names(ds) == "gender"],
@@ -42,6 +52,7 @@ with_mock_crunch({
         "Must provide the names of the category or",
         "categories that indicate the dichotomous selection"
     )
+    wrong.type <- "Expected subvariables to be either"
     invalid.selection <- "not found in variable's categories"
     not.categorical <- "are not Categorical"
     test_that("makeArray error conditions", {
@@ -50,6 +61,10 @@ with_mock_crunch({
         expect_error(
             makeArray(ds[grep("NO variables", names(ds))], name = "foo"),
             no.match
+        )
+        expect_error(
+            makeArray(ds$gender, name = "foo"),
+            wrong.type
         )
     })
     test_that("makeMR error conditions", {
@@ -210,11 +225,12 @@ with_mock_crunch({
         expect_equivalent(varDef, expected)
     })
 
-    test_that("deriveArray with subvariables creates a VariableDefinition", {
+    test_that("deriveArray with subvariable expr creates a categorical VariableDefinition", {
         expect_json_equivalent(
             deriveArray(
                 subvariables = list(VariableDefinition(ds$gender == "Male", name = "male")),
-                name = "Gender MR"
+                name = "Gender MR",
+                numeric = FALSE
             ),
             list(
                 name = "Gender MR",
@@ -227,7 +243,33 @@ with_mock_crunch({
                                 c(zcl(ds$gender == "Male"), list(references = list(name = "male")))
                             )
                         ), list(value = I("1")))
-                    ))
+                    )),
+                    kwargs = list(numeric = list(value = FALSE))
+                )
+            )
+        )
+    })
+
+    test_that("deriveArray with subvariable expr creates a numeric VariableDefinition", {
+        expect_json_equivalent(
+            deriveArray(
+                subvariables = list(VariableDefinition(ds$birthyr + 10, name = "birthyr + 10")),
+                name = "birthyr addition",
+                numeric = TRUE
+            ),
+            list(
+                name = "birthyr addition",
+                derivation = list(
+                    `function` = "array",
+                    args = list(list(
+                        `function` = "make_frame",
+                        args = list(list(
+                            map = list(
+                                c(zcl(ds$birthyr + 10), list(references = list(name = "birthyr + 10"))) #nolint
+                            )
+                        ), list(value = I("1")))
+                    )),
+                    kwargs = list(numeric = list(value = TRUE))
                 )
             )
         )
@@ -236,8 +278,7 @@ with_mock_crunch({
 
 with_test_authentication({
     whereas("We bind with makeArray", {
-        ds <- newDataset(mrdf)
-        ds$arrayVar <- makeArray(ds[1:3], name = "arrayVar")
+        ds <- mrdf.setup(newDataset(mrdf), name = "arrayVar")
 
         test_that("can make Categorical Array with Dataset subset", {
             expect_equal(c("arrayVar", "v4"), names(ds))
@@ -251,8 +292,7 @@ with_test_authentication({
     })
 
     whereas("Testing dichotomizing and undichotomizing", {
-        ds <- newDataset(mrdf)
-        ds$arrayVar <- makeArray(ds[c("mr_1", "mr_2", "mr_3")], name = "arrayVar")
+        ds <- mrdf.setup(newDataset(mrdf), name = "arrayVar")
         var <- ds$arrayVar
         test_that("setup to make MultipleResponse from CategoricalArray", {
             expect_true(is.CA(var))
@@ -315,7 +355,7 @@ with_test_authentication({
         expect_identical(ncol(ds), 4L)
     })
     whereas("makeMRFromText functions as expected", {
-        ds <- newDataset(mrdf)
+        ds <- mrdf.setup(newDataset(mrdf))
         v <- c("ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak")
         ds$delim <- c(
             "ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak"
@@ -331,7 +371,8 @@ with_test_authentication({
         ds <- newDataset(mrdf)
         ds$mrVar <- deriveArray(
             list(VariableDefinition(ds$v4 == "B", name = "subvar name", alias = "sv_alias")),
-            name = "MR Variable"
+            name = "MR Variable",
+            numeric = FALSE
         )
 
         test_that("can make MR with formMR", {

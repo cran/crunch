@@ -14,6 +14,7 @@
 \alias{analysis,CrunchSlide-method}
 \alias{analysis<-,CrunchSlide,formula-method}
 \alias{analysis<-,CrunchSlide,Analysis-method}
+\alias{analysis<-,CrunchSlide,list-method}
 \alias{filter,CrunchSlide-method}
 \alias{filter<-,CrunchSlide,ANY-method}
 \alias{query<-,CrunchSlide,ANY-method}
@@ -21,12 +22,14 @@
 \alias{cube,CrunchSlide-method}
 \alias{cubes,AnalysisCatalog-method}
 \alias{query<-,Analysis,formula-method}
+\alias{formulaToSlideQuery}
 \alias{cube,Analysis-method}
 \alias{filter,Analysis-method}
 \alias{filter,ANY-method}
 \alias{filter<-,Analysis,CrunchLogicalExpr-method}
 \alias{filter<-,Analysis,CrunchFilter-method}
 \alias{filter<-,Analysis,NULL-method}
+\alias{slideQueryEnv}
 \title{Get and set slide analyses}
 \usage{
 filter(x, ...)
@@ -55,6 +58,8 @@ cubes(x)
 
 \S4method{analysis}{CrunchSlide,Analysis}(x) <- value
 
+\S4method{analysis}{CrunchSlide,list}(x) <- value
+
 \S4method{filter}{CrunchSlide}(x, ...)
 
 \S4method{filter}{CrunchSlide,ANY}(x) <- value
@@ -69,6 +74,8 @@ cubes(x)
 
 \S4method{query}{Analysis,formula}(x) <- value
 
+formulaToSlideQuery(query, dataset)
+
 \S4method{cube}{Analysis}(x)
 
 \S4method{filter}{Analysis}(x, ...)
@@ -82,6 +89,8 @@ cubes(x)
 \S4method{filter}{Analysis,CrunchFilter}(x) <- value
 
 \S4method{filter}{Analysis,`NULL`}(x) <- value
+
+slideQueryEnv(weight, filter)
 }
 \arguments{
 \item{x}{a \code{CrunchSlide}, \code{AnalysisCatalog}, or \code{Analysis}}
@@ -89,6 +98,18 @@ cubes(x)
 \item{...}{ignored}
 
 \item{value}{for the setter, a query}
+
+\item{query}{For \code{formulaToSlideQuery()}, a formula that specifies the query, as in
+\code{newSlide()}}
+
+\item{dataset}{For \code{formulaToSlideQuery()}, a \code{CrunchDataset} that the variables in
+\code{query} refer to.}
+
+\item{weight}{For \code{slideQueryEnv()} a crunch variable to use as a weight or \code{NULL}
+to indicate no weight should be used.}
+
+\item{filter}{for \code{slideQueryEnv()}, a \code{CrunchFilter} or \code{CrunchExpression} to filter
+the slide.}
 }
 \value{
 an \code{AnalysisCatalog}, \code{Analysis}, \code{Cube}, or \code{Filter}
@@ -102,6 +123,11 @@ additional metadata. You can get and set a slide's Analysis Catalog with the
 You can get the \code{CrunchCube} from a slide or analysis with the \code{cube} method and
 from a \code{CrunchDeck} with \code{cubes}. Analyses can be changed by assigning a formula
 into the \code{query} function.
+
+Advanced users of the API can assign a list to  \verb{analysis<-} to specify settings
+on the analyses that are not otherwise available in \code{rcrunch}. The helpers
+\code{formulaToSlideQuery()} and \code{slideQueryEnv()} help you create objects for the
+\code{query} and \code{query_environment}.
 }
 \examples{
 \dontrun{

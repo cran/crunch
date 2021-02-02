@@ -187,7 +187,7 @@ zfuncExpr <- function(fun, x, ...) {
 #' encapsulate derivations of Crunch variables, possibly composed of other functions
 #' which are only evaluated when sent to the server when creating a variable using [`VarDef()`]
 #' or using [`as.vector()`] to get data. The crunch database functions can be found in the
-#' [Crunch API Reference](https://docs.crunch.io/object-reference/object-reference.html),
+#' [Help Center](https://help.crunch.io/hc/en-us/articles/360042411792-Expressions),
 #' and can be called directly via `crunchdbFunc()`m but many have also been wrapped
 #'  in native R functions, and are described in the details section below.
 #'
@@ -239,8 +239,8 @@ zfuncExpr <- function(fun, x, ...) {
 #'     by `id`.
 #'
 #' Array expressions
-#'  - `makeFrame(x)` an expression that creates an array from existing variables or expressions,
-#'    see `deriveArray()` for more details
+#'  - `makeFrame(x, numeric = NULL)` an expression that creates an array from existing
+#'    variables or expressions, see `deriveArray()` for more details
 #'  - `arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))` Take a subset of an
 #'    existing array variable, identifying the subvariables by alias, name, or id (if `x` is
 #'    an expression, you must use id).

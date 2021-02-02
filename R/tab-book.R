@@ -28,9 +28,7 @@
 #' @param ... Additional "options" passed to the tab book POST request.
 #' More details can be found
 #' [in the crunch API documentation](
-#' https://docs.crunch.io/endpoint-reference/endpoint-multitable.html#options)
-#' or [for the legacy endpoint](
-#' https://docs.crunch.io/endpoint-reference/endpoint-tabbook.html#options)
+#' https://crunch.io/api/reference/#post-/datasets/-dataset_id-/multitables/)
 #' @return If "json" format is requested, the function returns an object of
 #' class `TabBookResult`, containing a list of `MultitableResult`
 #' objects, which themselves contain `CrunchCube`s. If "xlsx" is requested,
@@ -184,7 +182,7 @@ setMethod("dim", "TabBookResult", function(x) {
 #' @rdname describe-catalog
 #' @export
 setMethod("names", "TabBookResult", function(x) {
-    unlist(lapply(x$meta$sheets, function(sheet) sheet$name))
+    unlist(lapply(x$meta$analyses, function(sheet) sheet$name))
 })
 #' @rdname describe-catalog
 #' @export
@@ -222,35 +220,88 @@ setMethod("initialize", "MultitableResult", function(.Object, ...) {
     )
     .Object$result <- lapply(.Object$result, function(cube) {
         cube <- CrunchCube(cube)
-        ## TODO: refactor with CrunchCubep-native methods (eg, dimensions<-, aperm)
-        if (length(dim(cube)) == 3L) {
-            ## check if there is an MR, in which case there are actually 4 dims
-            ## underlyingly, not 3 dims
-            selecteds <- is.selectedDimension(cube@dims)
-            if (any(which(selecteds) %in% c(3, 4))) {
-                ## the selected dimension is in the second half of the cube, so
-                ## the MR is in the multitable
-                cube@dims <- CubeDims(cube@dims[c(2, 3, 4, 1)])
-                cube@arrays <- lapply(cube@arrays, aperm, perm = c(2, 3, 4, 1))
-            } else if (any(which(selecteds) %in% c(1, 2))) {
-                ## the selected dimension is in the first half of the cube, so
-                ## the array is in the multitable
-                cube@dims <- CubeDims(cube@dims[c(4, 3, 1, 2)])
-                cube@arrays <- lapply(cube@arrays, aperm, perm = c(4, 3, 1, 2))
-            } else {
-                ## If cubes are 3D (categorical array x multitable), aperm the
-                ## cubes so that column is multitable var (3 -> 2), row is
-                ## category of array (2 -> 1), subvar is "tab" (1 -> 3)
-                ## TODO: check if it is cat by multitable catarray?
-                cube@dims <- CubeDims(cube@dims[c(2, 3, 1)])
-                cube@arrays <- lapply(cube@arrays, aperm, perm = c(2, 3, 1))
-            }
-        }
-        return(cube)
+        cube <- rearrange3DTabbookDims(cube)
+        cube <- rearrangeNumArrTabbookDims(cube)
+        cube
     })
 
     return(.Object)
 })
+
+# Tabbook cubes can only have 3 dimensions if they have a cat/numeric array
+# somewhere. At the time of writing, there is no validation on the template,
+# so it is possible it could be in either the template or the row variables.
+# This code preserves the legacy behavior where we have special logic to handle
+# the situation where categorical arrays
+# (see https://www.pivotaltracker.com/n/projects/2172644/stories/176401734)
+# NB: Tabbooks have 2 variables per cube, so there cannot be a 3D cube with
+# more than 1 selected dimension (2 MRs would be a 2D cube).
+# The goal is to have the dimensions be rearranged so that it's c(2, 3, 1)
+# but need to keep the MR together
+rearrange3DTabbookDims <- function(cube) {
+    if (length(dim(cube)) != 3L) return(cube)
+    ## TODO: refactor with CrunchCubep-native methods (eg, dimensions<-, aperm)
+
+    ## check if there is an MR, in which case there are actually 4 dims
+    ## underlyingly, not 3 dims
+    selecteds <- is.selectedDimension(cube@dims)
+    if (!any(selecteds)) {
+        ## If cubes are categorical array x multitable (non-array), aperm the
+        ## cubes so that column is multitable var (3 -> 2), row is
+        ## category of array (2 -> 1), subvar is "tab" (1 -> 3)
+        dim_order <- c(2, 3, 1)
+    } else if (any(which(selecteds) %in% c(3, 4))) {
+        ## the selected dimension is in the second half of the cube, so
+        ## the MR is in the multitable
+        ## The "3rd dimension" is actually c(3, 4), so dim_order is:
+        ## c(2, (3, 4), 1)
+        dim_order <- c(2, 3, 4, 1)
+    } else if (any(which(selecteds) %in% c(1, 2))) {
+        ## the selected dimension is in the first half of the cube, so
+        ## the array is in the multitable. (This shouldn't really be allowed)
+        ## The "first" dimension is actually c(1, 2), so it would be:
+        ## c(3, 4, (1, 2))
+        ## However, to match legacy behavior, we do 4, 3, 1, 2,
+        ## Greg isn't really sure why we do this, but since it only
+        ## comes up when there's a cat array in the template,
+        ## I just leave it as is.
+        dim_order <- c(4, 3, 1, 2)
+    }
+
+    cube@dims <- CubeDims(cube@dims[dim_order])
+    cube@arrays <- lapply(cube@arrays, function(x) {
+        out <- aperm(x, perm = dim_order)
+        attr(out, "measure_type") <- attr(x, "measure_type")
+        out
+    })
+    return(cube)
+}
+
+# Numeric arrays have a "measure axis" rather than a dimension,
+# and it gets put in the wrong order for display purposes.
+# When we find a numeric array as the last dimension, reorder
+# it so that numeric array is second-to-last
+rearrangeNumArrTabbookDims <- function(cube) {
+    dim_types <- getDimTypes(cube)
+    if (dim_types[length(dim_types)] != "numarray_items") return(cube)
+
+    ndims <- length(dim_types)
+    if (ndims == 2) {
+        dim_order <- c(2, 1)
+    } else if (ndims == 3) { # MR (or CatArray) by numeric array
+        dim_order <- c(3, 1, 2)
+    } else {
+        # Shouldn't ever happen, but don't want to error here
+        return(cube)
+    }
+    cube@dims <- CubeDims(cube@dims[dim_order])
+    cube@arrays <- lapply(cube@arrays, function(x) {
+        out <- aperm(x, perm = dim_order)
+        attr(out, "measure_type") <- attr(x, "measure_type")
+        out
+    })
+    cube
+}
 
 #' @rdname crunch-extract
 #' @export
@@ -291,13 +342,17 @@ setMethod("prop.table", "MultitableResult", function(x, margin = NULL) {
 #' @rdname cube-computing
 #' @export
 setMethod("prop.table", "TabBookResult", function(x, margin = NULL) {
-    lapply(x, prop.table, margin = margin)
+    lapply(x, function(x) {
+        tryCatch(prop.table(x, margin = margin), error = function(e) NULL)
+    })
 })
 
 #' @rdname cube-computing
 #' @export
 setMethod("bases", "TabBookResult", function(x, margin = NULL) {
-    lapply(x, bases, margin = margin)
+    lapply(x, function(x) {
+        tryCatch(bases(x, margin = margin), error = function(e) NULL)
+    })
 })
 
 #' @rdname cube-computing

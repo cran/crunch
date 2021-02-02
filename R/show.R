@@ -152,15 +152,26 @@ describeDatasetVariables <- function(dataset) {
     }, character(1)))
 }
 
-showCategoricalArrayVariable <- function(x) {
+showArrayVariable <- function(x) {
     c(showCrunchVariableTitle(x), showSubvariables(subvariables(x)))
 }
 
 showSubvariables <- function(x) {
-    out <- c("Subvariables:", vapply(index(x), function(s) {
-        paste0("  $`", s$name, "`")
-    }, character(1), USE.NAMES = FALSE))
-    return(out)
+    c("Subvariables:", format_subvars(aliases(x), names(x)))
+}
+
+format_subvars <- function(aliases, names) {
+    # Add ticks to aliases
+    aliases <- ifelse(grepl("[[:blank:]]", aliases), paste0("`", aliases, "`"), aliases)
+    # Make them constant width
+    aliases <- format(aliases, max(nchar(aliases)))
+
+    # Trim names to remaining width (3 for "  $" before alias, 4 for "  | " after)
+    names_width <- getOption("width", 100) - (3 + nchar(aliases[1]) + 4)
+    needs_trim <- nchar(names) > names_width
+    names[needs_trim] <- paste0(strtrim(names[needs_trim], names_width - 3), "...")
+
+    paste0("  $", aliases, "  | ", names)
 }
 
 showShojiOrder <- function(x, catalog_url = x@catalog_url, key = "name") {
@@ -373,10 +384,10 @@ showMultitable <- function(x) {
     out <- c(
         out, "Column variables:",
         vapply(x@body$template, function(expr) {
-            if ("each" %in% names(expr$query[[1]])) {
-                # if the first element of the query is each, then this is
-                # an array so take the second argument instead.
-                exprToFormat <- expr$query[[2]]
+            if ((expr$query[[1]][["function"]] %||% "") == "dimension") {
+                # if the first element of the query is a dimension func, then this is
+                # an array, so take the second arg
+                exprToFormat <- expr$query[[1]][["args"]][[1]]
 
                 # if the second arg is a as_selected take the variable from
                 # that to display var only
@@ -405,8 +416,8 @@ setMethod("getShowContent", "Heading", showSubtotalHeading)
 setMethod("getShowContent", "SummaryStat", showSubtotalHeading)
 setMethod("getShowContent", "CrunchVariable", showCrunchVariable)
 setMethod(
-    "getShowContent", "CategoricalArrayVariable",
-    showCategoricalArrayVariable
+    "getShowContent", "ArrayVariable",
+    showArrayVariable
 )
 setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
@@ -499,7 +510,23 @@ setMethod("show", "CrunchSlide", function(object) {
 #' @rdname show
 #' @export
 setMethod("show", "MultitableResult", function(object) {
-    show(do.call("cbind", lapply(object, cubeToArray)))
+    arrays <- lapply(object, cubeToArray)
+    num_unique_dims <- unique(vapply(arrays, function(x) length(dim(x)), numeric(1)))
+    if (length(num_unique_dims) > 1) {
+        # Happens if a categorical array is in the multitable template
+        # which we plan to disallow in the future
+        show("Cannot display Multitable results with unequal dimensions.")
+    } else {
+        # For 1&2D, abind along last dimension (as you usually would), but for 3D
+        # because of `rearrange3DTabbookDims()`, bind along the second one so
+        # that shapes match up.
+        # 4D only happens if Cat Array is in the template, which will be prevented
+        along <- ifelse(num_unique_dims == 3, 2, num_unique_dims)
+        show(do.call(
+            function(...) abind::abind(..., along = min(num_unique_dims, 2)),
+            lapply(object, cubeToArray)
+        ))
+    }
 })
 
 setMethod("getShowContent", "ShojiFolder", function(x) {

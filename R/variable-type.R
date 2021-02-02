@@ -34,16 +34,20 @@ is.MultipleResponse <- is.Multiple
 #' @export
 is.CA <- function(x) {
     ## so it doesn't return true for MultipleResponse
-    return(class(x) %in% "CategoricalArrayVariable")
+    return(identical(class(x), class(CategoricalArrayVariable())))
 }
 
 #' @rdname crunch-is
 #' @export
-is.Array <- function(x) inherits(x, "CategoricalArrayVariable")
+is.CategoricalArray <- is.CA
 
 #' @rdname crunch-is
 #' @export
-is.CategoricalArray <- is.CA
+is.NumericArray <- function(x) inherits(x, "NumericArrayVariable")
+
+#' @rdname crunch-is
+#' @export
+is.Array <- function(x) inherits(x, "ArrayVariable")
 
 has.categories <- function(x) {
     if (!is.character(x)) {
@@ -84,6 +88,13 @@ setMethod("type", "CrunchVariable", function(x) type(tuple(x)))
 #' @rdname type
 #' @export
 setMethod("type", "VariableEntity", function(x) x@body$type)
+
+# It's also nice sometimes if a list of variables has a `types` method
+#' @export
+#' @rdname describe-catalog
+setMethod("types", "list", function(x) {
+    vapply(x, type, character(1), USE.NAMES = FALSE)
+})
 
 castVariable <- function(x, value) {
     if (!(type(x) %in% CASTABLE_TYPES)) {

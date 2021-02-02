@@ -2,8 +2,10 @@ formulaToCubeQuery <- function(formula, data) {
     query <- formulaToQuery(formula, data)
     ## The formulaToQuery part is shared with newMultitable.
     ## What follows is needed to prepare for a cube query
-    query$dimensions <- unlist(query$dimensions, recursive = FALSE)
-    names(query$dimensions) <- NULL
+    if (length(query$dimensions) > 0) { # leave empty dimensions present in query
+        query$dimensions <- unlist(query$dimensions, recursive = FALSE)
+        names(query$dimensions) <- NULL
+    }
     return(query)
 }
 
@@ -21,7 +23,7 @@ formulaToQuery <- function(formula, data) {
     ## Construct the "measures", either from the formula or default "count"
     if (!length(measures)) {
         # if measures is an empty list, there are none.
-        measures <- list(count = zfunc("cube_count"))
+        measures <- list(zfunc("cube_count"))
     } else {
         ## Look for multiple measures, as passed by `list(f(x), g(x) ~ a + b)`
         if (startsWith(as.character(formula)[2], "list(")) {
@@ -46,11 +48,11 @@ formulaToQuery <- function(formula, data) {
         halt("Right side of formula cannot contain aggregation functions")
     }
 
-    ## One last munge
+    ## Name measures based on function (and append to end if already named)
     if (is.null(names(measures))) {
-        names(measures) <- vapply(measures, function(m) {
-            sub("^cube_", "", m[["function"]])
-        }, character(1))
+        names(measures) <- getCubeMeasureNames(measures)
+    } else {
+        names(measures) <- paste0(names(measures), "__", getCubeMeasureNames(measures))
     }
 
     return(list(dimensions = dimensions, measures = measures))
@@ -147,15 +149,35 @@ registerCubeFunctions <- function(varnames = c()) {
             }
             zfunc("as_array", x)
         },
+        # Preserved for backwards compatibility here, but we don't allow changing
+        # the default behavior of MRs anymore so this special case isn't needed
+        # except for the error message
         as_selected = function(x) {
-            ## Another hacky solution
             if (!is.MR(x)) {
                 halt(
                     "Cannot analyze a variable of type ", dQuote(type(x)),
                     " 'as_selected'"
                 )
             }
-            zfunc("as_selected", x)
+            x
+        },
+        subvariables = function(x) {
+            if (!is.Array(x)) {
+                halt(
+                    "Cannot analyze a variable of type ", dQuote(type(x)),
+                    " using 'subvariables'"
+                )
+            }
+            zfunc("dimension", x, "subvariables")
+        },
+        categories = function(x) {
+            if (!is.Array(x)) {
+                halt(
+                    "Cannot analyze a variable of type ", dQuote(type(x)),
+                    " using 'categories'"
+                )
+            }
+            zcl(x)
         },
         n = function(...) zfunc("cube_count")
     )
@@ -169,6 +191,12 @@ registerCubeFunctions <- function(varnames = c()) {
         )
     }
     return(funcs)
+}
+
+getCubeMeasureNames <- function(measures) {
+    vapply(measures, function(m) {
+        sub("^cube_", "", m[["function"]])
+    }, character(1))
 }
 
 isCubeAggregation <- function(x) {
@@ -190,24 +218,29 @@ varToDim <- function(x) {
     ## as dimensions
     v <- zcl(x)
     if (is.MR(x)) {
-        ## Multiple response gets "as_selected" by default and "each"
-        return(list(list(each = self(x)), zfunc("as_selected", v)))
-    } else if (is.CA(x)) {
-        ## Categorical array gets the var reference and "each"
-        ## Put "each" first so that the rows, not columns, are subvars
+        ## Multiple response gets "as_selected" by default and subvars dimension
         return(list(
-            list(each = self(x)),
+            zfunc("dimension", zfunc("as_selected", v), list(value = "subvariables")),
+            zfunc("as_selected", v)
+        ))
+    } else if (is.CA(x) | is.NumericArray(x)) {
+        ## Categorical array gets the subvariables dimension first
+        ## and then itself so that the rows, not columns, are subvars
+        ## We treat numeric arrays as categoricals when used bare
+        ## in formulas like this too so that eg `table(ds$numarray)`
+        ## matches expectations.
+        return(list(
+            zfunc("dimension", x, list(value = "subvariables")),
             v
         ))
     } else if (is.zfunc(x, "as_array")) {
         ## Pseudo-ZCL from registerCubeFunctions, used to treat an MR like a CA
         ## x is thus list(`function`="as_array", args=list(list(variable=self)))
-        ## Return instead list(list(each=self), list(variable=self))
-        return(list(list(each = x$args[[1]]$variable), x$args[[1]]))
-    } else if (is.zfunc(x, "as_selected")) {
-        ## Pseudo-ZCL from registerCubeFunctions, used to compute MR by subvar
-        ## x is thus list(`function`="as_selected", args=list(list(variable=self)))
-        return(list(list(each = x$args[[1]]$variable), zfunc("as_selected", x$args[[1]])))
+        ## Return instead subvar dimension + variable
+        return(list(
+            zfunc("dimension", x$args[[1]]["variable"], list(value = "subvariables")),
+            x$args[[1]]["variable"]
+        ))
     } else if (is.CrunchExpr(x)) {
         ## Give a name and alias "references"
         ref <- formatExpression(x)

@@ -6,14 +6,15 @@ with_mock_crunch({
         expect_POST(
             ds$derived_mr <- deriveArray(list(ds$gender),
                 selections = list("Female"),
-                name = "derivedMR"
+                name = "derivedMR",
+                numeric = FALSE
             ),
             "https://app.crunch.io/api/datasets/1/variables/",
             '{"derivation":{"function":"select_categories","args":',
             '[{"function":"array","args":[{"function":"make_frame","args":',
             '[{"map":{"1":{"variable":"https://app.crunch.io/api/datasets',
-            '/1/variables/gender/"}}},{"value":["1"]}]}]},{"value":', # nolint
-            '["Female"]}]},"name":"derivedMR","alias":"derived_mr"}'
+            '/1/variables/gender/"}}},{"value":["1"]}]}],"kwargs":{"numeric":{"value":false}}},', # nolint
+            '{"value":["Female"]}]},"name":"derivedMR","alias":"derived_mr"}'
         )
     })
 })
@@ -215,15 +216,9 @@ with_test_authentication({
         )
         ## 4 comes from derivedarray$dsub2, which comes from petloc$petloc_home,
         ## but with different category names
-
-        ## This assertion fails. The new data comes in as Cat Dog and not one two
-        # print(table(ds$metapetloc[[4]]))
-        # dsub2#
-        #  Cat  Dog Bird  one  two
-        #    5    3    6    5    3
         expect_identical(
             as.numeric(table(ds$metapetloc[[4]])),
-            2 * c(0, 0, 3, 5, 3)
+            c(5, 3, 6, 5, 3)
         )
     })
     test_that("Combined categories on top of derived array also gets the right data", {

@@ -9,8 +9,21 @@
 #' from a `CrunchDeck` with `cubes`. Analyses can be changed by assigning a formula
 #' into the `query` function.
 #'
+#' Advanced users of the API can assign a list to  `analysis<-` to specify settings
+#' on the analyses that are not otherwise available in `rcrunch`. The helpers
+#' `formulaToSlideQuery()` and `slideQueryEnv()` help you create objects for the
+#' `query` and `query_environment`.
+#'
 #' @param x a `CrunchSlide`, `AnalysisCatalog`, or `Analysis`
 #' @param value for the setter, a query
+#' @param query For `formulaToSlideQuery()`, a formula that specifies the query, as in
+#' `newSlide()`
+#' @param dataset For `formulaToSlideQuery()`, a `CrunchDataset` that the variables in
+#' `query` refer to.
+#' @param weight For `slideQueryEnv()` a crunch variable to use as a weight or `NULL`
+#' to indicate no weight should be used.
+#' @param filter for `slideQueryEnv()`, a `CrunchFilter` or `CrunchExpression` to filter
+#' the slide.
 #' @param ... ignored
 #'
 #' @return an `AnalysisCatalog`, `Analysis`, `Cube`, or `Filter`
@@ -47,7 +60,8 @@ setGeneric("cubes", function(x) standardGeneric("cubes"))
 #'
 #' A slide's display settings can be modified by assigning a named list
 #' @param x a CrunchSlide, Analysis, or AnalysisCatalog
-#' @param value a named list, for valid settings see docs.crunch.io
+#' @param value a named list, for valid settings see [API documentation](
+#' https://crunch.io/api/reference/#get-/datasets/-dataset_id-/decks/-deck_id-/slides/-slide_id-/)
 #' @rdname display-settings
 #' @export
 setGeneric("displaySettings", function(x) standardGeneric("displaySettings"))
@@ -121,7 +135,14 @@ setMethod(
         anCat <- analyses(value)
         payload$analyses <- lapply(seq_along(anCat), function(i) {
             out <- anCat[[i]]
-            out <- out@body[c("query", "query_environment", "display_settings")]
+            # TODO: Make sure API always sends all parts (and no legacy pre-viz_specs)
+            # and update fixtures
+            out <- out@body[
+                na.omit(match(
+                    c("query", "query_environment", "display_settings", "transform", "viz_specs"),
+                    names(out@body)
+                ))
+            ]
             out
         })
         payload <- wrapEntity(body = payload)
@@ -247,30 +268,74 @@ DEFAULT_DISPLAY_SETTINGS <- list(
 #'     ),
 #'     subtitle = "2017 Data"
 #' )
+#'
+#' # Can specify advanced options by specifying `analyses` directly
+#' # `formulaToSlideQuery()` and `slideQueryEnv()` help describe the API
+#' newSlide(
+#'     main_deck,
+#'     title = "custom slide",
+#'     analyses = list(list(
+#'         query = formulaToSlideQuery(~categories(fav_array)+subvariables(fav_array), ds),
+#'         query_environment = slideQueryEnv(filter = filters(ds)[[1]]),
+#'         display_settings = list(viz_type = list(value = "table")),
+#'         viz_specs =  list(
+#'             default = list(
+#'                 format = list(
+#'                     decimal_places = list(percentages = 0L, other = 2L),
+#'                     show_empty = FALSE
+#'                 )
+#'              ),
+#'              table = list(
+#'              measures = c("col_percent", "pairwise_t_test"),
+#'              page_layout = list(
+#'                  rows = list(
+#'                      top = list(),
+#'                      bottom = c("base_unweighted", "scale_mean", "significant_columns")
+#'                  ),
+#'                  measure_layout = "long"
+#'              ),
+#'              pairwise_comparison = list(sig_threshold = c(0.05, 0.01)),
+#'              format = list(pval_colors = FALSE)
+#'             )
+#'         )
+#'     ))
+#' )
 #' }
 newSlide <- function(deck,
-                     query,
+                     query = NULL,
                      display_settings = list(),
                      title = "",
                      subtitle = "",
                      ...) {
-    # TODO allow newSlide to accept list of formulas. In order for this to work
-    # we need to send the analysis order. The only current use case for multiple
-    # analyses is Profiles, and those probably shouldn't be set from R anyway.
-    stopifnot(inherits(query, "formula"))
-    ds <- loadDataset(datasetReference(deck))
-    query <- list(query)
-
+    stopifnot(inherits(query, "formula") || is.null(query))
     settings <- modifyList(DEFAULT_DISPLAY_SETTINGS, display_settings)
     settings <- wrapDisplaySettings(settings)
 
+    ds <- loadDataset(datasetReference(deck))
+
     payload <- list(title = title, subtitle = subtitle, ...)
-    payload[["analyses"]] <- lapply(query, function(x) {
-        return(list(
-            query = formulaToCubeQuery(x, ds),
+    if ("analyses" %in% names(payload) && !is.null(query)) {
+        halt("Cannot specify both a `query` and `analyses` for `newSlide()`")
+    }
+    if (!"analyses" %in% names(payload) && is.null(query)) {
+        halt("Must specify either a `query` or `analyses` for `newSlide()`")
+    }
+    if (!"analyses" %in% names(payload) && length(display_settings) != 0) {
+        warning(
+            "`display_settings` are ignored if `analyses` are defined directly for `newSlide()`"
+        )
+    }
+
+    if (!is.null(query)) {
+        # Technically multiple analyses per slide are allowed (for profiles), but this
+        # isn't supported in the R package, and if someone really wants it, they could
+        # form the analyses object themselves
+        payload[["analyses"]] <- list(list(
+            query = formulaToCubeQuery(query, ds),
             display_settings = settings
         ))
-    })
+    }
+
     payload <- wrapEntity(body = payload)
     url <- crPOST(shojiURL(deck, "catalogs", "slides"), body = toJSON(payload))
     return(CrunchSlide(crGET(url)))
@@ -341,6 +406,15 @@ setMethod("analysis<-", c("CrunchSlide", "formula"), function(x, value) {
 setMethod("analysis<-", c("CrunchSlide", "Analysis"), function(x, value) {
     analysis_cat <- analyses(x)
     return(invisible(modifyCatalogInPlace(analysis_cat, 1, NULL, value)))
+})
+
+#' @rdname analysis-methods
+#' @export
+setMethod("analysis<-", c("CrunchSlide", "list"), function(x, value) {
+    payload <- wrapEntity(body = value)
+    url <- self(analysis(x))
+    crPATCH(url, body = toJSON(payload))
+    invisible(refresh(x))
 })
 
 #' @rdname analysis-methods
@@ -429,7 +503,14 @@ setMethod(
         if (i > length(x) + 1) {
             # TODO what to do with adding an analysis that's not the next one.
         }
-        payload <- value@body[c("query", "display_settings", "query_environment")]
+        # TODO: Make sure API always sends all parts (and no legacy pre-viz_specs)
+        # and update fixtures
+        payload <- value@body[
+            na.omit(match(
+                c("query", "display_settings", "query_environment", "viz_specs", "transforms"),
+                names(value@body)
+            ))
+        ]
         payload <- wrapEntity(body = payload)
         if (i <= length(x)) {
             url <- names(x@index)[i]
@@ -498,6 +579,12 @@ setMethod("query<-", c("Analysis", "formula"), function(x, value) {
     crPATCH(self(x), body = toJSON(payload))
     return(invisible(refresh(x)))
 })
+
+#' @rdname analysis-methods
+#' @export
+formulaToSlideQuery <- function(query, dataset) {
+    formulaToCubeQuery(query, dataset)
+}
 
 #' @rdname analysis-methods
 #' @export
@@ -591,6 +678,30 @@ setMethod("filter<-", c("Analysis", "NULL"), function(x, value) {
     # crPATCH(self(x), body = toJSON(frmt))
     return(set_query_env_slot(x, filter = list()))
 })
+
+#' @rdname analysis-methods
+#' @export
+slideQueryEnv <- function(weight, filter) {
+    if (missing(weight) && missing(filter)) {
+        halt("Must specify at least one of `weight` or `filter`")
+    }
+    out <- list()
+    if (!missing(weight)) {
+        out$weight <- if (is.null(weight)) list() else list(self(weight))
+    }
+    if (!missing(filter)) {
+        if (is.null(filter)) {
+            out$filter <- list()
+        } else if (is.CrunchExpr(filter)) {
+            # Reasoning explained in `setMethod("filter<-", c("Analysis", "CrunchLogicalExpr")`
+            halt("ad-hoc filters not supported for slides")
+            # out$filter <- list(filter@expression)
+        } else {
+            out$filter <- list(self(filter))
+        }
+    }
+    out
+}
 
 #' @rdname display-settings
 #' @export

@@ -99,7 +99,8 @@ setClass("CrunchVariable",
     text = "TextVariable",
     datetime = "DatetimeVariable",
     multiple_response = "MultipleResponseVariable",
-    categorical_array = "CategoricalArrayVariable"
+    categorical_array = "CategoricalArrayVariable",
+    numeric_array = "NumericArrayVariable"
 )
 
 CrunchVariable <- function(tuple, filter = NULL, ...) {
@@ -131,16 +132,26 @@ TextVariable <- setClass("TextVariable", contains = "CrunchVariable")
 #' @export DatetimeVariable
 DatetimeVariable <- setClass("DatetimeVariable", contains = "CrunchVariable")
 
+ArrayVariable <- setClass("ArrayVariable",
+    representation("VIRTUAL"), contains = "CrunchVariable"
+)
+
 #' @rdname CrunchVariable
 #' @export CategoricalArrayVariable
 CategoricalArrayVariable <- setClass("CategoricalArrayVariable",
-    contains = "CrunchVariable"
+    contains = "ArrayVariable"
 )
 
 #' @rdname CrunchVariable
 #' @export MultipleResponseVariable
 MultipleResponseVariable <- setClass("MultipleResponseVariable",
     contains = "CategoricalArrayVariable"
+)
+
+#' @rdname CrunchVariable
+#' @export NumericArrayVariable
+NumericArrayVariable <- setClass("NumericArrayVariable",
+    contains = "ArrayVariable"
 )
 
 setClassUnion("CrunchVarOrExpr", c("CrunchVariable", "CrunchExpr"))

@@ -19,7 +19,7 @@ Crunch Expressions, i.e. \code{CrunchExpr} and \code{CrunchLogicalExpr},
 encapsulate derivations of Crunch variables, possibly composed of other functions
 which are only evaluated when sent to the server when creating a variable using \code{\link[=VarDef]{VarDef()}}
 or using \code{\link[=as.vector]{as.vector()}} to get data. The crunch database functions can be found in the
-\href{https://docs.crunch.io/object-reference/object-reference.html}{Crunch API Reference},
+\href{https://help.crunch.io/hc/en-us/articles/360042411792-Expressions}{Help Center},
 and can be called directly via \code{crunchdbFunc()}m but many have also been wrapped
 in native R functions, and are described in the details section below.
 }
@@ -80,8 +80,8 @@ by \code{id}.
 
 Array expressions
 \itemize{
-\item \code{makeFrame(x)} an expression that creates an array from existing variables or expressions,
-see \code{deriveArray()} for more details
+\item \code{makeFrame(x, numeric = NULL)} an expression that creates an array from existing
+variables or expressions, see \code{deriveArray()} for more details
 \item \code{arraySubsetExpr(x, subvars, subvar_id = c("alias", "name", "id"))} Take a subset of an
 existing array variable, identifying the subvariables by alias, name, or id (if \code{x} is
 an expression, you must use id).

@@ -4,7 +4,7 @@
 %   R/cube-variables.R, R/dataset.R, R/shoji-catalog.R, R/decks.R,
 %   R/multitables.R, R/shoji-folder.R, R/shoji-order-slots.R, R/slides.R,
 %   R/subvariables.R, R/tab-book.R, R/variable-catalog.R, R/variable-folder.R,
-%   R/versions.R
+%   R/variable-type.R, R/versions.R
 \name{aliases}
 \alias{aliases}
 \alias{describe-catalog}
@@ -54,7 +54,7 @@
 \alias{names,OrderGroup-method}
 \alias{names,SlideCatalog-method}
 \alias{names<-,SlideCatalog-method}
-\alias{names,CategoricalArrayVariable-method}
+\alias{names,ArrayVariable-method}
 \alias{names,TabBookResult-method}
 \alias{aliases,TabBookResult-method}
 \alias{descriptions,TabBookResult-method}
@@ -70,6 +70,7 @@
 \alias{types,VariableCatalog-method}
 \alias{ids,VariableCatalog-method}
 \alias{aliases,VariableFolder-method}
+\alias{types,list-method}
 \alias{names,VersionCatalog-method}
 \alias{descriptions,VersionCatalog-method}
 \alias{timestamps,VersionCatalog-method}
@@ -165,7 +166,7 @@ dates(x) <- value
 
 \S4method{names}{SlideCatalog}(x) <- value
 
-\S4method{names}{CategoricalArrayVariable}(x)
+\S4method{names}{ArrayVariable}(x)
 
 \S4method{names}{TabBookResult}(x)
 
@@ -196,6 +197,8 @@ dates(x) <- value
 \S4method{ids}{VariableCatalog}(x)
 
 \S4method{aliases}{VariableFolder}(x)
+
+\S4method{types}{list}(x)
 
 \S4method{names}{VersionCatalog}(x)
 

@@ -1,10 +1,12 @@
 #' Make a Categorical Array or Multiple Response variable
 #'
-#' Array variables are composed of a set of "subvariables" bound
-#' together for display in the app. For example, you might have a set of
-#' survey questions that ask how the respondent would rate a tv show from
-#' 1-5. Array variables allow you to display all of their ratings in a compact
-#' table rather than a set of distinct variables.
+#' In most situations we recommend using `deriveArray` which leaves your
+#' subvariables in the dataset. `makeArray` _removes_ component subvariables
+#' from your dataset. Array variables are composed of a set of "subvariables"
+#' bound together for display  in the app. For example, you might have a set of
+#' survey questions that ask how the respondent would rate a TV show from 1-5.
+#' Array variables allow you to display all of their ratings in a compact table
+#' rather than a set of distinct variables.
 #'
 #' @param subvariables a list of Variable objects to bind together, or a
 #' Dataset subset which contains only the Variables to bind.
@@ -13,6 +15,11 @@
 #' @param selections character, for `makeMR` and `deriveArray` the names of the
 #' categories to mark as the dichotomous selections. Required for
 #' `makeMR`; optional for `deriveArray`; ignored in `makeArray`.
+#' @param numeric Logical indicating whether the array should be a numeric
+#' array or categorical array. `NULL` the default will guess numeric if
+#' all variables are known to be numeric and categorical if all are
+#' categorical. If any subvariables are created from expressions, then
+#' their type cannot be guessed and so `numeric` must be specified.
 #' @param ... Optional additional attributes to set on the new variable.
 #' @return A VariableDefinition that when added to a Dataset will create the
 #' categorical-array or multiple-response variable. `deriveArray` will
@@ -21,29 +28,56 @@
 #' return an expression that "binds" variables together, removing them from
 #' independent existence.
 #' @export
+deriveArray <- function(subvariables, name, selections, numeric = NULL, ...) {
+    expression <- makeFrame(subvariables, numeric)
+    if (!missing(selections)) {
+        expression <- selectCategories(expression, selections, collapse = FALSE)
+    }
+    return(VariableDefinition(expression, name = name, ...))
+}
+
+#' @rdname deriveArray
+#' @export
 makeArray <- function(subvariables, name, ...) {
     if (missing(name)) {
         halt("Must provide the name for the new variable")
     }
 
-    ## Get subvariable URLs
     if (is.dataset(subvariables)) {
         ## as in, if the list of variables is a [ extraction from a Dataset
         subvariables <- allVariables(subvariables)
     }
-    subvariables <- urls(subvariables)
+    if (!(inherits(subvariables, "VariableCatalog") || is.list(subvariables))) {
+        halt("Expected subvariables to be either a variables catalog or list of variables")
+    }
+
     if (!length(subvariables)) {
         halt("No variables supplied")
     }
 
+    subvar_types <- unique(types(subvariables))
+    if (all(subvar_types == "numeric")) {
+        var_type <- "numeric_array"
+    } else if (all(subvar_types %in% c("numeric", "categorical"))) {
+        var_type <- "categorical_array"
+    } else {
+        bad_types <- paste0(
+            "'", setdiff(subvar_types, c("numeric", "categorical")), "'", collapse = ", "
+        )
+        halt("Cannot makeArray from subvariables of type: ", bad_types)
+    }
+
+    ## Get subvariable URLs
+    subvariables <- urls(subvariables)
+
     out <- VariableDefinition(
         subvariables = I(subvariables), name = name,
-        type = "categorical_array", ...
+        type = var_type, ...
     )
     return(out)
 }
 
-#' @rdname makeArray
+#' @rdname deriveArray
 #' @export
 makeMR <- function(subvariables, name, selections, ...) {
     if (missing(selections)) {
@@ -243,22 +277,9 @@ buildDelimRegex <- function(str, delim) {
     return(regex)
 }
 
-
-#' @rdname makeArray
-#' @export
-deriveArray <- function(subvariables, name, selections, ...) {
-    expression <- makeFrame(subvariables)
-
-    if (!missing(selections)) {
-        expression <- selectCategories(expression, selections, collapse = FALSE)
-    }
-    return(VariableDefinition(expression, name = name, ...))
-}
-
-
 #' @rdname expressions-internal
 #' @export
-makeFrame <- function(x) {
+makeFrame <- function(x, numeric = NULL) {
     ## Get subvariable URLs
     if (is.dataset(x)) {
         ## as in, if the list of variables is a [ extraction from a Dataset
@@ -266,19 +287,30 @@ makeFrame <- function(x) {
     }
 
     # if it's a list, it could contain variable definitions:
-    if (is.list(x)) {
+    if (is.list(x) & !is.VarDef(x)) {
         x <- x[lengths(x) > 0] # remove NULLs (from eg slider)
+        subvar_types <- vapply(x, function(sv) {
+            if (is.VarDef(sv)) return("vardef")
+            else if (is.variable(sv)) return(type(sv))
+            else return("unknown")
+        }, character(1))
         x <- lapply(x, zcl)
-    } else { # but ShojiCatalogs don't give their urls when lapplying, so treat differently
+    } else if (inherits(x, "VariableCatalog")) {
+        # but ShojiCatalogs don't give their urls when lapplying, so treat differently
+        subvar_types <- types(x)
         x <- lapply(urls(x), function(sv) list(variable = sv))
+    } else {
+        halt("Expected a Variable Catalog or a list of Variables/Expressions/VarDefs")
     }
+
+    numeric <- check_make_frame_type_arg(numeric, subvar_types)
 
     subvarids <- as.character(seq_along(x))
     expression <- zfunc("array", zfunc(
         "make_frame",
         list(map = structure(x, .Names = subvarids)),
         list(value = I(subvarids))
-    ))
+    ), numeric = list(value = numeric))
     # TODO: filters are not preserved in makeFrame expressions because
     # they aren't preserved in `VarDefs` which expressions are wrapped in
     # when forming variables... I believe this will only affect someone trying to
@@ -286,6 +318,21 @@ makeFrame <- function(x) {
     CrunchExpr(expression = expression)
 }
 
+check_make_frame_type_arg <- function(numeric, subvar_types) {
+    if (is.null(numeric)) {
+        if (all(subvar_types == "categorical")) {
+            numeric <- FALSE
+        } else if (all(subvar_types == "numeric")) {
+            numeric <- TRUE
+        } else {
+            halt("Could not guess array type, specify `numeric` argument in `makeFrame()`")
+        }
+    } else if (!is.logical(numeric) || length(numeric) != 1) {
+        halt("Expected `numeric` argument of `makeFrame()` to be TRUE or FALSE")
+    }
+
+    numeric
+}
 
 
 #' Rearrange array subvariables

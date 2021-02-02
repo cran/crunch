@@ -15,12 +15,13 @@ skip_on_local_backend <- function(message) {
 
 skip_on_local_env <- function(message) {
     jenkins <- identical(Sys.getenv("JENKINS_HOME"), "true")
-    travis <- identical(Sys.getenv("TRAVIS"), "true")
     cran <- !identical(Sys.getenv("NOT_CRAN"), "true")
+    travis <- identical(Sys.getenv("TRAVIS"), "true")
     appveyor <- identical(Sys.getenv("APPVEYOR"), "True")
+    github <- identical(Sys.getenv("GITHUB_ACTION"), "true")
 
     # if we are trying to skip when the tests are being run locally
-    if (!any(jenkins, travis, cran, appveyor)) {
+    if (!any(jenkins, cran, travis, appveyor, github)) {
         return(skip(paste("Skipping locally:", message)))
     }
 }
@@ -86,7 +87,7 @@ with_mock_crunch <- function(expr) {
     )
     with(
         opts,
-        with_mock_API(expr)
+        with_mock_api(expr)
     )
 }
 
@@ -150,13 +151,8 @@ with_test_authentication <- function(expr) {
             with_trace("locationHeader", exit = tracer, where = crGET, expr = {
                 ## Wrap this so that we can generate a test failure if
                 ## there's an error rather than just halt the process
-                tryCatch(eval(expr, envir = env),
-                    error = function(e) {
-                        test_that("There are no test code errors", {
-                            expect_error(stop(e$message), NA)
-                        })
-                    }
-                )
+                ## (eg make sure we run the test teardown)
+                eval(expr, envir = env)
             })
         })
     }

@@ -14,35 +14,16 @@
 
 <title>Array Variables</title>
 
-<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
-// be compatible with the behavior of Pandoc < 2.8).
-document.addEventListener('DOMContentLoaded', function(e) {
-  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
-  var i, h, a;
-  for (i = 0; i < hs.length; i++) {
-    h = hs[i];
-    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
-    a = h.attributes;
-    while (a.length > 0) h.removeAttribute(a[0].name);
-  }
-});
-</script>
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
 
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
-  }
-});
-</script>
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -135,187 +116,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
-}
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
-}
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
-}
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
-}
-#TOC ul ul {
-margin-left: -2em;
-}
-#TOC li {
-line-height: 16px;
-}
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
-}
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
-}
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
-}
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
-}
-pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
-}
-pre:not([class]) {
-background-color: #f7f7f7;
-}
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
 
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; } 
-code > span.er { color: #a61717; background-color: #e3d2d2; } 
-</style>
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
 
 
 
@@ -338,11 +140,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Creating an array</h2>
 <p>One of the reasons to use R with Crunch is to leverage the power of scripting for tasks that would be repetitive in a GUI. Many crunch functions operating on Crunch datasets have an optional <code>pattern</code> argument that lets you use regular expressions for these “bulk” operations.</p>
 <p>In our sample <em>Economist</em> dataset, we have set of variables prefixed with “imiss”:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">grep</span>(<span class="st">&quot;^imiss_&quot;</span>, <span class="kw">names</span>(ds), <span class="dt">value=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(<span class="st">&quot;^imiss_&quot;</span>, <span class="fu">names</span>(ds), <span class="at">value=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>##  [1] &quot;imiss_b&quot; &quot;imiss_c&quot; &quot;imiss_d&quot; &quot;imiss_f&quot; &quot;imiss_g&quot; &quot;imiss_h&quot; &quot;imiss_j&quot; &quot;imiss_m&quot; &quot;imiss_p&quot; &quot;imiss_q&quot; &quot;imiss_r&quot;
 ## [12] &quot;imiss_s&quot; &quot;imiss_t&quot;</code></pre>
 <p>These correspond to a survey grid question about how important respondents view a set of issues. Examining one of them, we see</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>ds<span class="op">$</span>imiss_b</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>imiss_b</span></code></pre></div>
 <pre><code>## imiss_b (categorical)
 ## 
 ##                    Count
@@ -351,8 +153,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## Not very Important     8
 ## Unimportant            1</code></pre>
 <p>All of these “imiss” categorical variables have the same structure. We can combine them into a categorical array variable with <code>makeArray</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>ds<span class="op">$</span>imiss &lt;-<span class="st"> </span><span class="kw">makeArray</span>(ds[<span class="kw">grep</span>(<span class="st">&quot;^imiss_&quot;</span>, <span class="kw">names</span>(ds))], <span class="dt">name=</span><span class="st">&quot;Issue importance&quot;</span>)</span>
-<span id="cb5-2"><a href="#cb5-2"></a>ds<span class="op">$</span>imiss</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>imiss <span class="ot">&lt;-</span> <span class="fu">makeArray</span>(ds[<span class="fu">grep</span>(<span class="st">&quot;^imiss_&quot;</span>, <span class="fu">names</span>(ds))], <span class="at">name=</span><span class="st">&quot;Issue importance&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>imiss</span></code></pre></div>
 <pre><code>## Issue importance (categorical_array)
 ## Subvariables:
 ##   $`imiss_b`
@@ -370,7 +172,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##   $`imiss_t`</code></pre>
 <p>The set of “important issue” variables have gone from thirteen separate categorical variable cards to just one, where the subvariables are shown as rows, and the common categories across all of them are shown as columns.</p>
 <p>In our example dataset, the categorical variables <code>imiss_*</code> are now not visible in the dataset directly, but we can access them as “subvariables” of the array we just created.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">subvariables</span>(ds<span class="op">$</span>imiss)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)</span></code></pre></div>
 <pre><code>## Subvariables:
 ##   $`imiss_b`
 ##   $`imiss_c`
@@ -386,7 +188,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##   $`imiss_s`
 ##   $`imiss_t`</code></pre>
 <p>We can also step into the subvariables and access the underlying categorical variables:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>ds<span class="op">$</span>imiss<span class="op">$</span>imiss_b</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>imiss<span class="sc">$</span>imiss_b</span></code></pre></div>
 <pre><code>## imiss_b (categorical)
 ## 
 ##                    Count
@@ -399,15 +201,15 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Manipulating subvariables</h2>
 <p>The names <code>imiss_b</code> through <code>imiss_t</code> are unsatisfying from a human-readability perspective: you can’t tell which political issues correspond to the variables. Unfortunately, we didn’t have additional metadata on these survey questions in the <code>data.frame</code> we imported initially. However, we can rectify this.</p>
 <p>Subvariables have methods similar to those for <a href="variables.html">categories</a>. They have a names attribute that we can get:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">names</span>(<span class="kw">subvariables</span>(ds<span class="op">$</span>imiss))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(<span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss))</span></code></pre></div>
 <pre><code>##  [1] &quot;imiss_b&quot; &quot;imiss_c&quot; &quot;imiss_d&quot; &quot;imiss_f&quot; &quot;imiss_g&quot; &quot;imiss_h&quot; &quot;imiss_j&quot; &quot;imiss_m&quot; &quot;imiss_p&quot; &quot;imiss_q&quot; &quot;imiss_r&quot;
 ## [12] &quot;imiss_s&quot; &quot;imiss_t&quot;</code></pre>
 <p>We can set it, too:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">names</span>(<span class="kw">subvariables</span>(ds<span class="op">$</span>imiss)) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;The economy&quot;</span>, <span class="st">&quot;Immigration&quot;</span>,</span>
-<span id="cb13-2"><a href="#cb13-2"></a>    <span class="st">&quot;The environment&quot;</span>, <span class="st">&quot;Terrorism&quot;</span>, <span class="st">&quot;Gay rights&quot;</span>, <span class="st">&quot;Education&quot;</span>,</span>
-<span id="cb13-3"><a href="#cb13-3"></a>    <span class="st">&quot;Health care&quot;</span>, <span class="st">&quot;Social security&quot;</span>, <span class="st">&quot;The budget deficit&quot;</span>,</span>
-<span id="cb13-4"><a href="#cb13-4"></a>    <span class="st">&quot;The war in Afghanistan&quot;</span>, <span class="st">&quot;Taxes&quot;</span>, <span class="st">&quot;Medicare&quot;</span>, <span class="st">&quot;Abortion&quot;</span>)</span>
-<span id="cb13-5"><a href="#cb13-5"></a><span class="kw">subvariables</span>(ds<span class="op">$</span>imiss)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(<span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;The economy&quot;</span>, <span class="st">&quot;Immigration&quot;</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;The environment&quot;</span>, <span class="st">&quot;Terrorism&quot;</span>, <span class="st">&quot;Gay rights&quot;</span>, <span class="st">&quot;Education&quot;</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Health care&quot;</span>, <span class="st">&quot;Social security&quot;</span>, <span class="st">&quot;The budget deficit&quot;</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;The war in Afghanistan&quot;</span>, <span class="st">&quot;Taxes&quot;</span>, <span class="st">&quot;Medicare&quot;</span>, <span class="st">&quot;Abortion&quot;</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)</span></code></pre></div>
 <pre><code>## Subvariables:
 ##   $`The economy`
 ##   $`Immigration`
@@ -423,9 +225,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##   $`Medicare`
 ##   $`Abortion`</code></pre>
 <p>Another useful thing we can do with array subvariables is reorder them. Let’s alphabetize the subvariables:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>sorting &lt;-<span class="st"> </span><span class="kw">order</span>(<span class="kw">names</span>(<span class="kw">subvariables</span>(ds<span class="op">$</span>imiss)))</span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="kw">subvariables</span>(ds<span class="op">$</span>imiss) &lt;-<span class="st"> </span><span class="kw">subvariables</span>(ds<span class="op">$</span>imiss)[sorting]</span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="kw">subvariables</span>(ds<span class="op">$</span>imiss)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>sorting <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">names</span>(<span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss) <span class="ot">&lt;-</span> <span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)[sorting]</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)</span></code></pre></div>
 <pre><code>## Subvariables:
 ##   $`Abortion`
 ##   $`Education`
@@ -445,7 +247,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Creating multiple response variables</h2>
 <p>Just as we created a categorical array, we can create a multiple response variable. Like categorical arrays, multiple responses contain a set of subvariables, categorical variables with a common list of categories. However, the subvariables in a multiple response are treated as dichotomous indicators. We specify one or more categories that indicate “selected” versus “not selected”. Hence, when a multiple response appears in the web app, it looks like a single categorical variable, each subvariable shown like a category. Unlike a categorical variable, though, the multiple responses are not mutually exclusive, so tabulations with them may not sum to 100 percent.</p>
 <p>In the <em>Economist</em> dataset, we have another set of parallel categorical variables, “boap”, which indicate approval of President Obama on a range of issues.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>ds<span class="op">$</span>boap_<span class="dv">4</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap_4</span></code></pre></div>
 <pre><code>## boap_4 (categorical)
 ## 
 ##                     Count
@@ -456,10 +258,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## Strongly approve       26</code></pre>
 <p>In the questionnaire that collected this data, “boap” appeared as a grid question, just as “imiss” did. But, for illustration purposes—and to show how you can convert between categorical array and multiple response—let’s treat this as multiple response.</p>
 <p>The function <code>makeMR</code> works like <code>makeArray</code> but with an additional argument, “selections”, in which you specify the category name(s) that identify which category or categories should be the dichotomous indicator.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>ds<span class="op">$</span>boap &lt;-<span class="st"> </span><span class="kw">makeMR</span>(ds[<span class="kw">grep</span>(<span class="st">&quot;^boap_[0-9]+&quot;</span>, <span class="kw">names</span>(ds))],</span>
-<span id="cb19-2"><a href="#cb19-2"></a>    <span class="dt">name=</span><span class="st">&quot;Approval of Obama on issues&quot;</span>,</span>
-<span id="cb19-3"><a href="#cb19-3"></a>    <span class="dt">selections=</span><span class="kw">c</span>(<span class="st">&quot;Strongly approve&quot;</span>, <span class="st">&quot;Somewhat approve&quot;</span>))</span>
-<span id="cb19-4"><a href="#cb19-4"></a>ds<span class="op">$</span>boap</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap <span class="ot">&lt;-</span> <span class="fu">makeMR</span>(ds[<span class="fu">grep</span>(<span class="st">&quot;^boap_[0-9]+&quot;</span>, <span class="fu">names</span>(ds))],</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">name=</span><span class="st">&quot;Approval of Obama on issues&quot;</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">selections=</span><span class="fu">c</span>(<span class="st">&quot;Strongly approve&quot;</span>, <span class="st">&quot;Somewhat approve&quot;</span>))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap</span></code></pre></div>
 <pre><code>## Approval of Obama on issues (multiple_response)
 ## Subvariables:
 ##   $`boap_2`
@@ -480,8 +282,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>(un)dichotomize</h2>
 <p>Multiple response variables can be thought of as categorical arrays that have extra metadata indicating which categories are “selected”. This metadata can be manipulated, and we can thus transform categorical arrays into multiple response and vice versa.</p>
 <p>The function <code>undichotomize</code> removes the dichotomization metadata:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>ds<span class="op">$</span>boap &lt;-<span class="st"> </span><span class="kw">undichotomize</span>(ds<span class="op">$</span>boap)</span>
-<span id="cb21-2"><a href="#cb21-2"></a>ds<span class="op">$</span>boap</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap <span class="ot">&lt;-</span> <span class="fu">undichotomize</span>(ds<span class="sc">$</span>boap)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap</span></code></pre></div>
 <pre><code>## Approval of Obama on issues (categorical_array)
 ## Subvariables:
 ##   $`boap_2`
@@ -498,8 +300,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##   $`boap_13`
 ##   $`boap_14`</code></pre>
 <p>We can add that information with <code>dichotomize</code>. Taking our categorical array “boap,” let’s make it into a multiple response, but this time, let’s only include the “Strongly approve” category:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>ds<span class="op">$</span>boap &lt;-<span class="st"> </span><span class="kw">dichotomize</span>(ds<span class="op">$</span>boap, <span class="st">&quot;Strongly approve&quot;</span>)</span>
-<span id="cb23-2"><a href="#cb23-2"></a>ds<span class="op">$</span>boap</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap <span class="ot">&lt;-</span> <span class="fu">dichotomize</span>(ds<span class="sc">$</span>boap, <span class="st">&quot;Strongly approve&quot;</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap</span></code></pre></div>
 <pre><code>## Approval of Obama on issues (multiple_response)
 ## Subvariables:
 ##   $`boap_2`
@@ -519,14 +321,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="splitting-arrays-back-into-categoricals" class="section level2">
 <h2>Splitting arrays back into categoricals</h2>
 <p>As noted above, when we make an array, its subvariables no longer appear in the dataset outside of the array.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">grep</span>(<span class="st">&quot;boap&quot;</span>, <span class="kw">names</span>(ds), <span class="dt">value=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(<span class="st">&quot;boap&quot;</span>, <span class="fu">names</span>(ds), <span class="at">value=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;boap&quot;</code></pre>
 <p>We can access the subvariables and do things with them directly via the <code>subvariables</code> method, but the case may arise in which we want to undo our binding of these subvariables into the array. The function <code>unbind</code> deletes the array variable and restores the subvariables as top-level variables.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">unbind</span>(ds<span class="op">$</span>boap)</span>
-<span id="cb27-2"><a href="#cb27-2"></a>ds &lt;-<span class="st"> </span><span class="kw">refresh</span>(ds)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unbind</span>(ds<span class="sc">$</span>boap)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="fu">refresh</span>(ds)</span></code></pre></div>
 <p>Note the use of <code>refresh</code>. Most functions that modify objects on the server refresh their local copies in our R session automatically; however, because <code>unbind</code> doesn’t assign back into <code>ds</code>, the local dataset object doesn’t get updated with the change, so we need to refresh it manually.</p>
 <p>Now, if we check the names of <code>ds</code>, we see our full set of <code>boap_*</code> former subvariables:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">grep</span>(<span class="st">&quot;boap&quot;</span>, <span class="kw">names</span>(ds), <span class="dt">value=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(<span class="st">&quot;boap&quot;</span>, <span class="fu">names</span>(ds), <span class="at">value=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>##  [1] &quot;boap_2&quot;  &quot;boap_3&quot;  &quot;boap_4&quot;  &quot;boap_5&quot;  &quot;boap_6&quot;  &quot;boap_7&quot;  &quot;boap_8&quot;  &quot;boap_9&quot;  &quot;boap_10&quot; &quot;boap_11&quot; &quot;boap_12&quot;
 ## [12] &quot;boap_13&quot; &quot;boap_14&quot;</code></pre>
 <p><a href="variable-order.html">Next: variable organization</a></p>
