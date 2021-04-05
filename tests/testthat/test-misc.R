@@ -107,6 +107,31 @@ test_that("JSON behavior for NULL (handle jsonlite API change in 0.9.22)", {
     expect_equal(unclass(toJSON(list(x = NULL))), '{"x":null}')
 })
 
+test_that("toJSON sorts when we want", {
+    unsorted <- '{"b":1,"a":2}'
+    sorted <- '{"a":2,"b":1}'
+    expect_equal(
+        unclass(toJSON(list(b = 1, a = 2))),
+        unsorted
+    )
+    expect_equal(
+        unclass(toJSON(list(b = 1, a = 2), for_query_string = TRUE)),
+        unsorted
+    )
+    expect_equal(
+        unclass(with(temp.options(crunch.stabilize.query = TRUE), toJSON(list(b = 1, a = 2)))),
+        unsorted
+    )
+    expect_equal(
+        unclass(with(
+            temp.options(crunch.stabilize.query = TRUE),
+            toJSON(list(b = 1, a = 2), for_query_string = TRUE)
+        )),
+        sorted
+    )
+
+})
+
 test_that("setIfNotAlready", {
     with(temp.options(
         crunch.test.opt1 = "previous",
@@ -273,7 +298,7 @@ test_that("expect_either", {
 })
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("haltIfArray", {
         expect_true(haltIfArray(ds$birthyr))

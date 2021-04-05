@@ -1,14 +1,20 @@
 context("Dataset object and methods")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
-    ds2 <- loadDataset("ECON.sav")
+    ds <- cachedLoadDataset("test ds")
+    ds2 <- cachedLoadDataset("ECON.sav")
     ds3 <- loadDataset("an archived dataset", kind = "archived")
 
     today <- "2016-02-11"
 
     test_that("Dataset can be loaded", {
         expect_true(is.dataset(ds))
+    })
+
+    test_that(
+        "Dataset can be loaded without cache (tests otherwise unused lazy-var-cat code path)", {
+            httpcache::uncached(ds <- loadDataset("test ds"))
+            expect_true(is.dataset(ds))
     })
 
     test_that("CrunchDataset class (re-)init preserves object state", {
@@ -284,7 +290,8 @@ with_mock_crunch({
         })
     })
 
-    test_that("Dataset ncol doesn't make any requests", {
+    test_that("Dataset ncol doesn't make any requests if variables have been forced", {
+        ds <- forceVariableCatalog(ds)
         with(temp.options(httpcache.log = ""), {
             logs <- capture.output(nc <- ncol(ds))
         })

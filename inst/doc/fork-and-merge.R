@@ -11,18 +11,30 @@ login()
 ## ----message=FALSE, results='hide'------------------------------------------------------------------------------------
 ds <- newDataset(SO_survey, "stackoverflow_survey")
 
+## ----forcevarcat1, include=FALSE--------------------------------------------------------------------------------------
+# Force catalog so that catalog is loaded at a consistent time
+ds <- forceVariableCatalog(ds)
+
 ## ----fork dataset-----------------------------------------------------------------------------------------------------
 forked_ds <- forkDataset(ds)
+
+## ----forcevarcat2, include=FALSE--------------------------------------------------------------------------------------
+# Force catalog so that catalog is loaded at a consistent time
+forked_ds <- forceVariableCatalog(forked_ds)
 
 ## ----state change1, include=FALSE-------------------------------------------------------------------------------------
 change_state()
 
 ## ----create Multiple Response Variable--------------------------------------------------------------------------------
-ds$ImportantHiringCA <- makeArray(ds[, c("ImportantHiringTechExp", "ImportantHiringPMExp")],
+forked_ds$ImportantHiringCA <- makeArray(forked_ds[, c("ImportantHiringTechExp", "ImportantHiringPMExp")],
     name = "importantCatArray")
 
+## ----forcevarcat3, include=FALSE--------------------------------------------------------------------------------------
+# Force catalog so that catalog is loaded at a consistent time
+forked_ds <- forceVariableCatalog(forked_ds)
+
 ## ----compare datasets-------------------------------------------------------------------------------------------------
-all(names(ds) %in% names(forked_ds))
+all.equal(names(forked_ds), names(ds))
 
 ## ----state change2, include=FALSE-------------------------------------------------------------------------------------
 change_state()

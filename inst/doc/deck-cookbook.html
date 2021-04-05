@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Crunch Deck Cookbook</title>
+
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Crunch Deck Cookbook</h1>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#basic-deck-and-slide-manipulation">Basic deck and slide manipulation</a>
+<ul>
+<li><a href="#creating-a-slide-on-a-new-deck">Creating a slide on a new deck</a></li>
+<li><a href="#creating-a-slide-on-an-existing-deck">Creating a slide on an existing deck</a></li>
+<li><a href="#editing-an-existing-slide">Editing an existing slide</a></li>
+<li><a href="#deleting-slides-on-a-deck">Deleting slides on a deck</a></li>
+<li><a href="#making-a-deck-public-or-private">Making a deck public (or private)</a></li>
+</ul></li>
+<li><a href="#query-types">Query types</a>
+<ul>
+<li><a href="#univariate-frequencies">Univariate frequencies</a></li>
+<li><a href="#bivariate-frequencies-crosstabs">Bivariate frequencies (crosstabs)</a></li>
+<li><a href="#frequencies-from-a-categorical-array">Frequencies from a Categorical Array</a></li>
+<li><a href="#mean-of-a-numeric-variable">Mean of a Numeric variable</a></li>
+<li><a href="#scorecard-of-aligned-multiple-response-variables">Scorecard of aligned Multiple Response variables</a></li>
+</ul></li>
+<li><a href="#dimension-transforms">Dimension transforms</a>
+<ul>
+<li><a href="#using-a-datasets-palette">Using a dataset’s palette</a></li>
+<li><a href="#using-a-set-of-colors-from-r">Using a set of colors from R</a></li>
+<li><a href="#hiding-a-dimension-item">Hiding a dimension item</a></li>
+</ul></li>
+<li><a href="#display-settings-and-visual-specifications">Display settings and visual specifications</a>
+<ul>
+<li><a href="#choosing-a-graph-type">Choosing a graph type</a></li>
+<li><a href="#using-a-slide-as-a-template">Using a slide as a template</a></li>
+</ul></li>
+<li><a href="#bulk-creation-of-slides">Bulk creation of slides</a>
+<ul>
+<li><a href="#basic-top-line-for-entire-dataset">Basic top line for entire dataset</a></li>
+<li><a href="#slides-for-variables-within-a-particular-folder">Slides for variables within a particular folder</a></li>
+<li><a href="#slides-based-on-variable-type">Slides based on variable type</a></li>
+</ul></li>
+</ul>
+</div>
+
+<p>Decks are a way to save a set of analyses so that you or your team can refer back to them later, export to Excel or PowerPoint, or create a Crunch Dashboard. Each <em>deck</em> is made up of a set of <em>slides</em>, and each <em>slide</em> contains an <em>analysis</em> and optionally a <em>title</em> and <em>subtitle</em>.</p>
+<p>While a good slide generally appears simple to the viewer, a lot depends on getting the analysis exactly right, and so creating them does require setting the analysis’s attributes just right. The attributes of a slide’s analysis are:</p>
+<ul>
+<li><strong>a query</strong>: A set of variables and what calculation to perform (such as a count or mean)</li>
+<li><strong>the query environment</strong>: Modifiers to the data that the query is performed on, like a filter or weight to use.</li>
+<li><strong>dimension transformations</strong>: A dimension is a set of items that the calculation is enumerated along (a table based on a categorical array could have the categories in the “rows” dimension and the subvariables in the “columns” dimension). Dimension transformations are modifications to how those dimensions are displayed, such as reordering, renaming or assigning colors.</li>
+<li><strong>display settings and visual specifications</strong>: There’s a whole other collection of settings such as the type of visualization, number of decimals, and advanced options for how the slide is exported to Excel.</li>
+</ul>
+<p>The recipes in this cookbook all start from the pets example dataset (available from <code>newExampleDataset()</code>).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(purrr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(crunch)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="st">&quot;crunch.show.progress&quot;</span> <span class="ot">=</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">login</span>()</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="fu">newExampleDataset</span>()</span></code></pre></div>
+<div id="basic-deck-and-slide-manipulation" class="section level2">
+<h2>Basic deck and slide manipulation</h2>
+<div id="creating-a-slide-on-a-new-deck" class="section level3">
+<h3>Creating a slide on a new deck</h3>
+<div id="problem" class="section level4">
+<h4>Problem</h4>
+<p>You want to create a new deck and add slides to it.</p>
+</div>
+<div id="solution" class="section level4">
+<h4>Solution</h4>
+<p>A deck is created on a dataset with the command <code>newDeck()</code>. It takes the dataset, a title for the deck, and can take <code>is_public=TRUE</code> if the deck should be made public to other users of the dataset (it defaults to <code>FALSE</code>).</p>
+<p>After the deck is created, the <code>newSlide()</code> function adds a slide.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>deck <span class="ot">&lt;-</span> <span class="fu">newDeck</span>(ds, <span class="st">&quot;Q3 Pets Deck&quot;</span>, <span class="at">is_public =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>private_deck <span class="ot">&lt;-</span> <span class="fu">newDeck</span>(ds, <span class="st">&quot;Private Deck&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># If no `vizType` is specified, defaults to a table</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(deck, <span class="sc">~</span>q1, <span class="at">title =</span> <span class="st">&quot;Table of Favorite Pet&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Example of setting a vizType and filter</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>(ndogs) <span class="sc">~</span> country, </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Dot Plot of Mean Dogs by Country&quot;</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">display_settings =</span> <span class="fu">list</span>(<span class="at">vizType =</span> <span class="st">&quot;dotplot&quot;</span>),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">filter =</span> ds<span class="sc">$</span>q1 <span class="sc">==</span> <span class="st">&quot;Dog&quot;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>deck <span class="ot">&lt;-</span> <span class="fu">refresh</span>(deck)</span></code></pre></div>
+</div>
+</div>
+<div id="creating-a-slide-on-an-existing-deck" class="section level3">
+<h3>Creating a slide on an existing deck</h3>
+<div id="problem-1" class="section level4">
+<h4>Problem</h4>
+<p>You want to add a slide to a deck that has already been made.</p>
+</div>
+<div id="solution-1" class="section level4">
+<h4>Solution</h4>
+<p>The <code>decks()</code> function access the decks catalog for a dataset. You can select one name or position and then add to it.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="fu">refresh</span>(ds)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">decks</span>(ds)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>private_deck <span class="ot">&lt;-</span> <span class="fu">decks</span>(ds)[[<span class="st">&quot;Private Deck&quot;</span>]]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    private_deck, </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>q1, </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Bar Plot of Favorite Pet&quot;</span>, </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">display_settings =</span> <span class="fu">list</span>(<span class="at">vizType =</span> <span class="st">&quot;groupedBarPlot&quot;</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div id="editing-an-existing-slide" class="section level3">
+<h3>Editing an existing slide</h3>
+<div id="problem-2" class="section level4">
+<h4>Problem</h4>
+<p>You want to edit a slide that’s already been created.</p>
+</div>
+<div id="solution-2" class="section level4">
+<h4>Solution</h4>
+<p>Slides can be accessed from the deck’s slide catalog, available from the <code>slides()</code> command. You can retrieve them by their title or position.</p>
+<p>The helper functions <code>title&lt;-</code>, <code>subtitle&lt;-</code>, <code>query&lt;-</code>, <code>weight&lt;-</code>, <code>filter&lt;-</code>, <code>transforms&lt;-</code>, <code>displaySettings&lt;-</code> and <code>vizSpecs&lt;-</code> help set options on a slide.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Move title to subtitle and change the title</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">slides</span>(deck)[[<span class="st">&quot;Table of Favorite Pet&quot;</span>]]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">subtitle</span>(slide) <span class="ot">&lt;-</span> <span class="fu">title</span>(slide)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(slide) <span class="ot">&lt;-</span> <span class="st">&quot;Cats are the most popular&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename a category</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">slides</span>(deck)[[<span class="dv">2</span>]]</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">transforms</span>(slide) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">rows_dimension =</span> <span class="fu">makeDimTransform</span>(<span class="at">rename =</span> <span class="fu">c</span>(<span class="st">&quot;AUS&quot;</span> <span class="ot">=</span> <span class="st">&quot;Australia&quot;</span>))</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div id="deleting-slides-on-a-deck" class="section level3">
+<h3>Deleting slides on a deck</h3>
+<div id="problem-3" class="section level4">
+<h4>Problem</h4>
+<p>You want to delete a slide from a deck.</p>
+</div>
+<div id="solution-3" class="section level4">
+<h4>Solution</h4>
+<p>Access a slide from the slide catalog and then use the <code>delete()</code> command to delete it (it will ask before deleting unless you use command <code>with_consent()</code>).</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">slides</span>(deck)[[<span class="dv">1</span>]]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="cn">FALSE</span>) { <span class="co"># Not actually run for example</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">delete</span>(slide)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+</div>
+<div id="making-a-deck-public-or-private" class="section level3">
+<h3>Making a deck public (or private)</h3>
+<div id="problem-4" class="section level4">
+<h4>Problem</h4>
+<p>You want to change a deck from being private to public (or vice-versa).</p>
+</div>
+<div id="solution-4" class="section level4">
+<h4>Solution</h4>
+<p>The <code>is.public&lt;-</code> function can set the deck’s status.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.public</span>(private_deck) <span class="ot">&lt;-</span> <span class="cn">TRUE</span> <span class="co"># now public</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="query-types" class="section level2">
+<h2>Query types</h2>
+<p>Queries define the variables and summary measures used for the slide’s analysis. They use the formula notation used by the crunch function <code>crtabs()</code> which is based on base R’s <code>xtabs()</code>.</p>
+<div id="univariate-frequencies" class="section level3">
+<h3>Univariate frequencies</h3>
+<div id="problem-5" class="section level4">
+<h4>Problem</h4>
+<p>You want to get the frequencies of a single categorical or multiple response variable.</p>
+</div>
+<div id="solution-5" class="section level4">
+<h4>Solution</h4>
+<p>The query for a univariate count query puts the variable on the right hand side of a formula (for example <code>~var</code>).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>q1, </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Univariate frequency: Favorite Pet&quot;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div id="bivariate-frequencies-crosstabs" class="section level3">
+<h3>Bivariate frequencies (crosstabs)</h3>
+<div id="problem-6" class="section level4">
+<h4>Problem</h4>
+<p>You want to get a crosstab (or a frequency from two variables’ joint distribution)</p>
+</div>
+<div id="solution-6" class="section level4">
+<h4>Solution</h4>
+<p>The query for a multivariate frequency uses the <code>+</code> to separate the variables on the right hand side of the formula (for example <code>~var1 + var2</code>).</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>q1 <span class="sc">+</span> country, </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Bivariate frequency: Favorite Pet by country&quot;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># A third dimension is possible, which will usually result in a tabbed result:</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>q1 <span class="sc">+</span> country <span class="sc">+</span> wave, </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Trivariate frequency: Favorite Pet by country by wave&quot;</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div id="frequencies-from-a-categorical-array" class="section level3">
+<h3>Frequencies from a Categorical Array</h3>
+<div id="problem-7" class="section level4">
+<h4>Problem</h4>
+<p>You want to get the frequencies from a categorical array variable</p>
+</div>
+<div id="solution-7" class="section level4">
+<h4>Solution</h4>
+<p>A categorical array contributes two dimensions to the analysis, a “categories” dimension and a “subvariables” dimension. If your query just specifies the variable, by default the categories dimension is used first and the categories second, but you can specify the order by using <code>categories()</code> and <code>subvaribles()</code> functions in your query.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>allpets, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Categorical array: default order&quot;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span><span class="fu">categories</span>(allpets) <span class="sc">+</span> <span class="fu">subvariables</span>(allpets), </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Categorical array: categories on rows dimension&quot;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div id="mean-of-a-numeric-variable" class="section level3">
+<h3>Mean of a Numeric variable</h3>
+<div id="problem-8" class="section level4">
+<h4>Problem</h4>
+<p>You want to get the mean from a Numeric (Numeric Array) variable</p>
+</div>
+<div id="solution-8" class="section level4">
+<h4>Solution</h4>
+<p>A numeric summary measure like a mean goes on the left hand side of the formula in a query. The right hand side cannot be empty, but to get the mean of the whole dataset put <code>1</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>(ndogs) <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Mean Number of Dogs&quot;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>(ndogs) <span class="sc">~</span> country,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Mean Number of Dogs by Country&quot;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div id="scorecard-of-aligned-multiple-response-variables" class="section level3">
+<h3>Scorecard of aligned Multiple Response variables</h3>
+<div id="problem-9" class="section level4">
+<h4>Problem</h4>
+<p>You want to make comparisons of frequencies of a set of Multiple Response variables with the same items (response)</p>
+</div>
+<div id="solution-9" class="section level4">
+<h4>Solution</h4>
+<p>A scorecard is a rectangular grid of different Multiple Response variables with their items aligned. The query for a scorecard can be created using the <code>scorecard()</code> function.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># There&#39;s only one MR available on this dataset, so we repeat the same one twice to illustrate</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span><span class="fu">scorecard</span>(allpets, allpets), </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Scorecard&quot;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="dimension-transforms" class="section level2">
+<h2>Dimension transforms</h2>
+<p>Query results have “dimensions”, which are enumerated sets that the calculation’s results are formed in, such as the categories of a categorical variables or the items in a multiple response variables. Their behavior in the slide can be customized using dimension transforms.</p>
+<p>A query result generally has up to three dimensions. The first is the “rows_dimension”, second is the “columns” dimension and third is the “tabs_dimension”. When using the <code>transform</code> argument of <code>newSlide()</code> or setting the <code>transforms&lt;-</code> of a slide directly, you form a named list with these dimensions as the names. The helper function <code>makeDimTransform()</code> can also help create the dimension changes.</p>
+<div id="using-a-datasets-palette" class="section level3">
+<h3>Using a dataset’s palette</h3>
+<div id="problem-10" class="section level4">
+<h4>Problem</h4>
+<p>You want to make the colors of a dashboard tile use a pre-defined palette.</p>
+</div>
+<div id="solution-10" class="section level4">
+<h4>Solution</h4>
+<p>Each Crunch Dataset has a set of color palettes associated with it’s account and folder. You can access the palettes using the <code>palettes()</code> or <code>defaultPalette()</code> functions. Then using the <code>makeDimTransform()</code> function you can use this palette. The colors are used in the order they appear and if more colors are needed than provided by the palette, the default colors are used.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>q1, </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Favorite pet using default palette&quot;</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">display_settings =</span> <span class="fu">list</span>(<span class="at">vizType =</span> <span class="st">&quot;groupedBarPlot&quot;</span>),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">transform =</span> <span class="fu">list</span>(</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">rows_dimension =</span> <span class="fu">makeDimTransform</span>(<span class="at">colors =</span> <span class="fu">defaultPalette</span>(ds))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>graph_pal <span class="ot">&lt;-</span> <span class="fu">palettes</span>(ds)[[<span class="st">&quot;purple palette&quot;</span>]]</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span><span class="fu">categories</span>(petloc) <span class="sc">+</span> <span class="fu">subvariables</span>(petloc), </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Pets by location using another palette&quot;</span>,</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">display_settings =</span> <span class="fu">list</span>(<span class="at">vizType =</span> <span class="st">&quot;horizontalBarPlot&quot;</span>),</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">transform =</span> <span class="fu">list</span>(</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">rows_dimension =</span> <span class="fu">makeDimTransform</span>(<span class="at">colors =</span> graph_pal)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div id="using-a-set-of-colors-from-r" class="section level3">
+<h3>Using a set of colors from R</h3>
+<div id="problem-11" class="section level4">
+<h4>Problem</h4>
+<p>You want to make the colors of a dashboard tile use a set of colors you specify in the script</p>
+</div>
+<div id="solution-11" class="section level4">
+<h4>Solution</h4>
+<p>If you want to specify the colors manually, you can also use a character vector of RGB hex codes.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>q1, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Favorite pet using colors from R&quot;</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">display_settings =</span> <span class="fu">list</span>(<span class="at">vizType =</span> <span class="st">&quot;groupedBarPlot&quot;</span>),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">transform =</span> <span class="fu">list</span>(</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">rows_dimension =</span> <span class="fu">makeDimTransform</span>(<span class="at">colors =</span> <span class="fu">c</span>(<span class="st">&quot;#af8dc3&quot;</span>, <span class="st">&quot;#f7f7f7&quot;</span>, <span class="st">&quot;#7fbf7b&quot;</span>))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div id="hiding-a-dimension-item" class="section level3">
+<h3>Hiding a dimension item</h3>
+<div id="problem-12" class="section level4">
+<h4>Problem</h4>
+<p>You want to hide a dimension item (a category or subvariable) from the slide.</p>
+</div>
+<div id="solution-12" class="section level4">
+<h4>Solution</h4>
+<p>The <code>hide</code> argument of <code>makeDimTransform()</code> takes a category name or id, if the dimension is made from categories, or a subvariable name or alias if the dimension is made from subvariables (as in a Multiple Response variable or a subvariables dimension of a Categorical Array or Numeric Array).</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>q1, </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Favorite pet excluding birds&quot;</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">display_settings =</span> <span class="fu">list</span>(<span class="at">vizType =</span> <span class="st">&quot;groupedBarPlot&quot;</span>),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">transform =</span> <span class="fu">list</span>(</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">rows_dimension =</span> <span class="fu">makeDimTransform</span>(<span class="at">hide =</span> <span class="st">&quot;Bird&quot;</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="display-settings-and-visual-specifications" class="section level2">
+<h2>Display settings and visual specifications</h2>
+<div id="choosing-a-graph-type" class="section level3">
+<h3>Choosing a graph type</h3>
+<div id="problem-13" class="section level4">
+<h4>Problem</h4>
+<p>You want to create a slide with a display type other than table.</p>
+</div>
+<div id="solution-13" class="section level4">
+<h4>Solution</h4>
+<p>The default display of a tile is the table, but the <code>vizType</code> display setting chooses between other options. The most commonly used <code>vizType</code>s are: - <code>table</code> (always available) - <code>groupedBarPlot</code>, <code>stackedBarPlot</code>, <code>horizontalBarPlot</code>, <code>horizontalStackedBarPlot</code> (available for queries based on a count in any number of dimensions) - <code>timeplot</code> (available when the second dimension has a time component) - <code>dotplot</code> (available for displays of means) - <code>donut</code> (available only for 1 dimensional count queries)</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>q1 <span class="sc">+</span> country, </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Favorite pet by country horizontal bar plot&quot;</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">display_settings =</span> <span class="fu">list</span>(<span class="at">vizType =</span> <span class="st">&quot;horizontalBarPlot&quot;</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>q1 <span class="sc">+</span> wave, </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Favorite pet over time timeplot&quot;</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">display_settings =</span> <span class="fu">list</span>(<span class="at">vizType =</span> <span class="st">&quot;timeplot&quot;</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div id="using-a-slide-as-a-template" class="section level3">
+<h3>Using a slide as a template</h3>
+<div id="problem-14" class="section level4">
+<h4>Problem</h4>
+<p>You want to use the settings from an existing slide to create a new one (or modify an existing one).</p>
+</div>
+<div id="solution-14" class="section level4">
+<h4>Solution</h4>
+<p>The functions <code>displaySettings()</code> and <code>vizSpecs()</code> give access to the settings on an existing slide. This slide can be a slide you’ve created from R or from the web app, so that you can use the visual editor to perfect the look for one slide and then use it for a whole set of slides. You can either set the attributes directly, or use <code>dput()</code> to print out the object in a way that you can copy and paste into your code.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>template_deck <span class="ot">&lt;-</span> <span class="fu">newDeck</span>(ds, <span class="st">&quot;Templates&quot;</span>, <span class="at">is_public =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    template_deck, </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>q1, </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Donut with value labels&quot;</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">display_settings =</span> <span class="fu">list</span>(<span class="at">vizType =</span> <span class="st">&quot;donut&quot;</span>, <span class="at">showValueLabels =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">viz_specs =</span> <span class="fu">list</span>(</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">default =</span> <span class="fu">list</span>(</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">format =</span> <span class="fu">list</span>(</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">decimal_places =</span> <span class="fu">list</span>(<span class="at">percentages =</span> 0L, <span class="at">other =</span> 2L),</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">show_empty =</span> <span class="cn">FALSE</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting the slide `display_setting` and `viz_specs` directly:</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newSlide</span>(</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    deck, </span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>country,</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Country donut with value labels&quot;</span>,</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">display_settings =</span> <span class="fu">displaySettings</span>(template_deck[[<span class="st">&quot;Donut with value labels&quot;</span>]]),</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">viz_specs =</span> <span class="fu">vizSpecs</span>(template_deck[[<span class="st">&quot;Donut with value labels&quot;</span>]])</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="co"># How to print out the structure in a format that can be copy and pasted into your code</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">dput</span>(<span class="fu">displaySettings</span>(template_deck[[<span class="st">&quot;Donut with value labels&quot;</span>]])))</span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="bulk-creation-of-slides" class="section level2">
+<h2>Bulk creation of slides</h2>
+<p>Sometimes you want to make many slides with related formatting to create a document that gives a good high level overview of a dataset. The [<code>tabBook()</code>] function is designed to create a basic “top line” report of simple crosstabs from a multitable, and is probably the first thing you should check if you’re thinking of making bulk analyses. However, <code>tabBook()</code> does not allow for all of the customization possible in a slide.</p>
+<p>The trickiest part of bulk creating slides from R is iterating over the variables. The general behind all of these cookbook recipes is to get a list of variable aliases, iterate over them using them to get other variable metadata. The trickiest part is to create a query formula from a string, but the <code>as.formula()</code> function helps with this. This cookbook uses base R functions <code>lapply()</code> and <code>paste0()</code>, but the “tidyverse” functions <code>purrr::walk()</code> and <code>glue::glue()</code> are well-suited to this task.</p>
+<div id="basic-top-line-for-entire-dataset" class="section level3">
+<h3>Basic top line for entire dataset</h3>
+<div id="problem-15" class="section level4">
+<h4>Problem</h4>
+<p>You want to create a simple report for every variable in a dataset.</p>
+</div>
+<div id="solution-15" class="section level4">
+<h4>Solution</h4>
+<p>Use the <code>variables()</code> function to get the variables from a dataset, and the <code>aliases()</code> function to get their aliases. Then use <code>lapply()</code> to iterate over the variable aliases and construct the slide using <code>paste0()</code> and <code>as.formula()</code>.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>deck <span class="ot">&lt;-</span> <span class="fu">newDeck</span>(ds, <span class="st">&quot;Full Dataset Topline Deck&quot;</span>, <span class="at">is_public =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>var_aliases <span class="ot">&lt;-</span> <span class="fu">aliases</span>(<span class="fu">variables</span>(ds))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>slides <span class="ot">&lt;-</span> <span class="fu">lapply</span>(var_aliases, <span class="cf">function</span>(alias) {</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    slide_query <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">&quot;~&quot;</span>, alias))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    slide_title <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Topline - &quot;</span>, <span class="fu">name</span>(ds[[alias]]))</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">newSlide</span>(deck, slide_query, <span class="at">title =</span> slide_title)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+</div>
+</div>
+<div id="slides-for-variables-within-a-particular-folder" class="section level3">
+<h3>Slides for variables within a particular folder</h3>
+<div id="problem-16" class="section level4">
+<h4>Problem</h4>
+<p>You want to create a simple report for every variable in a particular folder.</p>
+</div>
+<div id="solution-16" class="section level4">
+<h4>Solution</h4>
+<p>The <code>variables()</code> function can also work on a folder, so we can make a deck from variables in a folder in a similar way to making one for a whole dataset.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>deck <span class="ot">&lt;-</span> <span class="fu">newDeck</span>(ds, <span class="st">&quot;Folder Topline Deck&quot;</span>, <span class="at">is_public =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>folder <span class="ot">&lt;-</span> <span class="fu">cd</span>(ds, <span class="st">&quot;Key Pet Indicators&quot;</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>var_aliases <span class="ot">&lt;-</span> <span class="fu">aliases</span>(<span class="fu">variables</span>(folder))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>slides <span class="ot">&lt;-</span> <span class="fu">lapply</span>(var_aliases, <span class="cf">function</span>(alias) {</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    slide_query <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">&quot;~&quot;</span>, alias))</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    slide_title <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Topline - &quot;</span>, <span class="fu">name</span>(ds[[alias]]))</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">newSlide</span>(deck, slide_query, <span class="at">title =</span> slide_title)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+</div>
+<div id="problem-17" class="section level4">
+<h4>Problem</h4>
+<p>You want to create crosstabs for many variables across a set of variables.</p>
+</div>
+<div id="solution-17" class="section level4">
+<h4>Solution</h4>
+<p>You can use <code>lapply()</code> to iterate over both the row and column variables of the crosstab.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>deck <span class="ot">&lt;-</span> <span class="fu">newDeck</span>(ds, <span class="st">&quot;Crosstabs Deck&quot;</span>, <span class="at">is_public =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>demo_vars <span class="ot">&lt;-</span> <span class="fu">aliases</span>(<span class="fu">variables</span>(<span class="fu">cd</span>(ds, <span class="st">&quot;Dimensions&quot;</span>)))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>var_aliases <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(<span class="fu">aliases</span>(<span class="fu">variables</span>(ds)), demo_vars) <span class="co"># don&#39;t cross demo vars with themselves</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>slides <span class="ot">&lt;-</span> <span class="fu">lapply</span>(var_aliases, <span class="cf">function</span>(alias) {</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add a slide before crosstabs of the univariate frequency</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    all_query <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">&quot;~&quot;</span>, alias))</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    all_title <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Frequency - &quot;</span>, <span class="fu">name</span>(ds[[alias]]))</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">newSlide</span>(deck, all_query, <span class="at">title =</span> all_title)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lapply</span>(demo_vars, <span class="cf">function</span>(demo_alias) {</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>        crosstab_query <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">&quot;~&quot;</span>, demo_alias, <span class="st">&quot; + &quot;</span>, alias))</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>        crosstab_title <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;Crosstab - &quot;</span>, <span class="fu">name</span>(ds[[alias]]), <span class="st">&quot; by &quot;</span>, <span class="fu">name</span>(ds[[demo_alias]]))</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">newSlide</span>(deck, crosstab_query, <span class="at">title =</span> crosstab_title)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+</div>
+</div>
+<div id="slides-based-on-variable-type" class="section level3">
+<h3>Slides based on variable type</h3>
+<div id="problem-18" class="section level4">
+<h4>Problem</h4>
+<p>You want to create a report with slides that vary based on the variable’s type.</p>
+</div>
+<div id="solution-18" class="section level4">
+<h4>Solution</h4>
+<p>You can create functions that create slides for a particular variable type and then choose which function to use based on the variable’s type while iterating.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>cat_slide <span class="ot">&lt;-</span> <span class="cf">function</span>(alias, ds, deck) {</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    slide_query <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">&quot;~&quot;</span>, alias))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    slide_title <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">name</span>(ds[[alias]]))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">newSlide</span>(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>        deck, </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>        slide_query,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> slide_title,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">display_settings =</span> <span class="fu">list</span>(<span class="at">vizType =</span> <span class="st">&quot;donut&quot;</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>mr_slide <span class="ot">&lt;-</span> <span class="cf">function</span>(alias, ds, deck) {</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    slide_query <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">&quot;~&quot;</span>, alias))</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    slide_title <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">name</span>(ds[[alias]]))</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">newSlide</span>(</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        deck, </span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>        slide_query,</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> slide_title,</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">display_settings =</span> <span class="fu">list</span>(<span class="at">vizType =</span> <span class="st">&quot;groupedBarPlot&quot;</span>)</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>numeric_slide <span class="ot">&lt;-</span> <span class="cf">function</span>(alias, ds, deck) {</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>    slide_query <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">&quot;mean(&quot;</span>, alias, <span class="st">&quot;) ~ wave&quot;</span>))</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>    slide_title <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">name</span>(ds[[alias]]), <span class="st">&quot; over time&quot;</span>)</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">newSlide</span>(</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>        deck, </span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>        slide_query,</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> slide_title,</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">display_settings =</span> <span class="fu">list</span>(<span class="at">vizType =</span> <span class="st">&quot;timeplot&quot;</span>)</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>deck <span class="ot">&lt;-</span> <span class="fu">newDeck</span>(ds, <span class="st">&quot;Slides Customized by Variable Type&quot;</span>, <span class="at">is_public =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>var_aliases <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;q1&quot;</span>, <span class="st">&quot;allpets&quot;</span>, <span class="st">&quot;ndogs&quot;</span>)</span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>slides <span class="ot">&lt;-</span> <span class="fu">lapply</span>(var_aliases, <span class="cf">function</span>(alias) {</span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span>(</span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>        <span class="fu">type</span>(ds[[alias]]),</span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;categorical&quot;</span> <span class="ot">=</span> <span class="fu">cat_slide</span>(alias, ds, deck),</span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;multiple_response&quot;</span> <span class="ot">=</span> <span class="fu">mr_slide</span>(alias, ds, deck),</span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;numeric&quot;</span> <span class="ot">=</span> <span class="fu">numeric_slide</span>(alias, ds, deck),</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

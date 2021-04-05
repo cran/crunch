@@ -142,11 +142,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>forked_ds <span class="ot">&lt;-</span> <span class="fu">forkDataset</span>(ds)</span></code></pre></div>
 <p>You now have a copied dataset which is identical to the original, and are free to make changes without fear of disrupting the client’s experience. You can add or remove variables, delete records, or change the dataset’s organization. These changes will be isolated to your fork and won’t be visible to the end user until you decide to merge the fork back into the original dataset. This lets you edit the dataset with confidence because your work is isolated.</p>
 <p>In this case, let’s create a new categorical array variable.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>ImportantHiringCA <span class="ot">&lt;-</span> <span class="fu">makeArray</span>(ds[, <span class="fu">c</span>(<span class="st">&quot;ImportantHiringTechExp&quot;</span>, <span class="st">&quot;ImportantHiringPMExp&quot;</span>)],</span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>forked_ds<span class="sc">$</span>ImportantHiringCA <span class="ot">&lt;-</span> <span class="fu">makeArray</span>(forked_ds[, <span class="fu">c</span>(<span class="st">&quot;ImportantHiringTechExp&quot;</span>, <span class="st">&quot;ImportantHiringPMExp&quot;</span>)],</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;importantCatArray&quot;</span>)</span></code></pre></div>
 <p>Our forked dataset has diverged from the original dataset. Which we can see by comparing their names.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(<span class="fu">names</span>(ds) <span class="sc">%in%</span> <span class="fu">names</span>(forked_ds))</span></code></pre></div>
-<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">names</span>(forked_ds), <span class="fu">names</span>(ds))</span></code></pre></div>
+<pre><code>## [1] &quot;Lengths (22, 23) differ (string compare on first 22)&quot; &quot;14 string mismatches&quot;</code></pre>
 <p>You can work with the forked dataset as long as you like, if you want to see it in the web App or share it with other analysts by you can do so by calling <code>webApp(forked_ds)</code>. You might create many forks and discard most of them without merging them into the original dataset.</p>
 <p>If you do end up with changes to the forked dataset that you want to include in the original dataset you can do so with the <code>mergeFork()</code> function. This function figures out what changes you made the fork, and then applies those changes to the original dataset.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="fu">mergeFork</span>(ds, forked_ds)</span></code></pre></div>
@@ -196,16 +196,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="sc">~</span> TabsSpaces <span class="sc">+</span> HouseholdSize, ds_fork)</span></code></pre></div>
 <pre><code>##           HouseholdSize
 ## TabsSpaces   1   2   3   4   5
-##     Both   124 142  98 116 106
-##     Spaces 244 246 252 240 280
-##     Tabs   280 278 244 290 304</code></pre>
+##     Both   128 120 106 132 100
+##     Spaces 264 260 248 220 270
+##     Tabs   310 256 294 284 252</code></pre>
 <p>And finally once we’re comfortable that everything went as expected we can send the data to the client by merging the fork back to the original dataset.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="fu">mergeFork</span>(ds, ds_fork)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>HouseholdSize</span></code></pre></div>
 <pre><code>## HouseholdSize (numeric)
 ## 
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   1.000   2.000   3.000   3.018   4.000   5.000</code></pre>
+##   1.000   2.000   3.000   2.948   4.000   5.000</code></pre>
 </div>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>

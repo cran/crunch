@@ -102,7 +102,7 @@ handleAPIsuccess <- function(code, response) {
             progress_url <- handleShoji(content(response))
             ## Quick validation
             if (is.character(progress_url) && length(progress_url) == 1) {
-                tryCatch(pollProgress(progress_url),
+                tryCatch(pollProgress(progress_url, getOption("crunch.poll.wait", 0.5)),
                          error = function(e) {
                              ## Handle the error here so we can message the
                              ## Location header, if present
@@ -271,7 +271,16 @@ rootURL <- function(x, obj = getAPIRoot()) {
     }
 }
 
-retry <- function(expr, wait = .1, max.tries = 10) {
+#' Retry
+#'
+#' Retry an expression. This is useful for situations where a web resource is not yet available.
+#' You can set \code{options("crunch_retry_wait" = X)} some number larger than the default 0.1 in
+#' your script if you are working with large exports.
+#'
+#' @param expr An expression
+#' @param wait The time in seconds to wait before retrying the expression. Defaults to 0.1.
+#' @param max.tries The number of times to retry the expression
+retry <- function(expr, wait = getOption("crunch_retry_wait", default = 0.1), max.tries = 10) {
     ## Retry (e.g. a request)
     e <- substitute(expr)
     tries <- 0

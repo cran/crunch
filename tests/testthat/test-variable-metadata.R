@@ -1,7 +1,7 @@
 context("All variable metadata")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
     vm <- variableMetadata(ds)
     genders <- categories(ds$gender)
     test_that("variableMetadata exists, is a catalog", {
@@ -19,6 +19,8 @@ with_mock_crunch({
     })
 })
 
+# It does make internet request because variables catalog is lazy, unless we force it
+ds <- forceVariableCatalog(ds)
 httpcache::clearCache()
 without_internet({
     test_that("Getting categories and subvariables from variableMetadata doesn't make a request", {

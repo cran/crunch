@@ -129,6 +129,8 @@ with_mock_crunch({
     test_that("cube methods for crunch decks", {
         cube <- cube(main_deck[[1]])
         expect_is(cube, "CrunchCube")
+        expect_is(cube(main_deck[[2]]), "CrunchCube")
+        expect_is(cube(main_deck[[4]]), "CrunchCube")
         cube_list <- cubes(main_deck)
         expect_is(cube_list, "list")
         expect_identical(cube, cube_list[[1]])
@@ -197,7 +199,8 @@ with_mock_crunch({
             '"populationMagnitude":{"value":3},',
             '"showSignif":{"value":true},',
             '"currentTab":{"value":0},',
-            '"uiView":{"value":"app.datasets.browse"}}}]}}'
+            '"uiView":{"value":"app.datasets.browse"}},',
+            '"viz_specs":{"default":{"format":{"show_empty":true}}}}]}}'
         )
     })
     test_that("delete decks", {
@@ -237,14 +240,17 @@ with_mock_crunch({
 
     test_that("New Slide", {
         expect_POST(
-            newSlide(main_deck, ~birthyr, title = "Title", subtitle = "SubTitle"),
+            newSlide(
+                main_deck, ~birthyr, title = "Title", subtitle = "SubTitle",
+                weight = ds$birthyr, filter = filters(ds)[["Occasional Political Interest"]]),
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
             '{"element":"shoji:entity",',
             '"body":{"title":"Title",',
             '"subtitle":"SubTitle",',
             '"analyses":[{"query":{"dimensions":[{"variable":"https://app.',
             'crunch.io/api/datasets/4/variables/birthyr/"}],',
-            '"measures":{"count":{"function":"cube_count","args":[]}}},',
+            '"measures":{"count":{"function":"cube_count","args":[]}},',
+            '"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"},',
             '"display_settings":{"percentageDirection":{"value":"colPct"},',
             '"showEmpty":{"value":false},',
             '"showMean":{"value":false},',
@@ -252,7 +258,9 @@ with_mock_crunch({
             '"countsOrPercents":{"value":"percent"},',
             '"decimalPlaces":{"value":1},',
             '"showSignif":{"value":true},',
-            '"currentTab":{"value":0}}}]}}'
+            '"currentTab":{"value":0}},"query_environment":{',
+            '"filter":[{"filter":"https://app.crunch.io/api/datasets/4/filters/filter1/"}],',
+            '"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}}]}}'
         )
     })
 
@@ -286,6 +294,34 @@ with_mock_crunch({
             newSlide(main_deck, NULL),
             "Must specify either a `query` or `analyses` for `newSlide()`",
             fixed = TRUE
+        )
+    })
+
+    test_that("New Slide - with manual transforms", {
+        expect_POST(
+            newSlide(
+                main_deck, ~gender, title = "Title", subtitle = "SubTitle",
+                transform = list(
+                    rows_dimension = list(elements = list(`1` = list("hide" = TRUE))),
+                    version = "1.0"
+                )
+            ),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/",
+            '{"element":"shoji:entity",',
+            '"body":{"title":"Title",',
+            '"subtitle":"SubTitle",',
+            '"analyses":[{"query":{"dimensions":[{"variable":"https://app.',
+            'crunch.io/api/datasets/4/variables/gender/"}],',
+            '"measures":{"count":{"function":"cube_count","args":[]}}},',
+            '"display_settings":{"percentageDirection":{"value":"colPct"},',
+            '"showEmpty":{"value":false},',
+            '"showMean":{"value":false},',
+            '"vizType":{"value":"table"},',
+            '"countsOrPercents":{"value":"percent"},',
+            '"decimalPlaces":{"value":1},',
+            '"showSignif":{"value":true},',
+            '"currentTab":{"value":0}},"transform":{',
+            '"rows_dimension":{"elements":{"1":{"hide":true}}},"version":"1.0"}}]}}'
         )
     })
 
@@ -430,7 +466,7 @@ with_mock_crunch({
         expect_is(filter(main_deck[[3]]), "CrunchExpr")
         expect_prints(
             filter(main_deck[[3]]),
-            'Crunch expression: gender %in% "Male"'
+            'Crunch logical expression: gender %in% "Male"'
         )
         # filter() on slide and analysis are identical (a shortcut when there is
         # one analysis)
@@ -438,16 +474,20 @@ with_mock_crunch({
     })
 
     test_that("filter<-something for slides (and analyses)", {
-        # though CrunchLogicalExpr could be made into filters, the expression in
-        # query_environment is a bespoke shape unlike any other expression.
-        # This can be enabled once the specialness here is removed on the server.
-        expect_error(
+        # Ad-hoc expressions
+        expect_PATCH(
             filter(decks(ds)[[2]][[3]]) <- ds$birthyr > 1990,
-            "Setting adhoc filters on decks is unsupported"
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[{"function":">","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"},{"value":1990}]}],',
+            '"weight":null}}'
         )
-        expect_error(
+        expect_PATCH(
             filter(analysis(decks(ds)[[2]][[3]])) <- ds$birthyr > 1990,
-            "Setting adhoc filters on decks is unsupported"
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
+            '{"query_environment":{"filter":[{"function":">","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"},{"value":1990}]}],',
+            '"weight":null}}'
         )
 
         # named filters (through a CrunchDeck object)
@@ -570,25 +610,34 @@ with_mock_crunch({
     })
 
     test_that("weight<-NULL for slides (and analyses)", {
+        request_string <- paste0(
+            '{"query_environment":{"filter":[],"weight":null},"query":{"measures":{"count":',
+            '{"function":"cube_count","args":[]}},"dimensions":[{"each":',
+            '"https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"},', #nolint
+            '{"function":"as_selected","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"}]},', #nolint
+            '{"function":"bin","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/4/variables/0127c71ba3094ea4a12ca5823050991c/"}]}]}}' #nolint
+        )
         expect_PATCH(
             weight(decks(ds)[[2]][[4]]) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
-            '{"query_environment":{"filter":[],"weight":null}}'
+            request_string
         )
         expect_PATCH(
             weight(analysis(decks(ds)[[2]][[4]])) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
-            '{"query_environment":{"filter":[],"weight":null}}'
+            request_string
         )
         expect_PATCH(
             weight(main_deck[[4]]) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
-            '{"query_environment":{"filter":[],"weight":null}}'
+            request_string
         )
         expect_PATCH(
             weight(analysis(main_deck[[4]])) <- NULL,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e9/analyses/52fc/",
-            '{"query_environment":{"filter":[],"weight":null}}'
+            request_string
         )
     })
 
@@ -598,9 +647,16 @@ with_mock_crunch({
             weight(decks(ds)[[2]][[3]]) <- ds$birthyr,
             "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/72e8/analyses/52fb/",
             '{"query_environment":{"filter":[{"function":"in","args":[{"variable":"gender",',
-            '"dataset":"1"},{"column":[1],"type":{"function":"typeof","args":[{"variable":',
-            '"gender","dataset":"1"}]}}],"name":"Adhoc filter"}],"weight":',
-            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"}}'
+            '"dataset":"1"},{"column":[1],"type":{"function":"typeof","args":[{"variable":"',
+            'gender","dataset":"1"}]}}],"name":"Adhoc filter"}],"weight":',
+            '"https://app.crunch.io/api/datasets/4/variables/birthyr/"},"query":{"measures":{',
+            '"count":{"function":"cube_count","args":[]}},"dimensions":[{"each":',
+            '"https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"},',
+            '{"function":"as_selected","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/4/variables/4c51593ab88e4c5e97a99c87e53784d0/"',
+            '}]},{"function":"bin","args":[{"variable":',
+            '"https://app.crunch.io/api/datasets/4/variables/0127c71ba3094ea4a12ca5823050991c/"}]}',
+            '],"weight":"https://app.crunch.io/api/datasets/4/variables/birthyr/"}}'
         )
         # Can add a filter when weight exists
         expect_PATCH(
@@ -666,7 +722,8 @@ with_mock_crunch({
             '"showSignif":{"value":true},',
             '"currentTab":{"value":0},',
             '"uiView":{"value":"app.datasets.browse"}},',
-            '"query_environment":{"filter":[],"weight":null}}}'
+            '"query_environment":{"filter":[],"weight":null},',
+            '"viz_specs":{"default":{"format":{"show_empty":true}}}}}'
         )
         expect_POST(
             slide[[2]] <- slide[[1]],
@@ -775,6 +832,44 @@ with_mock_crunch({
         )
     })
 
+    test_that("analysis viz_specs", {
+        analysis <- an_cat[[1]]
+        expect_equal(
+            vizSpecs(analysis),
+            list(default = list(format = list(show_empty = TRUE)))
+        )
+        expect_PATCH(
+            vizSpecs(analysis) <- list(default = list(format = list(show_empty = FALSE))),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity","body":{"viz_specs"',
+            ':{"default":{"format":{"show_empty":false}}}}}'
+        )
+
+        # and the same thing works with the convenience of specifying the slide
+        expect_identical(
+            vizSpecs(slide),
+            list(default = list(format = list(show_empty = TRUE)))
+        )
+        expect_PATCH(
+            vizSpecs(slide) <- list(default = list(format = list(show_empty = FALSE))),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity","body":{"viz_specs":',
+            '{"default":{"format":{"show_empty":false}}}}}'
+        )
+
+        # And the analysis catalog
+        expect_equal(
+            vizSpecs(an_cat),
+            list(default = list(format = list(show_empty = TRUE)))
+        )
+        expect_PATCH(
+            vizSpecs(an_cat) <- list(default = list(format = list(show_empty = FALSE))),
+            "https://app.crunch.io/api/datasets/4/decks/8ad8/slides/da161/analyses/bce96/",
+            '{"element":"shoji:entity","body":{"viz_specs":',
+            '{"default":{"format":{"show_empty":false}}}}}'
+        )
+    })
+
     test_that("Assigning formulas to analysis", {
         ancat <- analyses(slide)
         expect_error(
@@ -803,7 +898,7 @@ with_mock_crunch({
     test_that("slideQueryEnv helper", {
         expect_equal(
             slideQueryEnv(weight = ds$birthyr),
-            list(weight = list(self(ds$birthyr)))
+            list(weight = self(ds$birthyr))
         )
         expect_equal(
             slideQueryEnv(weight = NULL),
@@ -819,14 +914,14 @@ with_mock_crunch({
             slideQueryEnv(filter = NULL),
             list(filter = list())
         )
-        expect_error(
+        expect_equal(
             slideQueryEnv(filter = ds$birthyr < 1980),
-            "ad-hoc filters not supported for slides"
+            list(filter = list(zcl(ds$birthyr < 1980)))
         )
 
         expect_equal(
             slideQueryEnv(weight = ds$birthyr, filter = filter),
-            list(weight = list(self(ds$birthyr)), filter = list(self(filter)))
+            list(weight = self(ds$birthyr), filter = list(self(filter)))
         )
 
         expect_error(

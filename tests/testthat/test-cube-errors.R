@@ -1,7 +1,7 @@
 context("Cube error handling")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
+    ds <- cachedLoadDataset("test ds")
 
     test_that("'formula' must be provided", {
         expect_error(crtabs(), "Must provide a formula")
@@ -180,7 +180,7 @@ with_test_authentication({
     })
 
     test_that("Reserved function names cannot be variable aliases", {
-        dsb <- ds
+        dsb <- forceVariableCatalog(ds)
         al <- aliases(dsb@variables)
         dsb@variables@index[[which(al == "v1")]]$alias <- "mean"
         dsb@variables@index[[which(al == "v2")]]$alias <- "sd"

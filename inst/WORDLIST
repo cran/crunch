@@ -100,6 +100,7 @@ hispanic
 http
 httpcache
 https
+httptest
 httr
 ies
 ifAny
@@ -159,6 +160,7 @@ sav
 SAV
 savepoints
 Savepoints
+scalable
 ScriptCatalog
 sd
 SearchResults
@@ -189,6 +191,7 @@ sym
 symlink
 TabBookResult
 TabBookResults
+tidyverse
 toJSON
 topo
 tv
