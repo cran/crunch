@@ -26,7 +26,14 @@
     </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
@@ -354,6 +361,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span><span class="fu">categories</span>(allpets) <span class="sc">+</span> <span class="fu">subvariables</span>(allpets), </span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Categorical array: categories on rows dimension&quot;</span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>The “categories” dimension cannot be the first dimension (used in the “tabs” of the analysis in a Crunch Dashboard) of a slide analysis that has 3 dimensions. Instead, to get the “tabs” dimension have the categorical array variable, choose one category to select, and create a Multiple Response variable out of it.</p>
+<p>When trying to make a slide with a categorical array (<code>ca</code>) and another variables(<code>cat</code>), the following table shows the 6 queries that are valid and which dimension the web app will display on each of the “rows”, “columns” and “tabs” dimensions. Here we have chosen to select the category with name = <code>&quot;category&quot;</code> when using <code>selectCategories</code>, but any valid category id or name could be used instead.</p>
+<table>
+<colgroup>
+<col width="45%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>query</th>
+<th>rows</th>
+<th>columns</th>
+<th>tabs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>~cat + categories(ca) + subvariables(ca)</code></td>
+<td>CA categories</td>
+<td>CA subvariables</td>
+<td>other variable</td>
+</tr>
+<tr class="even">
+<td><code>~cat + subvariables(ca) + categories(ca)</code></td>
+<td>CA subvariables</td>
+<td>CA categories</td>
+<td>other variable</td>
+</tr>
+<tr class="odd">
+<td><code>~subvariables(ca) + categories(ca) + cat</code></td>
+<td>CA categories</td>
+<td>other variable</td>
+<td>CA subvariables</td>
+</tr>
+<tr class="even">
+<td><code>~subvariables(ca) + cat + categories(ca)</code></td>
+<td>other variable</td>
+<td>CA categories</td>
+<td>CA subvariables</td>
+</tr>
+<tr class="odd">
+<td><code>~cat + selectCategories(ca, &quot;category&quot;)</code></td>
+<td>other variable</td>
+<td>CA subvariables</td>
+<td>CA categories</td>
+</tr>
+<tr class="even">
+<td><code>~selectCategories(ca, &quot;category&quot;) + cat</code></td>
+<td>CA subvariables</td>
+<td>other variable</td>
+<td>CA categories</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="mean-of-a-numeric-variable" class="section level3">

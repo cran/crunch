@@ -325,6 +325,17 @@ with_mock_crunch({
         )
     })
 
+    test_that("New slide - prevents categories in first dim", {
+        expect_error(
+            newSlide(
+                main_deck,
+                ~categories(catarray) + subvariables(catarray) + mymrset,
+                title = "Title"
+            ),
+            "First dimension of .+ analysis cannot be .+ categories"
+        )
+    })
+
     slide <- main_deck[[1]]
     test_that("Slide show method", {
         expect_prints(
@@ -1056,12 +1067,12 @@ with_test_authentication({
         settings <- displaySettings(analysis)
         expect_is(settings, "list")
         expect_equal(
-            names(settings),
-            c(
+            sort(names(settings)),
+            sort(c(
                 "percentageDirection", "showEmpty", "showMean", "vizType",
                 "countsOrPercents", "decimalPlaces", "populationMagnitude",
                 "showSignif", "currentTab", "uiView"
-            )
+            ))
         )
         expect_equal(settings$countsOrPercents, "percent")
         settings$countsOrPercents <- "count"
