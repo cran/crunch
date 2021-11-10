@@ -7,7 +7,7 @@ Description: The Crunch.io service <https://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.28.1
+Version: 1.28.2
 Authors@R: c(
     person("Greg", "Freedman Ellis", role = c("aut", "cre"), email = "greg@crunch.io"),
     person("Jonathan", "Keane", role="aut", email="jkeane@gmail.com"),
@@ -20,13 +20,13 @@ License: LGPL (>= 3)
 Depends: R (>= 3.0.0)
 Imports: abind, crayon, curl, grDevices, httr (>= 1.0.0), httpcache (>=
         0.1.4), jsonlite (>= 0.9.15), methods
-Suggests: covr, crunchy, devtools, haven, httptest (>= 3.0.0), keyring,
-        knitr, lintr, magrittr, rmarkdown, rstudioapi, spelling,
-        styler, testthat (>= 2.0.0), withr
+Suggests: base64enc, covr, crunchy, devtools, haven, httptest (>=
+        3.0.0), keyring, knitr, lintr, magrittr, mime, rmarkdown,
+        rstudioapi, spelling, styler, testthat (>= 2.0.0), withr
 VignetteBuilder: knitr
 Language: en-US
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 LazyData: true
 Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'R-to-variable.R' 'SO-survey.R' 'abstract-categories.R'
@@ -68,7 +68,7 @@ Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'variable-type.R' 'variable-update.R' 'variable.R'
         'variables.R' 'versions.R' 'weight.R' 'zcl.R'
 NeedsCompilation: no
-Packaged: 2021-08-13 17:32:19 UTC; gregfreedmanellis
+Packaged: 2021-11-10 17:00:12 UTC; gregfreedmanellis
 Author: Greg Freedman Ellis [aut, cre],
   Jonathan Keane [aut],
   Mike Malecki [aut],
@@ -76,4 +76,4 @@ Author: Greg Freedman Ellis [aut, cre],
   Gordon Shotwell [aut]
 Maintainer: Greg Freedman Ellis <greg@crunch.io>
 Repository: CRAN
-Date/Publication: 2021-08-13 18:20:06 UTC
+Date/Publication: 2021-11-10 17:30:02 UTC

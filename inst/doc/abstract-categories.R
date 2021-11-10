@@ -51,7 +51,7 @@ feeling_subtotals[[3]]$after
 feeling_subtotals[[3]]$categories
 
 ## -----------------------------------------------------------------------------
-feeling_insertions <- Insertions(data = lapply(feeling_subtotals, makeInsertion, var_categories = feeling_cats))
+feeling_insertions <- Insertions(data = lapply(feeling_subtotals, makeInsertion, var_items = feeling_cats))
 
 ## -----------------------------------------------------------------------------
 sapply(feeling_insertions, class)

@@ -252,7 +252,25 @@ CrunchDataset <- setClass("CrunchDataset",
 DeckCatalog <- setClass("DeckCatalog", contains = "ShojiCatalog")
 CrunchDeck <- setClass("CrunchDeck", contains = "ShojiObject")
 SlideCatalog <- setClass("SlideCatalog", contains = "ShojiCatalog")
-CrunchSlide <- setClass("CrunchSlide", contains = "ShojiObject")
+
+
+setClass("CrunchSlide", contains = "ShojiObject")
+CrunchAnalysisSlide <- setClass("CrunchAnalysisSlide", contains = "CrunchSlide")
+CrunchMarkdownSlide <- setClass("CrunchMarkdownSlide", contains = "CrunchSlide")
+
+.slideClasses <- list(
+    "analysis" = "CrunchAnalysisSlide",
+    "markdown" = "CrunchMarkdownSlide"
+)
+CrunchSlide <- function(...) {
+    ## Create correct subclass of crunch slide
+    ## Return a CrunchSlide if unknown type (won't be super useful but better than breaking)
+    cls <- try(.slideClasses[[list(...)[[1]]$body$type]], silent = TRUE)
+    if (is.error(cls)) cls <- "CrunchSlide"
+    return(new(cls, ...))
+}
+
+
 AnalysisCatalog <- setClass("AnalysisCatalog", contains = "ShojiCatalog")
 Analysis <- setClass("Analysis", contains = "ShojiObject")
 
@@ -376,7 +394,22 @@ setClass("Insertions", contains = "AbstractCategories")
 
 #' @rdname Insertions
 #' @export
-Insertions <- GenericConstructor("Insertions")
+Insertions <- function(..., data = NULL) {
+    if (is.null(data)) data <- list(...)
+    out <- new("Insertions", data)
+
+    # Get a potential id that doesn't clash with any existing ids
+    # for each insertion. Will use existing id if it exists (and is valid)
+    # But if no id exists, we'll use the fallback ids
+    existing_ids <- Filter(is.whole, lapply(out, function(insertion) insertion[["id"]]))
+    fallback_ids <- setdiff(seq_len(length(out) * 2), existing_ids)
+    lapply(seq_along(out), function(insertion_idx) {
+        if (is.null(out[[insertion_idx]][["id"]])) {
+            out[[insertion_idx]][["id"]] <<- fallback_ids[insertion_idx]
+        }
+    })
+    out
+}
 
 #' @rdname Insertions
 #' @export
@@ -406,23 +439,6 @@ Insertion <- function(...) {
         out$args <- NULL
     } else if (length(out$args) == 1) {
         out$args <- as.list(out$args)
-    }
-
-    # ensure that kwargs is missing if empty instead of NULL and is a list,
-    # even if it is a single element
-    # Note this is okay because all current kwargs are supposed to be lists
-    # but could cause problems if that changes
-    if (length(out$kwargs) == 0) {
-        out$kwargs <- NULL
-    } else {
-        for (kw in names(out$kwargs)) {
-            if (is.null(out$kwargs[[kw]])) {
-                out$kwargs[[kw]] <- NULL
-            }
-            else if (length(out$kwargs[[kw]]) == 1) {
-                out$kwargs[[kw]] <- as.list(out$kwargs[[kw]])
-            }
-        }
     }
 
     return(out)

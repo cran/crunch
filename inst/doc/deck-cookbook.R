@@ -44,6 +44,16 @@ knitr::opts_chunk$set(eval = FALSE)
 #  )
 
 ## ---------------------------------------------------------------------------------------------------------------------
+#  slide <- newMarkdownSlide(deck, "This survey included **10,000 participants**!", title = "About")
+
+## ---------------------------------------------------------------------------------------------------------------------
+#  slide <- newMarkdownSlide(
+#    deck,
+#    "This survey was collected by ACME surveys",
+#    markdownSlideImage("acme-logo.png"),
+#  )
+
+## ---------------------------------------------------------------------------------------------------------------------
 #  # Move title to subtitle and change the title
 #  slide <- slides(deck)[["Table of Favorite Pet"]]
 #  subtitle(slide) <- title(slide)
@@ -55,6 +65,11 @@ knitr::opts_chunk$set(eval = FALSE)
 #  transforms(slide) <- list(
 #      rows_dimension = makeDimTransform(rename = c("AUS" = "Australia"))
 #  )
+#  
+#  
+#  # Edit a markdown slide
+#  slide <- slides(deck)[[3]]
+#  slideMarkdown(slide) <- "**Replacement text**"
 
 ## ---- include=FALSE---------------------------------------------------------------------------------------------------
 #  ### Reordering slides on a deck

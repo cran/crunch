@@ -1,99 +1,118 @@
-## ----load data, include=FALSE-----------------------------------------------------------------------------------------
-## Because the vignette tasks require communicating with a remote host,
-## we do all the work ahead of time and save a workspace, which we load here.
-## We'll then reference saved objects in that as if we had just retrieved them
-## from the server
+## ---- message=FALSE---------------------------------------------------------------------------------------------------
 library(crunch)
-load("vignettes.RData")
+
+## ---- results='hide', include = FALSE---------------------------------------------------------------------------------
 options(width=120)
+library(httptest)
+if (!dir.exists("subtotals")) {
+    login()
+    
+    if ("example vignette ds - subtotal" %in% listDatasets()) {
+        ds <- loadDataset("example vignette ds - subtotal")
+        with_consent(deleteDataset("example vignette ds - subtotal"))
+    }
+    
+    ds <- newExampleDataset()
+    name(ds) <- "example vignette ds - subtotal"
+    lvls <- c("Love", "Like", "Neutral", "Dislike", "Hate")
+    ds$like_dogs <- factor(rep(lvls, c(4, 4, 8, 2, 2)), lvls)
+    ds$like_cats <- factor(rep(lvls, c(3, 5, 1, 6, 5)), rev(lvls))
+    
+    httpcache::clearCache()
+}
+start_vignette("subtotals")
+ds <- loadDataset("example vignette ds - subtotal")
 
-## ----no subtotals, eval=FALSE-----------------------------------------------------------------------------------------
-#  subtotals(ds$obamaapp)
+## ----no subtotals-----------------------------------------------------------------------------------------------------
+subtotals(ds$q1)
 
-## ----no subtotals print, echo = FALSE---------------------------------------------------------------------------------
-sub_initial_subtotals
+## ----state change1, include=FALSE-------------------------------------------------------------------------------------
+change_state()
 
-## ----add some subtotals, eval = FALSE---------------------------------------------------------------------------------
-#  subtotals(ds$DiversityImportant) <- list(
-#      Subtotal(name = "Follows closely",
-#               categories = c("Strongly closely", "Very closely"),
-#               after = "Somewhat closely"),
-#      Subtotal(name = "Generally disagree",
-#               categories = c("Not very closely", "Not at all"),
-#               after = "Not at all")
-#  )
+## ----add some subtotals-----------------------------------------------------------------------------------------------
+subtotals(ds$q1) <- list(
+    Subtotal(
+        name = "Mammals",
+        categories = c("Cat", "Dog"),
+        after = "Dog"
+    ),
+    Subtotal(
+        name = "Can speak on command",
+        categories = c("Dog", "Bird"),
+        after = "Bird"
+    )
+)
 
-## ----new subtotals, eval = FALSE--------------------------------------------------------------------------------------
-#  subtotals(ds$manningknowledge)
+## ----state change2, include=FALSE-------------------------------------------------------------------------------------
+change_state()
 
-## ---- echo = FALSE----------------------------------------------------------------------------------------------------
-sub_subtotals1
+## ----new subtotals----------------------------------------------------------------------------------------------------
+subtotals(ds$q1)
 
 ## ----crunch app output, echo = FALSE----------------------------------------------------------------------------------
-knitr::include_graphics("images/manning_knowledge_subtotals.png")
+knitr::include_graphics("images/webapp_subtotals.png")
 
+## ----add subtotal diff------------------------------------------------------------------------------------------------
+subtotals(ds$like_dogs) <- list(
+    Subtotal(
+        name = "Love minus Dislike & Hate",
+        categories = c("Love"),
+        negative = c("Dislike", "Hate"),
+        position = "top"
+    )
+)
 
-## ----add some headings, eval = FALSE----------------------------------------------------------------------------------
-#  subtotals(ds$obamaapp) <- list(
-#      Heading(name = "Approves",
-#              after = 0),
-#      Heading(name = "Disapprove",
-#              after = "Somewhat Approve"),
-#      Heading(name = "No Answer",
-#              after = "Strongly Disapprove")
-#  )
-#  
-#  subtotals(ds$obamaapp)
+## ----add mr subtotal--------------------------------------------------------------------------------------------------
+subtotals(ds$allpets) <- list(
+    Subtotal(
+        name = "Any mammal",
+        c("allpets_1", "allpets_2"),
+        position = "top"
+    )
+)
 
-## ----headings out, echo = FALSE---------------------------------------------------------------------------------------
-sub_headings
+## ----state change3, include=FALSE-------------------------------------------------------------------------------------
+change_state()
 
-## ----crunch app output headings, echo = FALSE-------------------------------------------------------------------------
-knitr::include_graphics("images/obama_headings.png")
+## ----remove some headings---------------------------------------------------------------------------------------------
+subtotals(ds$like_dogs) <- NULL
 
+## ----save some subtotals----------------------------------------------------------------------------------------------
+pet_type_subtotals <- list(
+    Subtotal(
+        name = "Love minus Dislike & Hate",
+        categories = c("Love"),
+        negative = c("Dislike", "Hate"),
+        position = "top"
+    )
+)
 
-## ----remove some headings, eval = FALSE-------------------------------------------------------------------------------
-#  subtotals(ds$YearsCodedJob) <- NULL
+## ----check some categories--------------------------------------------------------------------------------------------
+subtotals(ds$like_dogs) <- pet_type_subtotals
+subtotals(ds$like_cats) <- pet_type_subtotals
 
-## ----remove headings out, echo = FALSE--------------------------------------------------------------------------------
-sub_initial_subtotals
+## ----show some categories---------------------------------------------------------------------------------------------
+subtotals(ds$like_dogs)
+subtotals(ds$like_cats)
 
-## ----save some subtotals, eval = FALSE--------------------------------------------------------------------------------
-#  approve_subtotals <- list(
-#      Subtotal(name = "Approves",
-#              categories = c("Somewhat approve", "Strongly approve"),
-#              after = "Somewhat approve"),
-#      Subtotal(name = "Disapprove",
-#              categories = c("Somewhat disapprove", "Strongly disapprove"),
-#              after = "Strongly disapprove"))
+## ----show subtotals---------------------------------------------------------------------------------------------------
+crtabs(~like_dogs, data = ds)
 
-## ----check some categories, eval = FALSE------------------------------------------------------------------------------
-#  subtotals(ds$snowdenleakapp) <- approve_subtotals
-#  subtotals(ds$congapp) <- approve_subtotals
+## ----show subtotals only----------------------------------------------------------------------------------------------
+subtotalArray(crtabs(~like_dogs, data = ds))
 
-## ----show some categories, eval = FALSE-------------------------------------------------------------------------------
-#  subtotals(ds$snowdenleakapp)
-#  subtotals(ds$congapp)
+## ----noTransforms-----------------------------------------------------------------------------------------------------
+noTransforms(crtabs(~like_dogs, data = ds))
 
-## ----show categories out, echo = FALSE--------------------------------------------------------------------------------
-sub_snowdon
-sub_con
+## ---------------------------------------------------------------------------------------------------------------------
+# addSummaryStat is a convenient way to add mean/median
+addSummaryStat(crtabs(~q1, ds), margin = 1)
 
-## ----show subtotals, eval= FALSE--------------------------------------------------------------------------------------
-#  crtabs(~congapp + gender, data = ds)
+cube <- crtabs(~q1, data = ds)
+transforms(cube)$q1$insertions <- list(Heading("Mammals", position = "top"), Heading("Other", after = "Dog"))
+cube
 
-## ----show subtotals out, echo = FALSE---------------------------------------------------------------------------------
-sub_crtab
-
-## ----show subtotals only, eval = FALSE--------------------------------------------------------------------------------
-#  subtotalArray(crtabs(~congapp + gender, data = ds))
-
-## ----show subtotals only out, echo = FALSE----------------------------------------------------------------------------
-subtotalArray(sub_crtab)
-
-## ----noTransforms, eval = FALSE---------------------------------------------------------------------------------------
-#  noTransforms(crtabs(~congapp + gender, data = ds))
-
-## ---- echo = FALSE----------------------------------------------------------------------------------------------------
-noTransforms(sub_crtab)
+## ---- include=FALSE---------------------------------------------------------------------------------------------------
+logout()
+end_vignette()
 
