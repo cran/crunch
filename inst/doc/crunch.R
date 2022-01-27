@@ -6,8 +6,28 @@ library(httptest)
 start_vignette("crunch")
 login()
 
-## ----login, eval=FALSE------------------------------------------------------------------------------------------------
-#  login("xkcd@crunch.io")
+## ----usethis, eval=FALSE----------------------------------------------------------------------------------------------
+#  if (!require("usethis")) install.packages("usethis")
+#  # Note: After running this command, R may ask you one or two questions.
+#  # While you likely *do* want to update the dependency packages, you likely
+#  # *do not* want to install any package from source, so you can answer something
+#  # like "update all packages from CRAN" if it asks which packages to update,
+#  # and "No" if it asks you to install from source.
+#  usethis::edit_r_environ()
+
+## ----reload_environ, eval=FALSE---------------------------------------------------------------------------------------
+#  readRenviron("~/.Renviron")
+
+## ----sitrep-code, eval=FALSE------------------------------------------------------------------------------------------
+#  crunch_sitrep()
+
+## ----sitrep-display, echo=FALSE---------------------------------------------------------------------------------------
+message(paste0(
+    "crunch API: https://your-brand.crunch.io/api/\n",
+    "            (found in environment variable `R_CRUNCH_API`)\n",
+    "       key: abcdefghi***************************************\n",
+    "            (found in environment variable `R_CRUNCH_API_KEY`)"
+))
 
 ## ----dimensions-------------------------------------------------------------------------------------------------------
 dim(SO_survey)
