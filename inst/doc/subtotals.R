@@ -2,6 +2,7 @@
 library(crunch)
 
 ## ---- results='hide', include = FALSE---------------------------------------------------------------------------------
+set_crunch_opts("crunch.api" = "https://app.crunch.io/api/")
 options(width=120)
 library(httptest)
 if (!dir.exists("subtotals")) {

@@ -2,9 +2,9 @@
 library(crunch)
 
 ## ---- results='hide', include = FALSE---------------------------------------------------------------------------------
+set_crunch_opts("crunch.api" = "https://app.crunch.io/api/")
 library(httptest)
 start_vignette("crunch")
-login()
 
 ## ----usethis, eval=FALSE----------------------------------------------------------------------------------------------
 #  if (!require("usethis")) install.packages("usethis")

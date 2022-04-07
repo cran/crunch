@@ -52,7 +52,8 @@ forceVariableCatalog <- function(x) {
 }
 
 useLazyVariableCatalog <- function() {
-    envOrOption("crunch.lazy.variable.catalog", TRUE) && isTRUE(getOption("httpcache.on", TRUE))
+    envOrOption("crunch.lazy.variable.catalog", TRUE, expect_lgl = TRUE) &&
+        isTRUE(getOption("httpcache.on", TRUE))
 }
 
 getDatasetVariables <- function(x) {
@@ -405,7 +406,7 @@ joins <- function(x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
 
 variableCatalogURL <- function(dataset) {
     ## Get the variable catalog URL that corresponds to an object
-    if (class(dataset) == "VariableCatalog") {
+    if (is(dataset, "VariableCatalog")) {
         return(self(dataset))
     }
     if (!is.dataset(dataset)) {
