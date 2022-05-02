@@ -1,13 +1,11 @@
 ## ---- eval = FALSE, message=FALSE-------------------------------------------------------------------------------------
 #  library(crunch)
-#  login()
 
 ## ---- results='hide', echo=FALSE, message=FALSE-----------------------------------------------------------------------
 library(crunch)
 set_crunch_opts("crunch.api" = "https://app.crunch.io/api/")
 library(httptest)
 start_vignette("fork-and-merge")
-login()
 
 ## ----message=FALSE, results='hide'------------------------------------------------------------------------------------
 ds <- newDataset(SO_survey, "stackoverflow_survey")

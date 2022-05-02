@@ -121,6 +121,5 @@ subvariables(ds$WantWorkLanguageMR) <- subvariables(ds$WantWorkLanguageMR)[names
 knitr::include_graphics("images/WantWorkMRReodered.png")
 
 ## ---- include=FALSE---------------------------------------------------------------------------------------------------
-logout()
 end_vignette()
 

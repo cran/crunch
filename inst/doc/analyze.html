@@ -14,7 +14,19 @@
 
 <title>Analyzing Crunch Data</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -38,6 +50,7 @@
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -124,7 +137,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -141,14 +334,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 <p><a href="derive.html">Previous: transform and derive</a></p>
-<p>With <code>crunch</code>, you can harness the power of R to do computations with your datasets in Crunch that would be difficult or impossible to accomplish in a graphical user interface.</p>
+<p>With <code>crunch</code>, you can harness the power of R to do
+computations with your datasets in Crunch that would be difficult or
+impossible to accomplish in a graphical user interface.</p>
 <div id="crosstabbing" class="section level2">
 <h2>Crosstabbing</h2>
-<p>While the web application certainly supports crosstabbing, you may want to do aggregations like this in R. Crosstabbing in R with <code>crunch</code> may allow you to easily do additional computations on the result, for example.</p>
-<p><code>crunch</code> contains the <code>crtabs</code> (Crunch-tabs) function, which largely emulates the design of the <code>xtabs</code> function in base R. In essence, you define a formula and provide data in which to evaluate it. In this case, we’ll be providing a <code>CrunchDataset</code>.</p>
+<p>While the web application certainly supports crosstabbing, you may
+want to do aggregations like this in R. Crosstabbing in R with
+<code>crunch</code> may allow you to easily do additional computations
+on the result, for example.</p>
+<p><code>crunch</code> contains the <code>crtabs</code> (Crunch-tabs)
+function, which largely emulates the design of the <code>xtabs</code>
+function in base R. In essence, you define a formula and provide data in
+which to evaluate it. In this case, we’ll be providing a
+<code>CrunchDataset</code>.</p>
 <div id="basic-examples" class="section level3">
 <h3>Basic examples</h3>
-<p>Like <code>xtabs</code>, <code>crtabs</code> takes a formula and a data argument. Dimensions of your crosstab go on the right side of the <code>~</code>. For a univariate table of frequencies by education, we can do</p>
+<p>Like <code>xtabs</code>, <code>crtabs</code> takes a formula and a
+data argument. Dimensions of your crosstab go on the right side of the
+<code>~</code>. For a univariate table of frequencies by education, we
+can do</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>tab1 <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span> educ, <span class="at">data=</span>ds)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>tab1</span></code></pre></div>
 <pre><code>## educ
@@ -156,7 +361,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##                   12                   71                   61                   24                   57 
 ##            Post-grad 
 ##                   25</code></pre>
-<p>Additional dimensions are added with <code>+</code>. For a two-way table of education and gender,</p>
+<p>Additional dimensions are added with <code>+</code>. For a two-way
+table of education and gender,</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tab2 <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>tab2</span></code></pre></div>
 <pre><code>##                       gender
@@ -170,12 +376,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="weighting" class="section level3">
 <h3>Weighting</h3>
-<p><code>crtabs</code> takes advantage of several Crunch features that <code>xtabs</code> does not support. First, it respects weight variables that have been set on the server. This dataset is not currently weighted</p>
+<p><code>crtabs</code> takes advantage of several Crunch features that
+<code>xtabs</code> does not support. First, it respects weight variables
+that have been set on the server. This dataset is not currently
+weighted</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">weight</span>(ds)</span></code></pre></div>
 <pre><code>## NULL</code></pre>
-<p>but we can very easily change that. Let’s use the “weight” variable that already exists in the dataset:</p>
+<p>but we can very easily change that. Let’s use the “weight” variable
+that already exists in the dataset:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">weight</span>(ds) <span class="ot">&lt;-</span> ds<span class="sc">$</span>weight</span></code></pre></div>
-<p>Now, if we request the same two-way table as before, we’ll get weighted results:</p>
+<p>Now, if we request the same two-way table as before, we’ll get
+weighted results:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
@@ -198,7 +409,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="proportion-tables" class="section level3">
 <h3>Proportion tables</h3>
-<p>As with any <code>array</code> data type, we can compute margin tables, and the <code>prop.table</code> function in R provides a convenient way for sweeping a table by a margin. These work on the output of <code>crtabs</code>, too:</p>
+<p>As with any <code>array</code> data type, we can compute margin
+tables, and the <code>prop.table</code> function in R provides a
+convenient way for sweeping a table by a margin. These work on the
+output of <code>crtabs</code>, too:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(tab1)</span></code></pre></div>
 <pre><code>## educ
 ##                No HS High school graduate         Some college               2-year               4-year 
@@ -228,7 +442,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="complex-data-types" class="section level3">
 <h3>Complex data types</h3>
-<p><code>crtabs</code> also comfortably handles the more complex data types that Crunch supports, including categorical array and multiple response variables. In the <a href="array-variables.html">array variables vignette</a>, we created a categorical array, “imiss”, for “Important issues”. We can crosstab with arrays just as we do non-arrays.</p>
+<p><code>crtabs</code> also comfortably handles the more complex data
+types that Crunch supports, including categorical array and multiple
+response variables. In the <a href="array-variables.html">array
+variables vignette</a>, we created a categorical array, “imiss”, for
+“Important issues”. We can crosstab with arrays just as we do
+non-arrays.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tab3 <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span> imiss <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>tab3</span></code></pre></div>
 <pre><code>## , , gender = Male
@@ -266,10 +485,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   The economy                       103                 30                  4           1
 ##   The environment                    64                 45                 16          11
 ##   The war in Afghanistan             49                 57                 20          13</code></pre>
-<p>Note that even though we specified two variables in our formula, because “imiss” itself is two dimensional, our result is a three-dimensional array.</p>
-<p>To illustrate working with multiple response variables, let’s convert “imiss” to multiple response, selecting its positive categories as indicating selection:</p>
+<p>Note that even though we specified two variables in our formula,
+because “imiss” itself is two dimensional, our result is a
+three-dimensional array.</p>
+<p>To illustrate working with multiple response variables, let’s convert
+“imiss” to multiple response, selecting its positive categories as
+indicating selection:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>imiss <span class="ot">&lt;-</span> <span class="fu">dichotomize</span>(ds<span class="sc">$</span>imiss, <span class="fu">c</span>(<span class="st">&quot;Very Important&quot;</span>, <span class="st">&quot;Somewhat Important&quot;</span>))</span></code></pre></div>
-<p>Now, when we crosstab it, we’ll get a two-dimensional table because multiple response variables present a one-dimensional interface:</p>
+<p>Now, when we crosstab it, we’ll get a two-dimensional table because
+multiple response variables present a one-dimensional interface:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>tab3mr <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span> imiss <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>tab3mr</span></code></pre></div>
 <pre><code>##                         gender
@@ -287,12 +511,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   The economy            108.38178 119.16976
 ##   The environment         90.32808  97.05483
 ##   The war in Afghanistan  73.62479  96.68801</code></pre>
-<p>It’s worth noting here that the result of <code>crtabs</code> isn’t an <code>array</code> object but a <code>CrunchCube</code> object.</p>
+<p>It’s worth noting here that the result of <code>crtabs</code> isn’t
+an <code>array</code> object but a <code>CrunchCube</code> object.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(tab3mr)</span></code></pre></div>
 <pre><code>## [1] &quot;CrunchCube&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;crunch&quot;</code></pre>
-<p>This allows us to do the appropriate calculations on arrays and multiple response variables when <code>prop.table</code> is called. To compute a margin table over a multiple response variable, summing along the dimension would give an incorrect value because the responses in a multiple response are not mutually exclusive–they can’t be assumed to sum to 100 percent. However, the <code>margin.table</code> method on <code>CrunchCubes</code> can compute the correct margin, so <code>prop.table</code> gives correct proportions:</p>
+<p>This allows us to do the appropriate calculations on arrays and
+multiple response variables when <code>prop.table</code> is called. To
+compute a margin table over a multiple response variable, summing along
+the dimension would give an incorrect value because the responses in a
+multiple response are not mutually exclusive–they can’t be assumed to
+sum to 100 percent. However, the <code>margin.table</code> method on
+<code>CrunchCubes</code> can compute the correct margin, so
+<code>prop.table</code> gives correct proportions:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span><span class="fu">prop.table</span>(tab3mr, <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##                         gender
 ## imiss                    Male Female
@@ -309,7 +541,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   The economy              89     93
 ##   The environment          74     78
 ##   The war in Afghanistan   61     75</code></pre>
-<p>Finally, just as we saw in the <a href="array-variables.html">array variables</a> vignette, we can grab individual subvariables and crosstab with them:</p>
+<p>Finally, just as we saw in the <a href="array-variables.html">array
+variables</a> vignette, we can grab individual subvariables and crosstab
+with them:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="sc">~</span> imiss<span class="sc">$</span>imiss_f <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span></code></pre></div>
 <pre><code>##                     gender
 ## imiss_f              Male Female
@@ -320,7 +554,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="n-way-tables" class="section level3">
 <h3>N-way tables</h3>
-<p>It’s worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:</p>
+<p>It’s worth noting that we can extend the crosstabbing to higher
+dimensions, just by adding more terms on the right-hand side of the
+formula:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">crtabs</span>(<span class="sc">~</span> imiss <span class="sc">+</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds))</span></code></pre></div>
 <pre><code>## , , gender = Male
 ## 
@@ -366,7 +602,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="numeric-aggregations" class="section level3">
 <h3>Numeric aggregations</h3>
-<p><code>crtabs</code> can also compute quantities other than counts. Using the left-hand side of the formula, we can specify other aggregations to put in the cells of the table. For example, in the <a href="derive.html">deriving variables vignette</a>, we created an “age” variable. We can easily compute the average age by gender and education:</p>
+<p><code>crtabs</code> can also compute quantities other than counts.
+Using the left-hand side of the formula, we can specify other
+aggregations to put in the cells of the table. For example, in the <a href="derive.html">deriving variables vignette</a>, we created an “age”
+variable. We can easily compute the average age by gender and
+education:</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="fu">mean</span>(age) <span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
@@ -376,7 +616,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   2-year                  6     18
 ##   4-year                 25     32
 ##   Post-grad              15     10</code></pre>
-<p>Other supported aggregations include <code>min</code>, <code>max</code>, <code>sd</code>, and <code>sum</code>. For the minimum age by gender and education,</p>
+<p>Other supported aggregations include <code>min</code>,
+<code>max</code>, <code>sd</code>, and <code>sum</code>. For the minimum
+age by gender and education,</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="fu">min</span>(age) <span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
@@ -386,17 +628,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   2-year                  6     18
 ##   4-year                 25     32
 ##   Post-grad              15     10</code></pre>
-<p>We can get unconditional (univariate) statistics by making the right-hand side of your formula be just the number <code>1</code>:</p>
+<p>We can get unconditional (univariate) statistics by making the
+right-hand side of your formula be just the number <code>1</code>:</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="fu">min</span>(age) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data=</span>ds)</span></code></pre></div>
 <pre><code>## [1] 250</code></pre>
-<p>Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the <a href="variables.html">variables vignette</a>, we worked with the “On the right track” question and set some numeric values:</p>
+<p>Numeric aggregation functions also work with categorical variables
+that have numeric values defined for their categories; this is the
+reason why numeric values for categories are defined, in fact. In the <a href="variables.html">variables vignette</a>, we worked with the “On the
+right track” question and set some numeric values:</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">categories</span>(ds<span class="sc">$</span>track)</span></code></pre></div>
 <pre><code>##   id                                    name value missing
 ## 1  1 Generally headed in the right direction     1   FALSE
 ## 2  3                                Not sure     0    TRUE
 ## 3  2                             Wrong track    -1   FALSE
 ## 4 -1                                 No Data    NA    TRUE</code></pre>
-<p>We can use these numeric values to compute an “on the right track index” by averaging them. If the index is greater than zero, more people thing things are going well, and if it is negative, more respondents are pessimistic.</p>
+<p>We can use these numeric values to compute an “on the right track
+index” by averaging them. If the index is greater than zero, more people
+thing things are going well, and if it is negative, more respondents are
+pessimistic.</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">crtabs</span>(<span class="fu">mean</span>(track) <span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds), <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
@@ -406,11 +655,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   2-year                  6     18
 ##   4-year                 25     32
 ##   Post-grad              15     10</code></pre>
-<p>Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for women with higher levels of education.</p>
+<p>Looks like most people surveyed thought that the U.S. is on the wrong
+track, but that pessimism is less pronounced for women with higher
+levels of education.</p>
 </div>
 <div id="subsetting-data" class="section level3">
 <h3>Subsetting data</h3>
-<p>We can also specify a subset of <code>ds</code> to analyze, just as if it were a data.frame. Let’s do the same calculation for Democrats only:</p>
+<p>We can also specify a subset of <code>ds</code> to analyze, just as
+if it were a data.frame. Let’s do the same calculation for Democrats
+only:</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">crtabs</span>(<span class="fu">mean</span>(track) <span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds[ds<span class="sc">$</span>pid3 <span class="sc">==</span> <span class="st">&quot;Democrat&quot;</span>,]), <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
@@ -420,15 +673,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   2-year                  1      6
 ##   4-year                  9     19
 ##   Post-grad               5      5</code></pre>
-<p>Not surprisingly, Democrats were less pessimistic about the direction of the country than the general population.</p>
-<p>A few final observations about <code>crtabs</code>. First, all of these calculations have been weighted by the weight variable we set above. We set it and could then forget about it–we didn’t have to litter all of our expressions with <code>ds$weight</code> and extra arithmetic to do the weighting. Crunch handles this for us.</p>
-<p>Second, none of these aggregations required pulling case-level data to your computer. <code>crtabs</code> sends Crunch expressions to the server and receives in return an <code>n</code>-D array of results. The only computations happening locally are the margin tables and sweeping in <code>prop.table</code>, computing on the aggregate results. Your computer would work exactly as hard with this example dataset of 1000 rows as it would with a dataset of 100 million rows.</p>
+<p>Not surprisingly, Democrats were less pessimistic about the direction
+of the country than the general population.</p>
+<p>A few final observations about <code>crtabs</code>. First, all of
+these calculations have been weighted by the weight variable we set
+above. We set it and could then forget about it–we didn’t have to litter
+all of our expressions with <code>ds$weight</code> and extra arithmetic
+to do the weighting. Crunch handles this for us.</p>
+<p>Second, none of these aggregations required pulling case-level data
+to your computer. <code>crtabs</code> sends Crunch expressions to the
+server and receives in return an <code>n</code>-D array of results. The
+only computations happening locally are the margin tables and sweeping
+in <code>prop.table</code>, computing on the aggregate results. Your
+computer would work exactly as hard with this example dataset of 1000
+rows as it would with a dataset of 100 million rows.</p>
 </div>
 </div>
 <div id="statistical-modeling" class="section level2">
 <h2>Statistical modeling</h2>
-<p>Any statistical modeling function that takes a <code>data</code> argument should happily accept a <code>CrunchDataset</code> and just do the right thing–no extra effort or thought required.</p>
-<p>Let’s fit a basic Ordinary Least Squares (OLS) model. In our dataset, we have a few questions about Edward Snowden, such as:</p>
+<p>Any statistical modeling function that takes a <code>data</code>
+argument should happily accept a <code>CrunchDataset</code> and just do
+the right thing–no extra effort or thought required.</p>
+<p>Let’s fit a basic Ordinary Least Squares (OLS) model. In our dataset,
+we have a few questions about Edward Snowden, such as:</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>snowdenleakapp</span></code></pre></div>
 <pre><code>## Approval of Snowden&#39;s Leak (categorical)
 ## 
@@ -438,7 +705,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Somewhat approve    43.19385
 ## Somewhat disapprove 40.26587
 ## Strongly approve    24.70842</code></pre>
-<p>We can use <code>lm</code> to fit our model. Let’s explore the relationship between approval of Snowden’s leak and respondents’ interest in current events, party identification, gender, and age.</p>
+<p>We can use <code>lm</code> to fit our model. Let’s explore the
+relationship between approval of Snowden’s leak and respondents’
+interest in current events, party identification, gender, and age.</p>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>ols1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">I</span>(snowdenleakapp <span class="sc">==</span> <span class="st">&quot;Strongly approve&quot;</span>) <span class="sc">~</span> newsint2 <span class="sc">+</span> pid3 <span class="sc">+</span> gender <span class="sc">+</span> age,</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>ds)</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ols1)</span></code></pre></div>
@@ -467,8 +736,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Residual standard error: 0.3366 on 240 degrees of freedom
 ## Multiple R-squared:  0.02533,    Adjusted R-squared:  -0.01122 
 ## F-statistic: 0.6931 on 9 and 240 DF,  p-value: 0.7149</code></pre>
-<p>Looks like partisanship is weakly associated with approval of the NSA leak, but overall the model isn’t a great fit, given our data. (For what it’s worth, we’re working on a randomly drawn subset of the survey so that the size of data included with package is small. Results are more meaningful with the full dataset.) Nevertheless, this example illustrates how straightforward it is to do statistical analysis with data in Crunch. Even though your dataset lives on the server, you can think of it like a local <code>data.frame</code>. Note, for example, that our categorical variables (News Interest, Party ID, and Gender) expand their categories out as dichotomous indicators, just as if they were <code>factor</code> variables in a <code>data.frame</code>.</p>
-<p>Given that we’re estimating a model with a dichotomous dependent variable, perhaps a logit would be more appropriate than a strict linear predictor. We can use <code>glm</code> instead:</p>
+<p>Looks like partisanship is weakly associated with approval of the NSA
+leak, but overall the model isn’t a great fit, given our data. (For what
+it’s worth, we’re working on a randomly drawn subset of the survey so
+that the size of data included with package is small. Results are more
+meaningful with the full dataset.) Nevertheless, this example
+illustrates how straightforward it is to do statistical analysis with
+data in Crunch. Even though your dataset lives on the server, you can
+think of it like a local <code>data.frame</code>. Note, for example,
+that our categorical variables (News Interest, Party ID, and Gender)
+expand their categories out as dichotomous indicators, just as if they
+were <code>factor</code> variables in a <code>data.frame</code>.</p>
+<p>Given that we’re estimating a model with a dichotomous dependent
+variable, perhaps a logit would be more appropriate than a strict linear
+predictor. We can use <code>glm</code> instead:</p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>logit1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">I</span>(snowdenleakapp <span class="sc">==</span> <span class="st">&quot;Strongly approve&quot;</span>) <span class="sc">~</span> newsint2 <span class="sc">+</span> pid3 <span class="sc">+</span> gender <span class="sc">+</span> age,</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>), <span class="at">data=</span>ds)</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(logit1)</span></code></pre></div>
@@ -503,8 +784,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## AIC: 204.52
 ## 
 ## Number of Fisher Scoring iterations: 5</code></pre>
-<p>As before, not a particularly interesting result, but this is just the beginning of the analysis process. Using <code>crunch</code>, you can keep exploring the data and perhaps find a better fit.</p>
-<p>Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and if you specify a subset of the dataset to regress on (as we did above with <code>crtabs</code> when we looked at just Democrats), only those rows are retrieved. This helps minimize the time spent shipping data across the network. Moreover, because of the <code>crunch</code> package’s query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them.</p>
+<p>As before, not a particularly interesting result, but this is just
+the beginning of the analysis process. Using <code>crunch</code>, you
+can keep exploring the data and perhaps find a better fit.</p>
+<p>Unlike the previous examples, these modeling functions do have to
+pull columns of data from the server to your local machine. However,
+only the columns of data you reference in your formula are copied, and
+if you specify a subset of the dataset to regress on (as we did above
+with <code>crtabs</code> when we looked at just Democrats), only those
+rows are retrieved. This helps minimize the time spent shipping data
+across the network. Moreover, because of the <code>crunch</code>
+package’s query cache, subsequent models that incorporate any of those
+variables will not have to go to the server to get them.</p>
 <p><a href="filters.html">Next: filtering datasets</a></p>
 </div>
 

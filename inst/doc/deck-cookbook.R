@@ -9,7 +9,6 @@ knitr::opts_chunk$set(eval = FALSE)
 #  
 #  options("crunch.show.progress" = FALSE)
 #  
-#  login()
 #  ds <- newExampleDataset()
 
 ## ---------------------------------------------------------------------------------------------------------------------

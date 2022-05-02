@@ -217,8 +217,6 @@ vectorOrList <- function(obj, type) {
 #' | crunch.namekey.dataset       | R_CRUNCH_NAMEKEY_DATASET       | "alias"       | What variable identifier (alias or name) to use for a dataset's variables   |
 #' | crunch.namekey.array         | R_CRUNCH_NAMEKEY_ARRAY         | "alias"       | What variable identifier (alias or name) to use for an array's subvariables |
 #' | crunch.namekey.variableorder | R_CRUNCH_NAMEKEY_VARIABLEORDER | "name"        | What variable identifier (alias or name) to use for an order's variables    |
-#' | crunch.email                 | R_CRUNCH_EMAIL                 |               | (Deprecated) Email to use for [`login()`]                                   |
-#' | crunch.pw                    | R_CRUNCH_PW                    |               | (Deprecated) Password to use for [`login()`]                                |
 #' | use.legacy.tabbook.endpoint  | R_USE_LEGACY_TABBOOK_ENDPOINT  | FALSE         | (Deprecated) Whether to use legacy tabbook endpoint in [`tabBook()`]        |
 #'
 #' @param opt the option to get/set
@@ -368,7 +366,7 @@ is.singleCharacter <- function(value) {
 #'
 #' @keywords internal
 checkInstalledPackages <- function(pkgs) {
-    installed <- pkgs %in% rownames(installed.packages())
+    installed <- pkgs %in% rownames(utils::installed.packages())
     if (!all(installed)) {
         halt("Missing required packages: ", serialPaste(dQuote(pkgs[!installed])))
     }

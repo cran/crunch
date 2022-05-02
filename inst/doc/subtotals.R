@@ -6,8 +6,7 @@ set_crunch_opts("crunch.api" = "https://app.crunch.io/api/")
 options(width=120)
 library(httptest)
 if (!dir.exists("subtotals")) {
-    login()
-    
+
     if ("example vignette ds - subtotal" %in% listDatasets()) {
         ds <- loadDataset("example vignette ds - subtotal")
         with_consent(deleteDataset("example vignette ds - subtotal"))
@@ -114,6 +113,5 @@ transforms(cube)$q1$insertions <- list(Heading("Mammals", position = "top"), Hea
 cube
 
 ## ---- include=FALSE---------------------------------------------------------------------------------------------------
-logout()
 end_vignette()
 
