@@ -7,7 +7,7 @@ Description: The Crunch.io service <https://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.30.0
+Version: 1.30.1
 Authors@R: c(
     person("Greg", "Freedman Ellis", role = c("aut", "cre"), email = "greg@crunch.io"),
     person("Jonathan", "Keane", role="aut", email="jkeane@gmail.com"),
@@ -26,7 +26,7 @@ Suggests: base64enc, covr, crunchy, devtools, haven, httptest (>=
 VignetteBuilder: knitr
 Language: en-US
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.2
 LazyData: true
 Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'R-to-variable.R' 'SO-survey.R' 'abstract-categories.R'
@@ -68,7 +68,7 @@ Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'variable-type.R' 'variable-update.R' 'variable.R'
         'variables.R' 'versions.R' 'weight.R' 'zcl.R'
 NeedsCompilation: no
-Packaged: 2022-04-29 15:57:43 UTC; gregfreedmanellis
+Packaged: 2022-11-16 01:21:31 UTC; gregfreedmanellis
 Author: Greg Freedman Ellis [aut, cre],
   Jonathan Keane [aut],
   Mike Malecki [aut],
@@ -76,4 +76,4 @@ Author: Greg Freedman Ellis [aut, cre],
   Gordon Shotwell [aut]
 Maintainer: Greg Freedman Ellis <greg@crunch.io>
 Repository: CRAN
-Date/Publication: 2022-05-02 08:30:02 UTC
+Date/Publication: 2022-11-16 14:00:05 UTC

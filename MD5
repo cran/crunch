@@ -1,5 +1,5 @@
-636a6ffe5394e8370519b292b999ddbb *DESCRIPTION
-2e67598f730ead5e0ed59c953530d3a3 *NAMESPACE
+9133ef4a06901da073184ab4388ddb31 *DESCRIPTION
+9daffaecdbb7199c176003734b418602 *NAMESPACE
 624874f85a86138b023a57eadc4e1bdb *R/AllClasses.R
 1f62df43bb00a0939138ef42f364a3b9 *R/AllGenerics.R
 3b9c2e52543b3d63552b5a02d2b92bec *R/R-to-variable.R
@@ -59,7 +59,7 @@ ba204e0418fdfdcf735d8fc3a2ac2566 *R/delete.R
 8a3649cd573bb921458a8d50390659a9 *R/drop-rows.R
 86c8aeb70bace0908d3fb7c5b8e399e9 *R/edit-lock.R
 22750a317246518d98c0ae2f10b586a9 *R/export-dataset.R
-cd8f03236a4348ff2109cfeee3f57252 *R/expressions.R
+3232e8e335e8847df8c0e24ef0c44307 *R/expressions.R
 0031db4bda5a91dbe012fa5cc0abab3b *R/fill-variable.R
 1baa5ecb3b2ddc3b1909f0ea05c33707 *R/filters.R
 d606cef92b39fac7e2edeb01598a2e46 *R/folders.R
@@ -180,11 +180,11 @@ ec13eb3b637a663eaf233b83d16d1ce1 *inst/doc/variables.html
 58ff583b09704c046dc2302ba7ce99fa *inst/example-datasets/pets.json
 06ad04ecf1a83c7ff62331f23ab624fc *inst/httptest/redact.R
 e58ea8b20f1fa8e0af8bf6ee4eb5f148 *inst/httptest/start-vignette.R
-30a8b1010347f54bcee6b98260ee42b6 *inst/mocks.tgz
+e75ca6d8293700be2ac38c89ec911cf1 *inst/mocks.tgz
 ded2ecb1be42c00ef8a15011d332f70e *inst/rstudio/addins.dcf
 a1fe6b05f15bfff868b5113e4bbc3188 *man/AbstractCategory.Rd
 40b1a090bc0296b78aabaed5199173af *man/Categories.Rd
-6bb84761673e206e06eac1c8663b06d1 *man/ContextManager.Rd
+6789cf4f8e2f0b29a11d136fa0fe5fdf *man/ContextManager.Rd
 effc6099efcf50bafaa9f9eb8dd8e574 *man/CrunchDataFrame.Rd
 e0d494677ec6e72614a9043674faf59c *man/CrunchDataset.Rd
 f8aba58b21d01a4619c596eac299772e *man/CrunchVariable.Rd
@@ -243,7 +243,7 @@ ca89b90d9a7a40d0eeb027d537b17e61 *man/createSubvarDeriv.Rd
 30122c46817cdfd049d2857da0d030d7 *man/createWithMetadataAndFile.Rd
 368dc3b5a01623b3603faeb88cb88bca *man/createWithPreparedData.Rd
 01c7fcd196b8056d9ff873d536bc3f4f *man/crtabs.Rd
-cea4ccf53653ee0054cdb2db90f9dfb6 *man/crunch-api-key.Rd
+fda2750f39d0aae348626cb18c4448c3 *man/crunch-api-key.Rd
 f974a5c81c9939631eaefc637cbd2a25 *man/crunch-extract.Rd
 922080debe70d9006eb7a69bbb909be8 *man/crunch-is.Rd
 75c27cf3ef06bfe5c2b4aa197fff3f0b *man/crunch-summary.Rd
@@ -289,8 +289,8 @@ bf41d2917799fdd8d28266371f76f56e *man/duplicated.Rd
 935926013391614ea868abdff2671682 *man/exclusion.Rd
 a94d33bdc388d0926673444ce25eba33 *man/exportDataset.Rd
 2a3cf52a39df2ededf690d6dcc294faf *man/exportDeck.Rd
-a62d6a2e6982aa6c9c2b1ae4b63741bc *man/expressions-internal.Rd
-5446592779209b8bda2798d4f2b6df2c *man/expressions.Rd
+41581af16f8f19c9a68fc68395d0b433 *man/expressions-internal.Rd
+25d5f44814f8633b614b204270cd1c58 *man/expressions.Rd
 7e448a51fe0b6b62e266bcf323c51fa9 *man/fillExpr.Rd
 7fc77a9916efc5cc4f487a9ed4efb2b3 *man/filter-catalog.Rd
 34ee126d5cb988e181a689e1744be173 *man/flattenOrder.Rd
@@ -485,7 +485,7 @@ e3bb07cea4c8303fc086fa3a13884fff *tests/testthat/teardown.R
 22588a598b44bd7f34f85bb3c7b33fa2 *tests/testthat/test-add-subvariable.R
 11347febcc054d96513d10af09b3ef35 *tests/testthat/test-add-variable-definition.R
 7bb7114d550132ef482e7018773d07f0 *tests/testthat/test-add-variable.R
-4b2d55a94d8f79eca97c2d91dc10479b *tests/testthat/test-api.R
+b453061cc70f598c28ac4efcd13405bc *tests/testthat/test-api.R
 de3faa3f665fa71610f1962d11e367c4 *tests/testthat/test-append-arrays.R
 29ee3973bef7542b02a91de635ea7af6 *tests/testthat/test-append-conflicts.R
 b8440b6eb7eb8e1fabb75afb94dccc4b *tests/testthat/test-append-debug.R
@@ -493,7 +493,7 @@ def7d61b9f7ea1e0a0bb85990b4f70f0 *tests/testthat/test-append-sparse.R
 1fb88e096e899dcfbaa6c39e746b253d *tests/testthat/test-append-subset.R
 40b3f670a2dd9326bd2125462845c2ec *tests/testthat/test-append-subvariables.R
 286d3b3dd9320b8f67aa516395573b63 *tests/testthat/test-appending.R
-743f7c2178b96dfc280b2d08e97bf9f5 *tests/testthat/test-as-data-frame.R
+614a3e7213e509ae63465742b0c7ccf3 *tests/testthat/test-as-data-frame.R
 f2f1b50b7411c13352fc4b90f58175a9 *tests/testthat/test-auth.R
 4fab732a83be48b344fdfe3dadfb1784 *tests/testthat/test-automation.R
 9e4e03c7f33f1a18bd01e896d44342ee *tests/testthat/test-batches.R
