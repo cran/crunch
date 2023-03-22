@@ -29,22 +29,23 @@ document.addEventListener('DOMContentLoaded', function(e) {
 </script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
@@ -62,55 +63,54 @@ pre > code.sourceCode { white-space: pre-wrap; }
 pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {   }
+{ }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -119,13 +119,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -334,58 +341,53 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="TOC">
 <ul>
-<li><a href="#basic-deck-and-slide-manipulation">Basic deck and slide
+<li><a href="#basic-deck-and-slide-manipulation" id="toc-basic-deck-and-slide-manipulation">Basic deck and slide
 manipulation</a>
 <ul>
-<li><a href="#creating-an-analysis-slide-on-a-new-deck">Creating an
-analysis slide on a new deck</a></li>
-<li><a href="#creating-an-analysis-slide-on-an-existing-deck">Creating
-an analysis slide on an existing deck</a></li>
-<li><a href="#creating-a-markdown-slide">Creating a markdown
-slide</a></li>
-<li><a href="#adding-an-image-to-a-markdown-slide">Adding an image to a
+<li><a href="#creating-an-analysis-slide-on-a-new-deck" id="toc-creating-an-analysis-slide-on-a-new-deck">Creating an analysis
+slide on a new deck</a></li>
+<li><a href="#creating-an-analysis-slide-on-an-existing-deck" id="toc-creating-an-analysis-slide-on-an-existing-deck">Creating an
+analysis slide on an existing deck</a></li>
+<li><a href="#creating-a-markdown-slide" id="toc-creating-a-markdown-slide">Creating a markdown slide</a></li>
+<li><a href="#adding-an-image-to-a-markdown-slide" id="toc-adding-an-image-to-a-markdown-slide">Adding an image to a
 markdown slide</a></li>
-<li><a href="#editing-an-existing-slide">Editing an existing
-slide</a></li>
-<li><a href="#deleting-slides-on-a-deck">Deleting slides on a
-deck</a></li>
-<li><a href="#making-a-deck-public-or-private">Making a deck public (or
+<li><a href="#editing-an-existing-slide" id="toc-editing-an-existing-slide">Editing an existing slide</a></li>
+<li><a href="#deleting-slides-on-a-deck" id="toc-deleting-slides-on-a-deck">Deleting slides on a deck</a></li>
+<li><a href="#making-a-deck-public-or-private" id="toc-making-a-deck-public-or-private">Making a deck public (or
 private)</a></li>
 </ul></li>
-<li><a href="#query-types">Query types</a>
+<li><a href="#query-types" id="toc-query-types">Query types</a>
 <ul>
-<li><a href="#univariate-frequencies">Univariate frequencies</a></li>
-<li><a href="#bivariate-frequencies-crosstabs">Bivariate frequencies
+<li><a href="#univariate-frequencies" id="toc-univariate-frequencies">Univariate frequencies</a></li>
+<li><a href="#bivariate-frequencies-crosstabs" id="toc-bivariate-frequencies-crosstabs">Bivariate frequencies
 (crosstabs)</a></li>
-<li><a href="#frequencies-from-a-categorical-array">Frequencies from a
+<li><a href="#frequencies-from-a-categorical-array" id="toc-frequencies-from-a-categorical-array">Frequencies from a
 Categorical Array</a></li>
-<li><a href="#mean-of-a-numeric-variable">Mean of a Numeric
-variable</a></li>
-<li><a href="#scorecard-of-aligned-multiple-response-variables">Scorecard of
+<li><a href="#mean-of-a-numeric-variable" id="toc-mean-of-a-numeric-variable">Mean of a Numeric variable</a></li>
+<li><a href="#scorecard-of-aligned-multiple-response-variables" id="toc-scorecard-of-aligned-multiple-response-variables">Scorecard of
 aligned Multiple Response variables</a></li>
 </ul></li>
-<li><a href="#dimension-transforms">Dimension transforms</a>
+<li><a href="#dimension-transforms" id="toc-dimension-transforms">Dimension transforms</a>
 <ul>
-<li><a href="#using-a-datasets-palette">Using a dataset’s
-palette</a></li>
-<li><a href="#using-a-set-of-colors-from-r">Using a set of colors from
+<li><a href="#using-a-datasets-palette" id="toc-using-a-datasets-palette">Using a dataset’s palette</a></li>
+<li><a href="#using-a-set-of-colors-from-r" id="toc-using-a-set-of-colors-from-r">Using a set of colors from
 R</a></li>
-<li><a href="#hiding-a-dimension-item">Hiding a dimension item</a></li>
+<li><a href="#hiding-a-dimension-item" id="toc-hiding-a-dimension-item">Hiding a dimension item</a></li>
 </ul></li>
-<li><a href="#display-settings-and-visual-specifications">Display
-settings and visual specifications</a>
+<li><a href="#display-settings-and-visual-specifications" id="toc-display-settings-and-visual-specifications">Display settings and
+visual specifications</a>
 <ul>
-<li><a href="#choosing-a-graph-type">Choosing a graph type</a></li>
-<li><a href="#using-a-slide-as-a-template">Using a slide as a
+<li><a href="#choosing-a-graph-type" id="toc-choosing-a-graph-type">Choosing a graph type</a></li>
+<li><a href="#using-a-slide-as-a-template" id="toc-using-a-slide-as-a-template">Using a slide as a
 template</a></li>
 </ul></li>
-<li><a href="#bulk-creation-of-slides">Bulk creation of slides</a>
+<li><a href="#bulk-creation-of-slides" id="toc-bulk-creation-of-slides">Bulk creation of slides</a>
 <ul>
-<li><a href="#basic-top-line-for-entire-dataset">Basic top line for
-entire dataset</a></li>
-<li><a href="#slides-for-variables-within-a-particular-folder">Slides
-for variables within a particular folder</a></li>
-<li><a href="#slides-based-on-variable-type">Slides based on variable
+<li><a href="#basic-top-line-for-entire-dataset" id="toc-basic-top-line-for-entire-dataset">Basic top line for entire
+dataset</a></li>
+<li><a href="#slides-for-variables-within-a-particular-folder" id="toc-slides-for-variables-within-a-particular-folder">Slides for
+variables within a particular folder</a></li>
+<li><a href="#slides-based-on-variable-type" id="toc-slides-based-on-variable-type">Slides based on variable
 type</a></li>
 </ul></li>
 </ul>
@@ -508,7 +510,7 @@ dataset. You can select one name or position and then add to it.</p>
 <h4>Solution</h4>
 <p>The function <code>markdownSlideImage()</code> helps add an image to
 a markdown slide. The function takes a path to an image on your local
-machine, and you use it as an unnamed arugment of
+machine, and you use it as an unnamed argument of
 <code>newMarkdownSlide()</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>slide <span class="ot">&lt;-</span> <span class="fu">newMarkdownSlide</span>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  deck, </span>
