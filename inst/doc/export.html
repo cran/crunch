@@ -356,7 +356,7 @@ dataset.</p>
 <h2>as.data.frame and as.vector</h2>
 <p>To get the local R representation of a Crunch variable, use
 <code>as.vector</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>party_id <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(ds<span class="sc">$</span>pid3)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>party_id <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(ds<span class="sc">$</span>pid3)</span></code></pre></div>
 <p><code>as.vector</code> translates Crunch to R types in reverse of how
 they are mapped in translation from R to Crunch in
 <code>newDataset</code>: categoricals become factors, numerics are
@@ -367,7 +367,7 @@ into the subvariables (like <code>ds$var$subvar</code>).</p>
 <p>While categorical variables by default are translated as factors, you
 can use the “mode” argument to <code>as.vector</code> to request either
 the category “id” or the “numeric” values of the categories.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>party_id <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(ds<span class="sc">$</span>pid3, <span class="at">mode=</span><span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>party_id <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(ds<span class="sc">$</span>pid3, <span class="at">mode=</span><span class="st">&quot;id&quot;</span>)</span></code></pre></div>
 <p>Requesting <code>mode=&quot;id&quot;</code> may be particularly useful when you
 want to work with data locally that most closely matches the
 representation of the data on the server; however, the category names
@@ -378,28 +378,28 @@ distinction: <code>as.data.frame</code> doesn’t itself pull data off the
 server. Rather, <code>as.data.frame</code> returns a
 <code>data.frame</code>-like object that lazily fetches columns only
 when requested.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>v1 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(ds<span class="sc">$</span>var)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ds)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(v1, df<span class="sc">$</span>var)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">## TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>v1 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(ds<span class="sc">$</span>var)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ds)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="fu">identical</span>(v1, df<span class="sc">$</span>var)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="do">## TRUE</span></span></code></pre></div>
 <p>That way, you can call <code>as.data.frame</code> and get convenient
 access to the columns of data without having to download things you
 don’t need up front.</p>
 <p>Of course, you can download all of the data at once if you want–even
 though it’s discouraged!–by either calling <code>as.data.frame</code> a
 second time</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ds)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.data.frame</span>(df)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">## FALSE</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(df)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">is.data.frame</span>(df)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="do">## TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ds)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">is.data.frame</span>(df)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="do">## FALSE</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(df)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">is.data.frame</span>(df)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="do">## TRUE</span></span></code></pre></div>
 <p>or by calling <code>as.data.frame</code> the first time with
 <code>force=TRUE</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ds, <span class="at">force=</span><span class="cn">TRUE</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.data.frame</span>(df)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">## TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ds, <span class="at">force=</span><span class="cn">TRUE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">is.data.frame</span>(df)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">## TRUE</span></span></code></pre></div>
 </div>
 <div id="filtering-and-subsetting" class="section level2">
 <h2>Filtering and subsetting</h2>
@@ -413,27 +413,27 @@ the rows and columns of your data of interest.</p>
 demographic variables just for self-identified Democrats. I can filter
 the rows and columns of my dataset just as if I was working with a
 <code>data.frame</code>, and only pull that subset to my computer.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ds[ds<span class="sc">$</span>pid3 <span class="sc">==</span> <span class="st">&quot;Democrat&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;educ&quot;</span>, <span class="st">&quot;gender&quot;</span>)], <span class="at">force=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ds[ds<span class="sc">$</span>pid3 <span class="sc">==</span> <span class="st">&quot;Democrat&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;educ&quot;</span>, <span class="st">&quot;gender&quot;</span>)], <span class="at">force=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <p>This dataset filtering is much more efficient (and thus faster) than
 attempting to download the entire dataset and then subsetting the
 resulting <code>data.frame</code>.</p>
 <p>You can also use this subsetting for convenience when lazily
 accessing the data.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dems <span class="ot">&lt;-</span> ds[ds<span class="sc">$</span>pid3 <span class="sc">==</span> <span class="st">&quot;Democrat&quot;</span>, ]</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>dems <span class="ot">&lt;-</span> ds[ds<span class="sc">$</span>pid3 <span class="sc">==</span> <span class="st">&quot;Democrat&quot;</span>, ]</span></code></pre></div>
 <p>gives a view of the dataset that is filtered by party
 identification.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dem_age <span class="ot">&lt;-</span> dems<span class="sc">$</span>age</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>dem_age <span class="ot">&lt;-</span> dems<span class="sc">$</span>age</span></code></pre></div>
 <p>thus gives you just the values of “age” for those rows where “pid3”
 is equal to “Democrat”. This is equivalent to calling
 <code>as.vector</code> directly on a subsetted variable:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(<span class="fu">as.vector</span>(ds<span class="sc">$</span>age[ds<span class="sc">$</span>pid3 <span class="sc">==</span> <span class="st">&quot;Democrat&quot;</span>]), dem_age)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">## TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">identical</span>(<span class="fu">as.vector</span>(ds<span class="sc">$</span>age[ds<span class="sc">$</span>pid3 <span class="sc">==</span> <span class="st">&quot;Democrat&quot;</span>]), dem_age)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="do">## TRUE</span></span></code></pre></div>
 </div>
 <div id="expressions" class="section level2">
 <h2>Expressions</h2>
 <p>You can also get values for an on-the-fly derivation with
 <code>as.vector</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>perc_completed <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="dv">100</span> <span class="sc">-</span> ds<span class="sc">$</span>perc_skipped)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>perc_completed <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="dv">100</span> <span class="sc">-</span> ds<span class="sc">$</span>perc_skipped)</span></code></pre></div>
 <p>Even though <code>perc_completed</code> doesn’t exist in the dataset,
 we can get values for it by expression.</p>
 </div>
@@ -441,12 +441,12 @@ we can get values for it by expression.</p>
 <h2>Exporting</h2>
 <p>If you want to download a file of the dataset or of a subset, use
 <code>exportDataset</code>:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exportDataset</span>(ds, <span class="at">file=</span><span class="st">&quot;econ.sav&quot;</span>, <span class="at">format=</span><span class="st">&quot;spss&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">exportDataset</span>(ds, <span class="at">file=</span><span class="st">&quot;econ.sav&quot;</span>, <span class="at">format=</span><span class="st">&quot;spss&quot;</span>)</span></code></pre></div>
 <p><code>exportDataset</code> writes to SPSS (.sav) and CSV formats.
 Alternatively, to get a CSV, <code>write.csv</code> is short for
 <code>exportDataset(..., format=&quot;csv&quot;)</code> and works similar to how
 it does for regular <code>data.frame</code>s.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(ds, <span class="at">file=</span><span class="st">&quot;econ.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">write.csv</span>(ds, <span class="at">file=</span><span class="st">&quot;econ.csv&quot;</span>)</span></code></pre></div>
 <p>CSV export does have a “categories” option that governs whether
 categorical variables are exported as category names or ids. The latter
 is more concise and pairs well with the Crunch metadata export, but
@@ -455,7 +455,7 @@ metadata.</p>
 <p>As with the <code>as.data.frame</code> methods, you can subset what
 you export by indexing the rows and columns. Following the previous
 example, we can get a CSV of that demographic subset by:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(ds[ds<span class="sc">$</span>pid3 <span class="sc">==</span> <span class="st">&quot;Democrat&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;educ&quot;</span>, <span class="st">&quot;gender&quot;</span>)], <span class="at">file=</span><span class="st">&quot;demo-demos.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">write.csv</span>(ds[ds<span class="sc">$</span>pid3 <span class="sc">==</span> <span class="st">&quot;Democrat&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;educ&quot;</span>, <span class="st">&quot;gender&quot;</span>)], <span class="at">file=</span><span class="st">&quot;demo-demos.csv&quot;</span>)</span></code></pre></div>
 <p><a href="subtotals.html">Next: subtotals</a></p>
 </div>
 

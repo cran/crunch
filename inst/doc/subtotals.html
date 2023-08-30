@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(crunch)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(crunch)</span></code></pre></div>
 <p><a href="export.html">Previous: exporting data</a></p>
 <p>A common task in the market research world is to collapse two or more
 categories together to see how the collapsed categories compare to one
@@ -357,7 +357,7 @@ define, manage, and analyze variables with subtotals.</p>
 variable. In R, we can view and set subtotal definitions with the
 <code>subtotals()</code> function. If there are no subtotals, the
 function will return <code>NULL</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>q1)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>q1)</span></code></pre></div>
 <pre><code>## NULL</code></pre>
 <p>To add subtotals, we can assign a list of <code>Subtotal</code>
 objects. Each <code>Subtotal</code> object has three things: a
@@ -366,18 +366,18 @@ pool together, referenced either by category name or id; and a location
 to show it, either <code>after</code> a given category or with
 <code>position=&quot;top&quot;</code> or <code>&quot;bottom&quot;</code> to pin it first or
 last in the list.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>q1) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Subtotal</span>(</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">&quot;Mammals&quot;</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">categories =</span> <span class="fu">c</span>(<span class="st">&quot;Cat&quot;</span>, <span class="st">&quot;Dog&quot;</span>),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">after =</span> <span class="st">&quot;Dog&quot;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Subtotal</span>(</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">&quot;Can speak on command&quot;</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">categories =</span> <span class="fu">c</span>(<span class="st">&quot;Dog&quot;</span>, <span class="st">&quot;Bird&quot;</span>),</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">after =</span> <span class="st">&quot;Bird&quot;</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>q1) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>    <span class="fu">Subtotal</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">&quot;Mammals&quot;</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>        <span class="at">categories =</span> <span class="fu">c</span>(<span class="st">&quot;Cat&quot;</span>, <span class="st">&quot;Dog&quot;</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>        <span class="at">after =</span> <span class="st">&quot;Dog&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>    ),</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>    <span class="fu">Subtotal</span>(</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">&quot;Can speak on command&quot;</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>        <span class="at">categories =</span> <span class="fu">c</span>(<span class="st">&quot;Dog&quot;</span>, <span class="st">&quot;Bird&quot;</span>),</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>        <span class="at">after =</span> <span class="st">&quot;Bird&quot;</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>    )</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>)</span></code></pre></div>
 <p>Now, if we check <code>subtotals()</code>, we can see that we have
 saved them. In this output we see a few different aspects of subtotals:
 the <code>anchor</code> is the id of the category to put the subtotal
@@ -385,7 +385,7 @@ after (matching the <code>after</code> or <code>position</code> argument
 in <code>Subtotal()</code>), name, aggregation functions and
 <code>args</code>, which in the this case are the category ids to
 include in the subtotal.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>q1)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>q1)</span></code></pre></div>
 <pre><code>##   anchor                 name     func    args               kwargs
 ## 1      2              Mammals subtotal 1 and 2 positive: 1 and 2 | 
 ## 2      3 Can speak on command subtotal 2 and 3 positive: 2 and 3 |</code></pre>
@@ -395,33 +395,33 @@ this:</p>
 <p>Crunch also supports “Subtotal Differences” (sometimes also called
 “Net Promoter Scores”122). The <code>negative</code> argument of
 <code>Subtotal</code> specifies which categories to subtract.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>like_dogs) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Subtotal</span>(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">&quot;Love minus Dislike &amp; Hate&quot;</span>,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">categories =</span> <span class="fu">c</span>(<span class="st">&quot;Love&quot;</span>),</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">negative =</span> <span class="fu">c</span>(<span class="st">&quot;Dislike&quot;</span>, <span class="st">&quot;Hate&quot;</span>),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">position =</span> <span class="st">&quot;top&quot;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>like_dogs) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>    <span class="fu">Subtotal</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">&quot;Love minus Dislike &amp; Hate&quot;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>        <span class="at">categories =</span> <span class="fu">c</span>(<span class="st">&quot;Love&quot;</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>        <span class="at">negative =</span> <span class="fu">c</span>(<span class="st">&quot;Dislike&quot;</span>, <span class="st">&quot;Hate&quot;</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>        <span class="at">position =</span> <span class="st">&quot;top&quot;</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>    )</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 <div id="subtotals-on-multiple-response-variables" class="section level1">
 <h1>Subtotals on multiple response variables</h1>
 <p><a href="array-variables.html">Multiple Response variables</a> can
 also have subtotals. To specify, use the alias or name of the
 subvariables as the categories.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>allpets) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Subtotal</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">&quot;Any mammal&quot;</span>,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">c</span>(<span class="st">&quot;allpets_1&quot;</span>, <span class="st">&quot;allpets_2&quot;</span>),</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">position =</span> <span class="st">&quot;top&quot;</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>allpets) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>    <span class="fu">Subtotal</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">&quot;Any mammal&quot;</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>        <span class="fu">c</span>(<span class="st">&quot;allpets_1&quot;</span>, <span class="st">&quot;allpets_2&quot;</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>        <span class="at">position =</span> <span class="st">&quot;top&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>    )</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 <div id="removing-subtotals" class="section level1">
 <h1>Removing subtotals</h1>
 <p>Subtotals and headings can be removed by assigning a
 <code>NULL</code> value.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>like_dogs) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>like_dogs) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code></pre></div>
 </div>
 <div id="setting-many-subtotals" class="section level1">
 <h1>Setting many subtotals</h1>
@@ -429,25 +429,25 @@ subvariables as the categories.</p>
 categories. If the category names (or ids, if we’re using those) are the
 same, we can use the same set of subtotals across multiple
 variables.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pet_type_subtotals <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Subtotal</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">&quot;Love minus Dislike &amp; Hate&quot;</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">categories =</span> <span class="fu">c</span>(<span class="st">&quot;Love&quot;</span>),</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">negative =</span> <span class="fu">c</span>(<span class="st">&quot;Dislike&quot;</span>, <span class="st">&quot;Hate&quot;</span>),</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">position =</span> <span class="st">&quot;top&quot;</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>like_dogs) <span class="ot">&lt;-</span> pet_type_subtotals</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>like_cats) <span class="ot">&lt;-</span> pet_type_subtotals</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>pet_type_subtotals <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>    <span class="fu">Subtotal</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">&quot;Love minus Dislike &amp; Hate&quot;</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>        <span class="at">categories =</span> <span class="fu">c</span>(<span class="st">&quot;Love&quot;</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>        <span class="at">negative =</span> <span class="fu">c</span>(<span class="st">&quot;Dislike&quot;</span>, <span class="st">&quot;Hate&quot;</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>        <span class="at">position =</span> <span class="st">&quot;top&quot;</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>    )</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>like_dogs) <span class="ot">&lt;-</span> pet_type_subtotals</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>like_cats) <span class="ot">&lt;-</span> pet_type_subtotals</span></code></pre></div>
 <p>Notice here, because each of the categories for these variables has
 slightly different ids, the <code>args</code> in the output differs
 slightly. But, because we used category names when we were constructing
 our list of subtotals, when we store them on the variable itself, Crunch
 does the right thing and converts them over to the correct ids.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>like_dogs)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>like_dogs)</span></code></pre></div>
 <pre><code>##   anchor                      name     func args                          kwargs
 ## 1    top Love minus Dislike &amp; Hate subtotal    1 positive: 1 | negative: 4 and 5</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>like_cats)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">subtotals</span>(ds<span class="sc">$</span>like_cats)</span></code></pre></div>
 <pre><code>##   anchor                      name     func args                          kwargs
 ## 1    top Love minus Dislike &amp; Hate subtotal    5 positive: 5 | negative: 2 and 1</code></pre>
 </div>
@@ -455,7 +455,7 @@ does the right thing and converts them over to the correct ids.</p>
 <h1>Computing with subtotals</h1>
 <p>Now that we have defined subtotals on the congressional approval
 question, if we use it in a crosstab, we can see the subtotals.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="sc">~</span>like_dogs, <span class="at">data =</span> ds)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="sc">~</span>like_dogs, <span class="at">data =</span> ds)</span></code></pre></div>
 <pre><code>##                           
 ##                          
 ## Love minus Dislike &amp; Hate 0
@@ -466,13 +466,13 @@ question, if we use it in a crosstab, we can see the subtotals.</p>
 ##                      Hate 2</code></pre>
 <p>We can even get just the subtotals as an array from the result if we
 want to ignore the constituent groups:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subtotalArray</span>(<span class="fu">crtabs</span>(<span class="sc">~</span>like_dogs, <span class="at">data =</span> ds))</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">subtotalArray</span>(<span class="fu">crtabs</span>(<span class="sc">~</span>like_dogs, <span class="at">data =</span> ds))</span></code></pre></div>
 <pre><code>## Love minus Dislike &amp; Hate 
 ##                         0</code></pre>
 <p>If you don’t want to see the subtotals as part of these summaries,
 you can suppress them from display with the <code>noTransforms()</code>
 function around <code>crtabs()</code>.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">noTransforms</span>(<span class="fu">crtabs</span>(<span class="sc">~</span>like_dogs, <span class="at">data =</span> ds))</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">noTransforms</span>(<span class="fu">crtabs</span>(<span class="sc">~</span>like_dogs, <span class="at">data =</span> ds))</span></code></pre></div>
 <pre><code>## like_dogs
 ##    Love    Like Neutral Dislike    Hate 
 ##       4       4       8       2       2</code></pre>
@@ -487,8 +487,8 @@ be sent to the server. Therefore, they are only useful when working on
 <code>cube</code> objects that you’ve already requested. The
 <code>Heading</code> and <code>addSummaryStat</code> functions help you
 make these kinds of insertions.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># addSummaryStat is a convenient way to add mean/median</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">addSummaryStat</span>(<span class="fu">crtabs</span>(<span class="sc">~</span>q1, ds), <span class="at">margin =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="co"># addSummaryStat is a convenient way to add mean/median</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="fu">addSummaryStat</span>(<span class="fu">crtabs</span>(<span class="sc">~</span>q1, ds), <span class="at">margin =</span> <span class="dv">1</span>)</span></code></pre></div>
 <pre><code>##                                     
 ##                     
 ##                  Cat                6
@@ -497,9 +497,9 @@ make these kinds of insertions.</p>
 ##                 Bird                3
 ## Can speak on command                7
 ##                 mean 1.76923076923077</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>cube <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span>q1, <span class="at">data =</span> ds)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">transforms</span>(cube)<span class="sc">$</span>q1<span class="sc">$</span>insertions <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">Heading</span>(<span class="st">&quot;Mammals&quot;</span>, <span class="at">position =</span> <span class="st">&quot;top&quot;</span>), <span class="fu">Heading</span>(<span class="st">&quot;Other&quot;</span>, <span class="at">after =</span> <span class="st">&quot;Dog&quot;</span>))</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>cube</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>cube <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span>q1, <span class="at">data =</span> ds)</span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="fu">transforms</span>(cube)<span class="sc">$</span>q1<span class="sc">$</span>insertions <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">Heading</span>(<span class="st">&quot;Mammals&quot;</span>, <span class="at">position =</span> <span class="st">&quot;top&quot;</span>), <span class="fu">Heading</span>(<span class="st">&quot;Other&quot;</span>, <span class="at">after =</span> <span class="st">&quot;Dog&quot;</span>))</span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>cube</span></code></pre></div>
 <pre><code>##         
 ##        
 ## Mammals   

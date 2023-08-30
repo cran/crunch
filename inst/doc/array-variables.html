@@ -359,12 +359,12 @@ functions operating on Crunch datasets have an optional
 these “bulk” operations.</p>
 <p>In our sample <em>Economist</em> dataset, we have set of variables
 prefixed with “imiss”:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(<span class="st">&quot;^imiss_&quot;</span>, <span class="fu">names</span>(ds), <span class="at">value=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">grep</span>(<span class="st">&quot;^imiss_&quot;</span>, <span class="fu">names</span>(ds), <span class="at">value=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>##  [1] &quot;imiss_b&quot; &quot;imiss_c&quot; &quot;imiss_d&quot; &quot;imiss_f&quot; &quot;imiss_g&quot; &quot;imiss_h&quot; &quot;imiss_j&quot; &quot;imiss_m&quot; &quot;imiss_p&quot; &quot;imiss_q&quot; &quot;imiss_r&quot;
 ## [12] &quot;imiss_s&quot; &quot;imiss_t&quot;</code></pre>
 <p>These correspond to a survey grid question about how important
 respondents view a set of issues. Examining one of them, we see</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>imiss_b</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>ds<span class="sc">$</span>imiss_b</span></code></pre></div>
 <pre><code>## imiss_b (categorical)
 ## 
 ##                    Count
@@ -375,8 +375,8 @@ respondents view a set of issues. Examining one of them, we see</p>
 <p>All of these “imiss” categorical variables have the same structure.
 We can combine them into a categorical array variable with
 <code>makeArray</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>imiss <span class="ot">&lt;-</span> <span class="fu">makeArray</span>(ds[<span class="fu">grep</span>(<span class="st">&quot;^imiss_&quot;</span>, <span class="fu">names</span>(ds))], <span class="at">name=</span><span class="st">&quot;Issue importance&quot;</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>imiss</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>ds<span class="sc">$</span>imiss <span class="ot">&lt;-</span> <span class="fu">makeArray</span>(ds[<span class="fu">grep</span>(<span class="st">&quot;^imiss_&quot;</span>, <span class="fu">names</span>(ds))], <span class="at">name=</span><span class="st">&quot;Issue importance&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>ds<span class="sc">$</span>imiss</span></code></pre></div>
 <pre><code>## Issue importance (categorical_array)
 ## Subvariables:
 ##   $`imiss_b`
@@ -399,7 +399,7 @@ shown as columns.</p>
 <p>In our example dataset, the categorical variables
 <code>imiss_*</code> are now not visible in the dataset directly, but we
 can access them as “subvariables” of the array we just created.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)</span></code></pre></div>
 <pre><code>## Subvariables:
 ##   $`imiss_b`
 ##   $`imiss_c`
@@ -416,7 +416,7 @@ can access them as “subvariables” of the array we just created.</p>
 ##   $`imiss_t`</code></pre>
 <p>We can also step into the subvariables and access the underlying
 categorical variables:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>imiss<span class="sc">$</span>imiss_b</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>ds<span class="sc">$</span>imiss<span class="sc">$</span>imiss_b</span></code></pre></div>
 <pre><code>## imiss_b (categorical)
 ## 
 ##                    Count
@@ -435,15 +435,15 @@ have additional metadata on these survey questions in the
 this.</p>
 <p>Subvariables have methods similar to those for <a href="variables.html">categories</a>. They have a names attribute that
 we can get:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(<span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">names</span>(<span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss))</span></code></pre></div>
 <pre><code>##  [1] &quot;imiss_b&quot; &quot;imiss_c&quot; &quot;imiss_d&quot; &quot;imiss_f&quot; &quot;imiss_g&quot; &quot;imiss_h&quot; &quot;imiss_j&quot; &quot;imiss_m&quot; &quot;imiss_p&quot; &quot;imiss_q&quot; &quot;imiss_r&quot;
 ## [12] &quot;imiss_s&quot; &quot;imiss_t&quot;</code></pre>
 <p>We can set it, too:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(<span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;The economy&quot;</span>, <span class="st">&quot;Immigration&quot;</span>,</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;The environment&quot;</span>, <span class="st">&quot;Terrorism&quot;</span>, <span class="st">&quot;Gay rights&quot;</span>, <span class="st">&quot;Education&quot;</span>,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Health care&quot;</span>, <span class="st">&quot;Social security&quot;</span>, <span class="st">&quot;The budget deficit&quot;</span>,</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;The war in Afghanistan&quot;</span>, <span class="st">&quot;Taxes&quot;</span>, <span class="st">&quot;Medicare&quot;</span>, <span class="st">&quot;Abortion&quot;</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">names</span>(<span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;The economy&quot;</span>, <span class="st">&quot;Immigration&quot;</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>    <span class="st">&quot;The environment&quot;</span>, <span class="st">&quot;Terrorism&quot;</span>, <span class="st">&quot;Gay rights&quot;</span>, <span class="st">&quot;Education&quot;</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>    <span class="st">&quot;Health care&quot;</span>, <span class="st">&quot;Social security&quot;</span>, <span class="st">&quot;The budget deficit&quot;</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>    <span class="st">&quot;The war in Afghanistan&quot;</span>, <span class="st">&quot;Taxes&quot;</span>, <span class="st">&quot;Medicare&quot;</span>, <span class="st">&quot;Abortion&quot;</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)</span></code></pre></div>
 <pre><code>## Subvariables:
 ##   $`The economy`
 ##   $`Immigration`
@@ -460,9 +460,9 @@ we can get:</p>
 ##   $`Abortion`</code></pre>
 <p>Another useful thing we can do with array subvariables is reorder
 them. Let’s alphabetize the subvariables:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>sorting <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">names</span>(<span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss) <span class="ot">&lt;-</span> <span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)[sorting]</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>sorting <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">names</span>(<span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)))</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss) <span class="ot">&lt;-</span> <span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)[sorting]</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="fu">subvariables</span>(ds<span class="sc">$</span>imiss)</span></code></pre></div>
 <pre><code>## Subvariables:
 ##   $`Abortion`
 ##   $`Education`
@@ -493,7 +493,7 @@ tabulations with them may not sum to 100 percent.</p>
 <p>In the <em>Economist</em> dataset, we have another set of parallel
 categorical variables, “boap”, which indicate approval of President
 Obama on a range of issues.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap_4</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>ds<span class="sc">$</span>boap_4</span></code></pre></div>
 <pre><code>## boap_4 (categorical)
 ## 
 ##                     Count
@@ -510,10 +510,10 @@ response—let’s treat this as multiple response.</p>
 but with an additional argument, “selections”, in which you specify the
 category name(s) that identify which category or categories should be
 the dichotomous indicator.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap <span class="ot">&lt;-</span> <span class="fu">makeMR</span>(ds[<span class="fu">grep</span>(<span class="st">&quot;^boap_[0-9]+&quot;</span>, <span class="fu">names</span>(ds))],</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">name=</span><span class="st">&quot;Approval of Obama on issues&quot;</span>,</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">selections=</span><span class="fu">c</span>(<span class="st">&quot;Strongly approve&quot;</span>, <span class="st">&quot;Somewhat approve&quot;</span>))</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>ds<span class="sc">$</span>boap <span class="ot">&lt;-</span> <span class="fu">makeMR</span>(ds[<span class="fu">grep</span>(<span class="st">&quot;^boap_[0-9]+&quot;</span>, <span class="fu">names</span>(ds))],</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>    <span class="at">name=</span><span class="st">&quot;Approval of Obama on issues&quot;</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>    <span class="at">selections=</span><span class="fu">c</span>(<span class="st">&quot;Strongly approve&quot;</span>, <span class="st">&quot;Somewhat approve&quot;</span>))</span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>ds<span class="sc">$</span>boap</span></code></pre></div>
 <pre><code>## Approval of Obama on issues (multiple_response)
 ## Subvariables:
 ##   $`boap_2`
@@ -538,8 +538,8 @@ This metadata can be manipulated, and we can thus transform categorical
 arrays into multiple response and vice versa.</p>
 <p>The function <code>undichotomize</code> removes the dichotomization
 metadata:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap <span class="ot">&lt;-</span> <span class="fu">undichotomize</span>(ds<span class="sc">$</span>boap)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>ds<span class="sc">$</span>boap <span class="ot">&lt;-</span> <span class="fu">undichotomize</span>(ds<span class="sc">$</span>boap)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>ds<span class="sc">$</span>boap</span></code></pre></div>
 <pre><code>## Approval of Obama on issues (categorical_array)
 ## Subvariables:
 ##   $`boap_2`
@@ -558,8 +558,8 @@ metadata:</p>
 <p>We can add that information with <code>dichotomize</code>. Taking our
 categorical array “boap,” let’s make it into a multiple response, but
 this time, let’s only include the “Strongly approve” category:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap <span class="ot">&lt;-</span> <span class="fu">dichotomize</span>(ds<span class="sc">$</span>boap, <span class="st">&quot;Strongly approve&quot;</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>boap</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>ds<span class="sc">$</span>boap <span class="ot">&lt;-</span> <span class="fu">dichotomize</span>(ds<span class="sc">$</span>boap, <span class="st">&quot;Strongly approve&quot;</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>ds<span class="sc">$</span>boap</span></code></pre></div>
 <pre><code>## Approval of Obama on issues (multiple_response)
 ## Subvariables:
 ##   $`boap_2`
@@ -580,15 +580,15 @@ this time, let’s only include the “Strongly approve” category:</p>
 <h2>Splitting arrays back into categoricals</h2>
 <p>As noted above, when we make an array, its subvariables no longer
 appear in the dataset outside of the array.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(<span class="st">&quot;boap&quot;</span>, <span class="fu">names</span>(ds), <span class="at">value=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">grep</span>(<span class="st">&quot;boap&quot;</span>, <span class="fu">names</span>(ds), <span class="at">value=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;boap&quot;</code></pre>
 <p>We can access the subvariables and do things with them directly via
 the <code>subvariables</code> method, but the case may arise in which we
 want to undo our binding of these subvariables into the array. The
 function <code>unbind</code> deletes the array variable and restores the
 subvariables as top-level variables.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unbind</span>(ds<span class="sc">$</span>boap)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="fu">refresh</span>(ds)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">unbind</span>(ds<span class="sc">$</span>boap)</span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="fu">refresh</span>(ds)</span></code></pre></div>
 <p>Note the use of <code>refresh</code>. Most functions that modify
 objects on the server refresh their local copies in our R session
 automatically; however, because <code>unbind</code> doesn’t assign back
@@ -596,7 +596,7 @@ into <code>ds</code>, the local dataset object doesn’t get updated with
 the change, so we need to refresh it manually.</p>
 <p>Now, if we check the names of <code>ds</code>, we see our full set of
 <code>boap_*</code> former subvariables:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span>(<span class="st">&quot;boap&quot;</span>, <span class="fu">names</span>(ds), <span class="at">value=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">grep</span>(<span class="st">&quot;boap&quot;</span>, <span class="fu">names</span>(ds), <span class="at">value=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>##  [1] &quot;boap_2&quot;  &quot;boap_3&quot;  &quot;boap_4&quot;  &quot;boap_5&quot;  &quot;boap_6&quot;  &quot;boap_7&quot;  &quot;boap_8&quot;  &quot;boap_9&quot;  &quot;boap_10&quot; &quot;boap_11&quot; &quot;boap_12&quot;
 ## [12] &quot;boap_13&quot; &quot;boap_14&quot;</code></pre>
 <p><a href="variable-order.html">Next: variable organization</a></p>

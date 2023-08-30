@@ -361,8 +361,8 @@ which to evaluate it. In this case, we’ll be providing a
 data argument. Dimensions of your crosstab go on the right side of the
 <code>~</code>. For a univariate table of frequencies by education, we
 can do</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>tab1 <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span> educ, <span class="at">data=</span>ds)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>tab1</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>tab1 <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span> educ, <span class="at">data=</span>ds)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>tab1</span></code></pre></div>
 <pre><code>## educ
 ##                No HS High school graduate         Some college               2-year               4-year 
 ##                   12                   71                   61                   24                   57 
@@ -370,8 +370,8 @@ can do</p>
 ##                   25</code></pre>
 <p>Additional dimensions are added with <code>+</code>. For a two-way
 table of education and gender,</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tab2 <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>tab2</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>tab2 <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>tab2</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
 ##   No HS                   6      6
@@ -387,14 +387,14 @@ table of education and gender,</p>
 <code>xtabs</code> does not support. First, it respects weight variables
 that have been set on the server. This dataset is not currently
 weighted</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">weight</span>(ds)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">weight</span>(ds)</span></code></pre></div>
 <pre><code>## NULL</code></pre>
 <p>but we can very easily change that. Let’s use the “weight” variable
 that already exists in the dataset:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">weight</span>(ds) <span class="ot">&lt;-</span> ds<span class="sc">$</span>weight</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">weight</span>(ds) <span class="ot">&lt;-</span> ds<span class="sc">$</span>weight</span></code></pre></div>
 <p>Now, if we request the same two-way table as before, we’ll get
 weighted results:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
 ##   No HS                   6      6
@@ -404,7 +404,7 @@ weighted results:</p>
 ##   4-year                 25     32
 ##   Post-grad              15     10</code></pre>
 <p>If we want unweighted data, that’s easy enough:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds, <span class="at">weight=</span><span class="cn">NULL</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds, <span class="at">weight=</span><span class="cn">NULL</span>)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
 ##   No HS                   6      6
@@ -420,14 +420,14 @@ weighted results:</p>
 tables, and the <code>prop.table</code> function in R provides a
 convenient way for sweeping a table by a margin. These work on the
 output of <code>crtabs</code>, too:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(tab1)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">prop.table</span>(tab1)</span></code></pre></div>
 <pre><code>## educ
 ##                No HS High school graduate         Some college               2-year               4-year 
 ##                0.048                0.284                0.244                0.096                0.228 
 ##            Post-grad 
 ##                0.100</code></pre>
 <p>For column proportions, specify margin=2 (by rows, margin=1):</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(tab2, <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">prop.table</span>(tab2, <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                         Male     Female
 ##   No HS                0.05405405 0.04316547
@@ -437,7 +437,7 @@ output of <code>crtabs</code>, too:</p>
 ##   4-year               0.22522523 0.23021583
 ##   Post-grad            0.13513514 0.07194245</code></pre>
 <p>Let’s make that more readable:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span><span class="fu">prop.table</span>(tab2, <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span><span class="fu">prop.table</span>(tab2, <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
 ##   No HS                   5      4
@@ -455,8 +455,8 @@ response variables. In the <a href="array-variables.html">array
 variables vignette</a>, we created a categorical array, “imiss”, for
 “Important issues”. We can crosstab with arrays just as we do
 non-arrays.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tab3 <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span> imiss <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>tab3</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>tab3 <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span> imiss <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>tab3</span></code></pre></div>
 <pre><code>## , , gender = Male
 ## 
 ##                         imiss
@@ -498,11 +498,11 @@ three-dimensional array.</p>
 <p>To illustrate working with multiple response variables, let’s convert
 “imiss” to multiple response, selecting its positive categories as
 indicating selection:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>imiss <span class="ot">&lt;-</span> <span class="fu">dichotomize</span>(ds<span class="sc">$</span>imiss, <span class="fu">c</span>(<span class="st">&quot;Very Important&quot;</span>, <span class="st">&quot;Somewhat Important&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>ds<span class="sc">$</span>imiss <span class="ot">&lt;-</span> <span class="fu">dichotomize</span>(ds<span class="sc">$</span>imiss, <span class="fu">c</span>(<span class="st">&quot;Very Important&quot;</span>, <span class="st">&quot;Somewhat Important&quot;</span>))</span></code></pre></div>
 <p>Now, when we crosstab it, we’ll get a two-dimensional table because
 multiple response variables present a one-dimensional interface:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>tab3mr <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span> imiss <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>tab3mr</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>tab3mr <span class="ot">&lt;-</span> <span class="fu">crtabs</span>(<span class="sc">~</span> imiss <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>tab3mr</span></code></pre></div>
 <pre><code>##                         gender
 ## imiss                         Male    Female
 ##   Abortion                58.64993  97.61001
@@ -520,7 +520,7 @@ multiple response variables present a one-dimensional interface:</p>
 ##   The war in Afghanistan  73.62479  96.68801</code></pre>
 <p>It’s worth noting here that the result of <code>crtabs</code> isn’t
 an <code>array</code> object but a <code>CrunchCube</code> object.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(tab3mr)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">class</span>(tab3mr)</span></code></pre></div>
 <pre><code>## [1] &quot;CrunchCube&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;crunch&quot;</code></pre>
@@ -532,7 +532,7 @@ multiple response are not mutually exclusive–they can’t be assumed to
 sum to 100 percent. However, the <code>margin.table</code> method on
 <code>CrunchCubes</code> can compute the correct margin, so
 <code>prop.table</code> gives correct proportions:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span><span class="fu">prop.table</span>(tab3mr, <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span><span class="fu">prop.table</span>(tab3mr, <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>##                         gender
 ## imiss                    Male Female
 ##   Abortion                 48     77
@@ -551,7 +551,7 @@ sum to 100 percent. However, the <code>margin.table</code> method on
 <p>Finally, just as we saw in the <a href="array-variables.html">array
 variables</a> vignette, we can grab individual subvariables and crosstab
 with them:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="sc">~</span> imiss<span class="sc">$</span>imiss_f <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="sc">~</span> imiss<span class="sc">$</span>imiss_f <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span></code></pre></div>
 <pre><code>##                     gender
 ## imiss_f              Male Female
 ##   Very Important       44     68
@@ -564,7 +564,7 @@ with them:</p>
 <p>It’s worth noting that we can extend the crosstabbing to higher
 dimensions, just by adding more terms on the right-hand side of the
 formula:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">crtabs</span>(<span class="sc">~</span> imiss <span class="sc">+</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds))</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">crtabs</span>(<span class="sc">~</span> imiss <span class="sc">+</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds))</span></code></pre></div>
 <pre><code>## , , gender = Male
 ## 
 ##                         educ
@@ -614,7 +614,7 @@ Using the left-hand side of the formula, we can specify other
 aggregations to put in the cells of the table. For example, in the <a href="derive.html">deriving variables vignette</a>, we created an “age”
 variable. We can easily compute the average age by gender and
 education:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="fu">mean</span>(age) <span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="fu">mean</span>(age) <span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
 ##   No HS                   6      6
@@ -626,7 +626,7 @@ education:</p>
 <p>Other supported aggregations include <code>min</code>,
 <code>max</code>, <code>sd</code>, and <code>sum</code>. For the minimum
 age by gender and education,</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="fu">min</span>(age) <span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="fu">min</span>(age) <span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
 ##   No HS                   6      6
@@ -637,13 +637,13 @@ age by gender and education,</p>
 ##   Post-grad              15     10</code></pre>
 <p>We can get unconditional (univariate) statistics by making the
 right-hand side of your formula be just the number <code>1</code>:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="fu">min</span>(age) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data=</span>ds)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">crtabs</span>(<span class="fu">min</span>(age) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data=</span>ds)</span></code></pre></div>
 <pre><code>## [1] 250</code></pre>
 <p>Numeric aggregation functions also work with categorical variables
 that have numeric values defined for their categories; this is the
 reason why numeric values for categories are defined, in fact. In the <a href="variables.html">variables vignette</a>, we worked with the “On the
 right track” question and set some numeric values:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">categories</span>(ds<span class="sc">$</span>track)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">categories</span>(ds<span class="sc">$</span>track)</span></code></pre></div>
 <pre><code>##   id                                    name value missing
 ## 1  1 Generally headed in the right direction     1   FALSE
 ## 2  3                                Not sure     0    TRUE
@@ -653,7 +653,7 @@ right track” question and set some numeric values:</p>
 index” by averaging them. If the index is greater than zero, more people
 thing things are going well, and if it is negative, more respondents are
 pessimistic.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">crtabs</span>(<span class="fu">mean</span>(track) <span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds), <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">crtabs</span>(<span class="fu">mean</span>(track) <span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds), <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
 ##   No HS                   6      6
@@ -671,7 +671,7 @@ levels of education.</p>
 <p>We can also specify a subset of <code>ds</code> to analyze, just as
 if it were a data.frame. Let’s do the same calculation for Democrats
 only:</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">crtabs</span>(<span class="fu">mean</span>(track) <span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds[ds<span class="sc">$</span>pid3 <span class="sc">==</span> <span class="st">&quot;Democrat&quot;</span>,]), <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">crtabs</span>(<span class="fu">mean</span>(track) <span class="sc">~</span> educ <span class="sc">+</span> gender, <span class="at">data=</span>ds[ds<span class="sc">$</span>pid3 <span class="sc">==</span> <span class="st">&quot;Democrat&quot;</span>,]), <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##                       gender
 ## educ                   Male Female
 ##   No HS                   0      3
@@ -703,7 +703,7 @@ argument should happily accept a <code>CrunchDataset</code> and just do
 the right thing–no extra effort or thought required.</p>
 <p>Let’s fit a basic Ordinary Least Squares (OLS) model. In our dataset,
 we have a few questions about Edward Snowden, such as:</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>snowdenleakapp</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>ds<span class="sc">$</span>snowdenleakapp</span></code></pre></div>
 <pre><code>## Approval of Snowden&#39;s Leak (categorical)
 ## 
 ##                        Count
@@ -715,9 +715,9 @@ we have a few questions about Edward Snowden, such as:</p>
 <p>We can use <code>lm</code> to fit our model. Let’s explore the
 relationship between approval of Snowden’s leak and respondents’
 interest in current events, party identification, gender, and age.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>ols1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">I</span>(snowdenleakapp <span class="sc">==</span> <span class="st">&quot;Strongly approve&quot;</span>) <span class="sc">~</span> newsint2 <span class="sc">+</span> pid3 <span class="sc">+</span> gender <span class="sc">+</span> age,</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>ds)</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ols1)</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a>ols1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">I</span>(snowdenleakapp <span class="sc">==</span> <span class="st">&quot;Strongly approve&quot;</span>) <span class="sc">~</span> newsint2 <span class="sc">+</span> pid3 <span class="sc">+</span> gender <span class="sc">+</span> age,</span>
+<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a>    <span class="at">data=</span>ds)</span>
+<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a><span class="fu">summary</span>(ols1)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = I(snowdenleakapp == &quot;Strongly approve&quot;) ~ newsint2 + 
@@ -757,9 +757,9 @@ were <code>factor</code> variables in a <code>data.frame</code>.</p>
 <p>Given that we’re estimating a model with a dichotomous dependent
 variable, perhaps a logit would be more appropriate than a strict linear
 predictor. We can use <code>glm</code> instead:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>logit1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">I</span>(snowdenleakapp <span class="sc">==</span> <span class="st">&quot;Strongly approve&quot;</span>) <span class="sc">~</span> newsint2 <span class="sc">+</span> pid3 <span class="sc">+</span> gender <span class="sc">+</span> age,</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>), <span class="at">data=</span>ds)</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(logit1)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a>logit1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">I</span>(snowdenleakapp <span class="sc">==</span> <span class="st">&quot;Strongly approve&quot;</span>) <span class="sc">~</span> newsint2 <span class="sc">+</span> pid3 <span class="sc">+</span> gender <span class="sc">+</span> age,</span>
+<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a>    <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>), <span class="at">data=</span>ds)</span>
+<span id="cb47-3"><a href="#cb47-3" tabindex="-1"></a><span class="fu">summary</span>(logit1)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## glm(formula = I(snowdenleakapp == &quot;Strongly approve&quot;) ~ newsint2 + 

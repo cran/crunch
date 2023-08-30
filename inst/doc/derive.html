@@ -358,20 +358,20 @@ have “Birth Year” (<code>birthyr</code>). We can create an age variable
 simply by taking the current year and subtracting the “Birth Year”
 variable from it–just as you would do if you were working with a
 <code>data.frame</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>age <span class="ot">&lt;-</span> <span class="dv">2015</span> <span class="sc">-</span> ds<span class="sc">$</span>birthyr</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>ds<span class="sc">$</span>age <span class="ot">&lt;-</span> <span class="dv">2015</span> <span class="sc">-</span> ds<span class="sc">$</span>birthyr</span></code></pre></div>
 <p>Now, we have an age variable, and it looks like we’d expect it would
 relative to <code>birthyr</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>age)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>age)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   22.00   38.00   48.50   49.62   59.75   90.00</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>birthyr)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>birthyr)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    1925    1955    1966    1965    1977    1993</code></pre>
 <p>Age is now a derived variable, functionally linked to
 <code>birthyr</code> on the server. Note that in order to create
 <code>age</code>, we didn’t pull any values off of the server; we just
 supplied the derivation expression.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="dv">2015</span> <span class="sc">-</span> ds<span class="sc">$</span>birthyr)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">class</span>(<span class="dv">2015</span> <span class="sc">-</span> ds<span class="sc">$</span>birthyr)</span></code></pre></div>
 <pre><code>## [1] &quot;CrunchExpr&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;crunch&quot;</code></pre>
@@ -384,22 +384,22 @@ demonstration purposes, that we want to truncate the range of the
 less than 1945. We can once again write the R code we’d write if we were
 working with a <code>data.frame</code>, even though we’re working with a
 Crunch dataset:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>birthyr[ds<span class="sc">$</span>birthyr <span class="sc">&lt;</span> <span class="dv">1945</span>] <span class="ot">&lt;-</span> <span class="dv">1945</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>ds<span class="sc">$</span>birthyr[ds<span class="sc">$</span>birthyr <span class="sc">&lt;</span> <span class="dv">1945</span>] <span class="ot">&lt;-</span> <span class="dv">1945</span></span></code></pre></div>
 <p>If we look at the summary again, we’ll see that our data have been
 updated, and the minimum Birth Year is now 1945.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>birthyr)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>birthyr)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    1945    1955    1966    1966    1977    1993</code></pre>
 <p>Not only that: since <code>age</code> is a function of
 <code>birthyr</code> on the server, its values also update now that
 we’ve modified <code>birthyr</code>. Max age is now 70, or 2015 -
 1945.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>age)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>age)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   22.00   38.00   48.50   48.98   59.75   70.00</code></pre>
 <p>Once again, we’ve done this operation by turning idiomatic R
 expressions into Crunch expression syntax.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(ds<span class="sc">$</span>birthyr <span class="sc">&lt;</span> <span class="dv">1945</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">class</span>(ds<span class="sc">$</span>birthyr <span class="sc">&lt;</span> <span class="dv">1945</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;CrunchLogicalExpr&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;crunch&quot;</code></pre>

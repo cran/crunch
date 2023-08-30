@@ -228,7 +228,7 @@ uploadData <- function(dataset, data, strict = TRUE, first_batch = TRUE) {
 #' @param order a valid "order" payload: list containing either aliases or
 #' list(group, entities)
 #' @param ... dataset entity metadata. "name" is required.
-#' @param return list suitable for JSONing and POSTing to create a dataset
+#' @return list suitable for JSONing and POSTing to create a dataset
 #' @export
 #' @keywords internal
 shojifyDatasetMetadata <- function(metadata, order = I(names(metadata)), ...) {
@@ -276,7 +276,7 @@ newDatasetByColumn <- function(x,
 #' [newDataset()] and pass the filename or URL, and it will handle it for you,
 #' thereby saving you eight keystrokes.
 #'
-#' @param file character, the path to a local file to upload, or a URL. This
+#' @param x character, the path to a local file to upload, or a URL. This
 #'   should either be a `.csv`, `.sav` (SPSS), `.asc` (Triple-S data), or `.dat`
 #'   (Triple-S data) file
 #' @param name character, the name to give the new Crunch dataset. By default
@@ -291,11 +291,22 @@ newDatasetByColumn <- function(x,
 #' @seealso [newDataset()]
 #' @keywords internal
 newDatasetFromFile <- function(x, name = basename(x), schema, ...) {
-    # TODO: check file extensions of the files to not return "Error: An error
-    # occurred processing your request. We have been notified"
     if (!missing(schema)) {
-        schema_source <- createSource(schema)
-        body_payload <- list(name = name, table = list(source = schema_source))
+        schema_type <- tools::file_ext(schema)
+        if (schema_type %in% c('xml', 'sss')){
+            schema_source <- createSource(schema)
+            body_payload <- list(
+                name = name, table = list(source = schema_source)
+            )
+        } else if (schema_type %in% c('json')){
+            schema_source <- NULL
+            body_payload <- jsonlite::read_json(schema)
+        } else{
+            halt(
+                'Unsupported schema type: ', schema_type,
+                ' (see ?newDatasetFromFile)'
+            )
+        }
         ds <- createDataset(body = body_payload, ...)
         ds <- addBatchFile(ds, x, first_batch = TRUE, schema = schema_source)
     } else {

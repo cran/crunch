@@ -354,24 +354,24 @@ Watch this vignette for updates as the APIs evolve.</p>
 <p>Projects are used to organize datasets into groups and manage access
 to those bundles of datasets. View your top-level projects with
 <code>projects()</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">projects</span>()</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">##                             name                               id description</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                  Daily Surveys 1093171cd5a746b283adf8b7444bebe7            </span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                  Test Datasets 84f740d53da14a5b8001ac97c8925813            </span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                 Crunch.io Devs 80c51523fc31446396f6c915a02c77de            </span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">projects</span>()</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">##                             name                               id description</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="do">## 1                  Daily Surveys 1093171cd5a746b283adf8b7444bebe7            </span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="do">## 2                  Test Datasets 84f740d53da14a5b8001ac97c8925813            </span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="do">## 3                 Crunch.io Devs 80c51523fc31446396f6c915a02c77de            </span></span></code></pre></div>
 <p>To select a project, use standard R list extraction methods.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>proj <span class="ot">&lt;-</span> <span class="fu">projects</span>()[[<span class="st">&quot;Crunch.io Devs&quot;</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>proj <span class="ot">&lt;-</span> <span class="fu">projects</span>()[[<span class="st">&quot;Crunch.io Devs&quot;</span>]]</span></code></pre></div>
 <p><code>newProject()</code> creates a new top-level project.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>proj <span class="ot">&lt;-</span> <span class="fu">newProject</span>(<span class="at">name=</span><span class="st">&quot;A new start&quot;</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">projects</span>()</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">##                             name                               id description</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                  Daily Surveys 1093171cd5a746b283adf8b7444bebe7            </span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                  Test Datasets 84f740d53da14a5b8001ac97c8925813            </span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                 Crunch.io Devs 80c51523fc31446396f6c915a02c77de   </span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 4                    A new start 23deb438a9dde2340091dec23abbbb43</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>proj <span class="ot">&lt;-</span> <span class="fu">newProject</span>(<span class="at">name=</span><span class="st">&quot;A new start&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">projects</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="do">##                             name                               id description</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="do">## 1                  Daily Surveys 1093171cd5a746b283adf8b7444bebe7            </span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="do">## 2                  Test Datasets 84f740d53da14a5b8001ac97c8925813            </span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="do">## 3                 Crunch.io Devs 80c51523fc31446396f6c915a02c77de   </span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="do">## 4                    A new start 23deb438a9dde2340091dec23abbbb43</span></span></code></pre></div>
 <p>Once you have a project in hand, you can put datasets in it and
 organize them into groups.</p>
 </div>
@@ -390,13 +390,13 @@ the project</li>
 </ul>
 <p>Like a file system, you can express the “path” to a folder as a
 string separated by a “/” delimiter, like this:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span>(proj, <span class="st">&quot;Tracking studies/Domestic/Automotive&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">mkdir</span>(proj, <span class="st">&quot;Tracking studies/Domestic/Automotive&quot;</span>)</span></code></pre></div>
 <p>If your folder names should legitimately have a “/” in them, you can
 set a different character to be the path separator. See
 <code>?mkdir</code> or any of the other functions’ help files for
 details.</p>
 <p>You can also specify paths as a vector of path segments, like</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span>(proj, <span class="fu">c</span>(<span class="st">&quot;Tracking studies&quot;</span>, <span class="st">&quot;Domestic&quot;</span>, <span class="st">&quot;Automotive&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">mkdir</span>(proj, <span class="fu">c</span>(<span class="st">&quot;Tracking studies&quot;</span>, <span class="st">&quot;Domestic&quot;</span>, <span class="st">&quot;Automotive&quot;</span>))</span></code></pre></div>
 <p>which is equivalent to the previous example. One or the other way may
 be more convenient, depending on what you’re trying to accomplish.</p>
 <p>These functions all take a project as the first argument, and they
@@ -415,18 +415,18 @@ reflects the current API and its limited capabilities. In the new API,
 </blockquote>
 <p>To get started, let’s look at the contents of our “Crunch.io Devs”
 project.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>proj <span class="ot">&lt;-</span> <span class="fu">projects</span>()[[<span class="st">&quot;Crunch.io Devs&quot;</span>]]</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>proj</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Project “Crunch.io Devs”</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Crunch User Monthly Tracker (February 2018)</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Crunch User Monthly Tracker (January 2018)</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Crunch User Quarterly Tracker (Q3 2017)</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Crunch User Quarterly Tracker (Q4 2017)</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Crunch User Survey</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Stack Overflow Developer Survey (2016)</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Stack Overflow Developer Survey (2017)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>proj <span class="ot">&lt;-</span> <span class="fu">projects</span>()[[<span class="st">&quot;Crunch.io Devs&quot;</span>]]</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>proj</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co"># Project “Crunch.io Devs”</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co"># Crunch User Monthly Tracker (February 2018)</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co"># Crunch User Monthly Tracker (January 2018)</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co"># Crunch User Quarterly Tracker (Q3 2017)</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co"># Crunch User Quarterly Tracker (Q4 2017)</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co"># Crunch User Survey</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co"># Stack Overflow Developer Survey (2016)</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co"># Stack Overflow Developer Survey (2017)</span></span></code></pre></div>
 <p>It’s flat—there are no groups here, only datasets.</p>
 </div>
 <div id="creating-groups" class="section level2">
@@ -437,57 +437,57 @@ datasets. We could call <code>mkdir()</code> and then <code>mv()</code>,
 but for convenience, <code>mv()</code> will create the group specified
 by your path if it doesn’t already exist, so we can use
 <code>mv()</code> alone and get</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(ds_so2016, <span class="st">&quot;Stack Overflow&quot;</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(ds_so2017, <span class="st">&quot;Stack Overflow&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>    <span class="fu">mv</span>(ds_so2016, <span class="st">&quot;Stack Overflow&quot;</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>    <span class="fu">mv</span>(ds_so2017, <span class="st">&quot;Stack Overflow&quot;</span>)</span></code></pre></div>
 <p>Now when we look at the top-level directory again, we see a “Stack
 Overflow” folder and those datasets are no longer at the root level:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>proj</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Project “Crunch.io Devs”</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Crunch User Quarterly Tracker (Q3 2017)</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Crunch User Monthly Tracker (January 2018)</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Crunch User Quarterly Tracker (Q4 2017)</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Crunch User Monthly Tracker (February 2018)</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Crunch User Survey</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># [+] Stack Overflow</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     Stack Overflow Developer Survey (2016)</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     Stack Overflow Developer Survey (2017)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>proj</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># Project “Crunch.io Devs”</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co"># Crunch User Quarterly Tracker (Q3 2017)</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co"># Crunch User Monthly Tracker (January 2018)</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co"># Crunch User Quarterly Tracker (Q4 2017)</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co"># Crunch User Monthly Tracker (February 2018)</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co"># Crunch User Survey</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co"># [+] Stack Overflow</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#     Stack Overflow Developer Survey (2016)</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#     Stack Overflow Developer Survey (2017)</span></span></code></pre></div>
 <p>We can also make nested groups and move datasets into them as
 well:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(ds_tracker_q32017, <span class="st">&quot;Trackers/Quarterly&quot;</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(ds_tracker_q42017, <span class="st">&quot;Trackers/Quarterly&quot;</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(ds_tracker_012018, <span class="st">&quot;Trackers/Monthly&quot;</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(ds_tracker_022018, <span class="st">&quot;Trackers/Monthly&quot;</span>)    </span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(ds_user, <span class="st">&quot;User Surveys&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>    <span class="fu">mv</span>(ds_tracker_q32017, <span class="st">&quot;Trackers/Quarterly&quot;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>    <span class="fu">mv</span>(ds_tracker_q42017, <span class="st">&quot;Trackers/Quarterly&quot;</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>    </span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>    <span class="fu">mv</span>(ds_tracker_012018, <span class="st">&quot;Trackers/Monthly&quot;</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>    <span class="fu">mv</span>(ds_tracker_022018, <span class="st">&quot;Trackers/Monthly&quot;</span>)    </span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>    </span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>    <span class="fu">mv</span>(ds_user, <span class="st">&quot;User Surveys&quot;</span>)</span></code></pre></div>
 <p>And finally, we can see that our project has three groups, each
 containing a different set of datasets. Datasets can only be in one
 group at a time.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>proj</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Project “Crunch.io Devs”</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># [+] Stack Overflow</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     Stack Overflow Developer Survey (2016)</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     Stack Overflow Developer Survey (2017)</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># [+] Trackers</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     [+] Quarterly</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#         Crunch User Quarterly Tracker (Q3 2017)</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#         Crunch User Quarterly Tracker (Q4 2017)</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     [+] Monthly</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#         Crunch User Monthly Tracker (January 2018)</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#         Crunch User Monthly Tracker (February 2018)</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co"># [+] User Surveys</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     Crunch User Survey</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>proj</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co"># Project “Crunch.io Devs”</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co"># [+] Stack Overflow</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#     Stack Overflow Developer Survey (2016)</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#     Stack Overflow Developer Survey (2017)</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co"># [+] Trackers</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#     [+] Quarterly</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#         Crunch User Quarterly Tracker (Q3 2017)</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#         Crunch User Quarterly Tracker (Q4 2017)</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#     [+] Monthly</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#         Crunch User Monthly Tracker (January 2018)</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#         Crunch User Monthly Tracker (February 2018)</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co"># [+] User Surveys</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#     Crunch User Survey</span></span></code></pre></div>
 </div>
 <div id="deleting-groups" class="section level2">
 <h2>Deleting groups</h2>
@@ -496,30 +496,30 @@ group at a time.</p>
 was a one off and we won’t have any more like it. So we want to get rid
 of that group The cleanest way to delete a group is with
 <code>rmdir()</code>.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rmdir</span>(<span class="st">&quot;User Surveys&quot;</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Error: Cannot remove &#39;User Surveys&#39; because it is not empty. Move its contents somewhere else and then retry. </span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>    <span class="fu">rmdir</span>(<span class="st">&quot;User Surveys&quot;</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co"># Error: Cannot remove &#39;User Surveys&#39; because it is not empty. Move its contents somewhere else and then retry. </span></span></code></pre></div>
 <p>If the group isn’t empty, <code>rmdir()</code> warns us and doesn’t
 do anything, to delete it, we need to move the dataset out.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(ds_user, <span class="st">&quot;/&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rmdir</span>(<span class="st">&quot;User Surveys&quot;</span>)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>proj </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Project “Crunch.io Devs”</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># [+] Stack Overflow</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     Stack Overflow Developer Survey (2016)</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     Stack Overflow Developer Survey (2017)</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co"># [+] Trackers</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     [+] Quarterly</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#         Crunch User Quarterly Tracker (Q3 2017)</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#         Crunch User Quarterly Tracker (Q4 2017)</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     [+] Monthly</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#         Crunch User Monthly Tracker (January 2018)</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#         Crunch User Monthly Tracker (February 2018)</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Crunch User Survey</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>proj <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>    <span class="fu">mv</span>(ds_user, <span class="st">&quot;/&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>    <span class="fu">rmdir</span>(<span class="st">&quot;User Surveys&quot;</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>proj </span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co"># Project “Crunch.io Devs”</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co"># [+] Stack Overflow</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co">#     Stack Overflow Developer Survey (2016)</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#     Stack Overflow Developer Survey (2017)</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co"># [+] Trackers</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#     [+] Quarterly</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#         Crunch User Quarterly Tracker (Q3 2017)</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#         Crunch User Quarterly Tracker (Q4 2017)</span></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="co">#     [+] Monthly</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="co">#         Crunch User Monthly Tracker (January 2018)</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="co">#         Crunch User Monthly Tracker (February 2018)</span></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="co"># Crunch User Survey</span></span></code></pre></div>
 <p>As we said at the top, we are actively developing organizing
 datasets, so please give us any feedback you have as a <a href="https://github.com/Crunch-io/rcrunch/issues">GitHub issue</a> or
 at <a href="mailto:support@crunch.io" class="email">support@crunch.io</a>.</p>

@@ -374,11 +374,11 @@ simple, example: an <code>AbstractCategories</code> for binned income
 could have 5 <code>AbstractCategory</code>s: &lt;$25,000,
 $25,000-$49,999, $50,000-$99,999, $100,000-$199,999, &gt;$200,000. This
 could be represented in R as:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>income <span class="ot">&lt;-</span> <span class="fu">AbstractCategories</span>(<span class="fu">AbstractCategory</span>(<span class="at">name =</span> <span class="st">&quot;&lt;$25,000&quot;</span>),</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">AbstractCategory</span>(<span class="at">name =</span> <span class="st">&quot;$25,000-$49,999&quot;</span>),</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">AbstractCategory</span>(<span class="at">name =</span> <span class="st">&quot;$50,000-$99,999&quot;</span>),</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">AbstractCategory</span>(<span class="at">name =</span> <span class="st">&quot;$100,000-$199,999&quot;</span>),</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">AbstractCategory</span>(<span class="at">name =</span> <span class="st">&quot;&gt;$200,000&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>income <span class="ot">&lt;-</span> <span class="fu">AbstractCategories</span>(<span class="fu">AbstractCategory</span>(<span class="at">name =</span> <span class="st">&quot;&lt;$25,000&quot;</span>),</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                             <span class="fu">AbstractCategory</span>(<span class="at">name =</span> <span class="st">&quot;$25,000-$49,999&quot;</span>),</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>                             <span class="fu">AbstractCategory</span>(<span class="at">name =</span> <span class="st">&quot;$50,000-$99,999&quot;</span>),</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>                             <span class="fu">AbstractCategory</span>(<span class="at">name =</span> <span class="st">&quot;$100,000-$199,999&quot;</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>                             <span class="fu">AbstractCategory</span>(<span class="at">name =</span> <span class="st">&quot;&gt;$200,000&quot;</span>))</span></code></pre></div>
 <p>An alternate (and less typing) way to instantiate this same
 <code>AbstractCategories</code> is to send lists, and the constructor
 takes care of calling the <code>AbstractCategory</code> class on each
@@ -387,21 +387,21 @@ takes care of calling the <code>AbstractCategory</code> class on each
 container to singular entity constructor in the same way, so passing
 <code>Categories</code> a list will result in a <code>Categories</code>
 object full of <code>Category</code> objects.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>income <span class="ot">&lt;-</span> <span class="fu">AbstractCategories</span>(<span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;&lt;$25,000&quot;</span>),</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;$25,000-$49,999&quot;</span>),</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;$50,000-$99,999&quot;</span>),</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;$100,000-$199,999&quot;</span>),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;&gt;$200,000&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>income <span class="ot">&lt;-</span> <span class="fu">AbstractCategories</span>(<span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;&lt;$25,000&quot;</span>),</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>                             <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;$25,000-$49,999&quot;</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>                             <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;$50,000-$99,999&quot;</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>                             <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;$100,000-$199,999&quot;</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>                             <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;&gt;$200,000&quot;</span>))</span></code></pre></div>
 <p>Finally, there’s a <code>data</code> argument, if you already have a
 list of <code>AbstractCategory</code>s (or simply named lists!) you want
 to pass in (the same thing could also be accomplished with
 <code>do.call</code>):</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>income_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;&lt;$25,000&quot;</span>),</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;$25,000-$49,999&quot;</span>),</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;$50,000-$99,999&quot;</span>),</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;$100,000-$199,999&quot;</span>),</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;&gt;$200,000&quot;</span>))</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>income <span class="ot">&lt;-</span> <span class="fu">AbstractCategories</span>(<span class="at">data=</span>income_list)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>income_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;&lt;$25,000&quot;</span>),</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>                    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;$25,000-$49,999&quot;</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;$50,000-$99,999&quot;</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>                    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;$100,000-$199,999&quot;</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>                    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;&gt;$200,000&quot;</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>income <span class="ot">&lt;-</span> <span class="fu">AbstractCategories</span>(<span class="at">data=</span>income_list)</span></code></pre></div>
 <div id="methods" class="section level3">
 <h3>Methods</h3>
 <p>Any methods that are defined for the abstract classes will function
@@ -549,14 +549,14 @@ interpretation as <code>Subtotal</code> above.</p>
 <p>The same as <code>Subtotal</code> for <code>anchor</code>.
 <code>func</code> and <code>arguments</code> return <code>NA</code></p>
 <p>As a concrete example, let’s take the following categories:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>feeling_cats <span class="ot">&lt;-</span> <span class="fu">Categories</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Very Happy&quot;</span>, <span class="at">id =</span> <span class="dv">1</span>),</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Somewhat Happy&quot;</span>, <span class="at">id =</span> <span class="dv">2</span>),</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Neither Happy nor Unhappy&quot;</span>, <span class="at">id =</span> <span class="dv">3</span>),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Somewhat Unhappy&quot;</span>, <span class="at">id =</span> <span class="dv">4</span>),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Very Unhappy&quot;</span>, <span class="at">id =</span> <span class="dv">5</span>)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>feeling_cats</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>feeling_cats <span class="ot">&lt;-</span> <span class="fu">Categories</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Very Happy&quot;</span>, <span class="at">id =</span> <span class="dv">1</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Somewhat Happy&quot;</span>, <span class="at">id =</span> <span class="dv">2</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Neither Happy nor Unhappy&quot;</span>, <span class="at">id =</span> <span class="dv">3</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Somewhat Unhappy&quot;</span>, <span class="at">id =</span> <span class="dv">4</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">name =</span> <span class="st">&quot;Very Unhappy&quot;</span>, <span class="at">id =</span> <span class="dv">5</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>)</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>feeling_cats</span></code></pre></div>
 <pre><code>##   id                      name value missing
 ## 1  1                Very Happy    NA   FALSE
 ## 2  2            Somewhat Happy    NA   FALSE
@@ -564,24 +564,24 @@ interpretation as <code>Subtotal</code> above.</p>
 ## 4  4          Somewhat Unhappy    NA   FALSE
 ## 5  5              Very Unhappy    NA   FALSE</code></pre>
 <p>And make some subtotals and headings to use as insertions:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>feeling_subtotals <span class="ot">&lt;-</span> <span class="fu">Insertions</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Heading</span>(<span class="at">name =</span> <span class="st">&quot;How I feel about cheese&quot;</span>, <span class="at">position =</span> <span class="st">&quot;top&quot;</span>),</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Subtotal</span>(<span class="at">name =</span> <span class="st">&quot;Generally Happy&quot;</span>, <span class="at">after =</span> <span class="st">&quot;Somewhat Happy&quot;</span>, </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">categories =</span> <span class="fu">c</span>(<span class="st">&quot;Very Happy&quot;</span>, <span class="st">&quot;Somewhat Happy&quot;</span>)),</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Subtotal</span>(<span class="at">name =</span> <span class="st">&quot;Generally Unhappy&quot;</span>, <span class="at">after =</span> <span class="dv">5</span>, </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">categories =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">5</span>))</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>feeling_subtotals <span class="ot">&lt;-</span> <span class="fu">Insertions</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>    <span class="fu">Heading</span>(<span class="at">name =</span> <span class="st">&quot;How I feel about cheese&quot;</span>, <span class="at">position =</span> <span class="st">&quot;top&quot;</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    <span class="fu">Subtotal</span>(<span class="at">name =</span> <span class="st">&quot;Generally Happy&quot;</span>, <span class="at">after =</span> <span class="st">&quot;Somewhat Happy&quot;</span>, </span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>        <span class="at">categories =</span> <span class="fu">c</span>(<span class="st">&quot;Very Happy&quot;</span>, <span class="st">&quot;Somewhat Happy&quot;</span>)),</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="fu">Subtotal</span>(<span class="at">name =</span> <span class="st">&quot;Generally Unhappy&quot;</span>, <span class="at">after =</span> <span class="dv">5</span>, </span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>        <span class="at">categories =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">5</span>))</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>)</span></code></pre></div>
 <p>Notice that the “Generally Happy” subtotal is made specifying
 category <code>name</code>s for <code>after</code> and
 <code>categories</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>feeling_subtotals[[<span class="dv">2</span>]]<span class="sc">$</span>after</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>feeling_subtotals[[<span class="dv">2</span>]]<span class="sc">$</span>after</span></code></pre></div>
 <pre><code>## [1] &quot;Somewhat Happy&quot;</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>feeling_subtotals[[<span class="dv">2</span>]]<span class="sc">$</span>categories</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>feeling_subtotals[[<span class="dv">2</span>]]<span class="sc">$</span>categories</span></code></pre></div>
 <pre><code>## [1] &quot;Very Happy&quot;     &quot;Somewhat Happy&quot;</code></pre>
 <p>Where as the “Generally Unhappy” subtotal uses <code>id</code>s:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>feeling_subtotals[[<span class="dv">3</span>]]<span class="sc">$</span>after</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>feeling_subtotals[[<span class="dv">3</span>]]<span class="sc">$</span>after</span></code></pre></div>
 <pre><code>## [1] 5</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>feeling_subtotals[[<span class="dv">3</span>]]<span class="sc">$</span>categories</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>feeling_subtotals[[<span class="dv">3</span>]]<span class="sc">$</span>categories</span></code></pre></div>
 <pre><code>## [1] 4 5</code></pre>
 </div>
 </div>
@@ -600,27 +600,27 @@ include a <code>Categories</code> object as the <code>var_items</code>
 argument. In general, this is only needed before sending a heterogeneous
 set of <code>Insertions</code> to the Crunch API.</p>
 <p>Using the examples we used before, we can see how this works:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>feeling_insertions <span class="ot">&lt;-</span> <span class="fu">Insertions</span>(<span class="at">data =</span> <span class="fu">lapply</span>(feeling_subtotals, makeInsertion, <span class="at">var_items =</span> feeling_cats))</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>feeling_insertions <span class="ot">&lt;-</span> <span class="fu">Insertions</span>(<span class="at">data =</span> <span class="fu">lapply</span>(feeling_subtotals, makeInsertion, <span class="at">var_items =</span> feeling_cats))</span></code></pre></div>
 <p>Now, all of the <code>Subtotal</code>s and <code>Heading</code> from
 <code>feeling_subtotals</code> are proper <code>Insertion</code>s:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(feeling_insertions, class)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">sapply</span>(feeling_insertions, class)</span></code></pre></div>
 <pre><code>## [1] &quot;Insertion&quot; &quot;Insertion&quot; &quot;Insertion&quot;</code></pre>
 <p>This means that the <code>after</code> property has been translated
 into <code>anchor</code>, and the <code>function</code> and
 <code>args</code> properties have been filled in appropriately:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>feeling_insertions[[<span class="dv">3</span>]]<span class="sc">$</span>anchor</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>feeling_insertions[[<span class="dv">3</span>]]<span class="sc">$</span>anchor</span></code></pre></div>
 <pre><code>## [1] 5</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>feeling_insertions[[<span class="dv">3</span>]]<span class="sc">$</span><span class="st">`</span><span class="at">function</span><span class="st">`</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>feeling_insertions[[<span class="dv">3</span>]]<span class="sc">$</span><span class="st">`</span><span class="at">function</span><span class="st">`</span></span></code></pre></div>
 <pre><code>## [1] &quot;subtotal&quot;</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>feeling_insertions[[<span class="dv">3</span>]]<span class="sc">$</span>args</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>feeling_insertions[[<span class="dv">3</span>]]<span class="sc">$</span>args</span></code></pre></div>
 <pre><code>## [1] 4 5</code></pre>
 <p>Because <code>Insertion</code>s are required to use category
 <code>id</code>s only, the new all-<code>Insertion</code>s
 <code>feeling_insertions</code> has translated the “Generally Happy”
 subtotal’s category <code>name</code>s to <code>id</code>s:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>feeling_insertions[[<span class="dv">2</span>]]<span class="sc">$</span>anchor</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>feeling_insertions[[<span class="dv">2</span>]]<span class="sc">$</span>anchor</span></code></pre></div>
 <pre><code>## [1] 2</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>feeling_insertions[[<span class="dv">2</span>]]<span class="sc">$</span>args</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>feeling_insertions[[<span class="dv">2</span>]]<span class="sc">$</span>args</span></code></pre></div>
 <pre><code>## [1] 1 2</code></pre>
 </div>
 <div id="converting-from-insertion-to-subtotalheading" class="section level3">
@@ -640,8 +640,8 @@ determining if it can be identified as one of the known child classes of
 <code>Heading</code>).</p>
 <p>Using the same example above, we can convert back from all
 <code>Insertion</code>s to the subtypes:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>feeling_subtotals_again <span class="ot">&lt;-</span> <span class="fu">subtypeInsertions</span>(feeling_insertions)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(feeling_subtotals_again, class)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>feeling_subtotals_again <span class="ot">&lt;-</span> <span class="fu">subtypeInsertions</span>(feeling_insertions)</span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">sapply</span>(feeling_subtotals_again, class)</span></code></pre></div>
 <pre><code>## [1] &quot;Heading&quot;  &quot;Subtotal&quot; &quot;Subtotal&quot;</code></pre>
 </div>
 </div>

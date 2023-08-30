@@ -364,7 +364,7 @@ folder</li>
 </ul>
 <p>Like a file system, you can express the “path” to a folder as a
 string separated by a “/” delimiter, like this:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span>(ds, <span class="st">&quot;Brands/Cars and Trucks/Domestic&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">mkdir</span>(ds, <span class="st">&quot;Brands/Cars and Trucks/Domestic&quot;</span>)</span></code></pre></div>
 <p>If your folder names should legitimately have a “/” in them, you can
 set a different character to be the path separator. See
 <code>?mkdir</code> or any of the other functions’ help files for
@@ -376,7 +376,7 @@ special path segments <code>&quot;..&quot;</code> (go up a level) and
 <code>&quot;.&quot;</code> (this level) are also supported. We’ll use those in
 examples below.</p>
 <p>You can also specify paths as a vector of path segments, like</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span>(ds, <span class="fu">c</span>(<span class="st">&quot;Brands&quot;</span>, <span class="st">&quot;Cars and Trucks&quot;</span>, <span class="st">&quot;Domestic&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">mkdir</span>(ds, <span class="fu">c</span>(<span class="st">&quot;Brands&quot;</span>, <span class="st">&quot;Cars and Trucks&quot;</span>, <span class="st">&quot;Domestic&quot;</span>))</span></code></pre></div>
 <p>which is equivalent to the previous example. One or the other way may
 be more convenient, depending on what you’re trying to accomplish.</p>
 <p>These four functions all take a dataset or a folder as the first
@@ -391,10 +391,10 @@ they don’t require that you do.</p>
 <p>To get started, let’s pick up the dataset we used in the <a href="array-variables.html">array variables vignette</a> and view its
 starting layout. We can do that by selecting the root folder (“/”) and
 printing it</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="fu">print</span>()</span></code></pre></div>
 <p>(The <code>print()</code> isn’t strictly necessary here as
 <code>cd</code> will return the folder and thus it will print by
 default, but we’ll use different <code>print</code> arguments later, so
@@ -408,21 +408,21 @@ file, this is where you’ll begin.</p>
 <p>Let’s make some folders and move some variables into them. To start,
 I know that the demographic variables are at the back of the dataset, so
 let’s make a “Demos” folder and move variables 21 to 37 into it:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mkdir</span>(<span class="st">&quot;Demos&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(<span class="dv">21</span><span class="sc">:</span><span class="dv">37</span>, <span class="st">&quot;Demos&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>    <span class="fu">mkdir</span>(<span class="st">&quot;Demos&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>    <span class="fu">mv</span>(<span class="dv">21</span><span class="sc">:</span><span class="dv">37</span>, <span class="st">&quot;Demos&quot;</span>)</span></code></pre></div>
 <p>Now when I print the top-level directory again, I see a “Demos”
 folder and don’t see those demographic variables:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;/&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;/&quot;</span>)</span></code></pre></div>
 <p><code>mv()</code> can reference variables or folders within a level
 in several ways. Numeric indices like we just did probably won’t be the
 most common way you’ll do it: names work just as well and are more
 transparent. Let’s move the first variable, <code>perc_skipped</code>,
 into “Demos” as well</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(<span class="st">&quot;perc_skipped&quot;</span>, <span class="st">&quot;Demos&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="do">## To print the folder contents</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>    <span class="fu">mv</span>(<span class="st">&quot;perc_skipped&quot;</span>, <span class="st">&quot;Demos&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="do">## To print the folder contents</span></span></code></pre></div>
 <blockquote>
 <p>A side note: although the last step of that chain was
 <code>cd()</code>, we haven’t changed state in our R session. There is
@@ -437,18 +437,18 @@ function to “start” in that folder.</p>
 Let’s use <code>matches</code> to move all of the questions about Edward
 Snowden or Bradley (Chelsea) Manning to a folder for the topical
 questions in this week’s survey:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mkdir</span>(<span class="st">&quot;This week&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(<span class="fu">matches</span>(<span class="st">&quot;manning|snowden&quot;</span>, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">&quot;This week&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>    <span class="fu">mkdir</span>(<span class="st">&quot;This week&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>    <span class="fu">mv</span>(<span class="fu">matches</span>(<span class="st">&quot;manning|snowden&quot;</span>, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">&quot;This week&quot;</span>)</span></code></pre></div>
 <p>We can also select all variables in a folder using the
 <code>variables</code> function (or all folders within a folder using
 <code>folders</code>). Let’s move all remaining variables from the top
 level folder to a folder called “Tracking questions”. To do this, we do
 need to explicitly change to the top level folder.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;/&quot;</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mkdir</span>(<span class="st">&quot;Tracking questions&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(., <span class="fu">variables</span>(.), <span class="st">&quot;Tracking questions&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;/&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    <span class="fu">mkdir</span>(<span class="st">&quot;Tracking questions&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>    <span class="fu">mv</span>(., <span class="fu">variables</span>(.), <span class="st">&quot;Tracking questions&quot;</span>)</span></code></pre></div>
 <blockquote>
 <p>(Curious about the “dot” notation? See the <a href="https://magrittr.tidyverse.org/articles/magrittr.html">magrittr
 docs</a>.)</p>
@@ -469,21 +469,21 @@ level folder, not nested in other folders, so we wanted
 <p>Now, our variable tree has some structure. Let’s use
 <code>print(folder, depth = 1)</code> to see these folders and their
 contents one level deep:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="at">depth =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>    <span class="fu">print</span>(<span class="at">depth =</span> <span class="dv">1</span>)</span></code></pre></div>
 </div>
 <div id="nested-folders" class="section level2">
 <h2>Nested folders</h2>
 <p>We can create folders within folders as well. In the “This week”
 folder, we have a set of questions about Edward Snowden. Let’s nest them
 inside their own subfolder inside “This week”:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;This week&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mkdir</span>(<span class="st">&quot;Snowden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(<span class="fu">matches</span>(<span class="st">&quot;snowden&quot;</span>, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">&quot;Snowden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;..&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="at">depth =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;This week&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>    <span class="fu">mkdir</span>(<span class="st">&quot;Snowden&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>    <span class="fu">mv</span>(<span class="fu">matches</span>(<span class="st">&quot;snowden&quot;</span>, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">&quot;Snowden&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;..&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>    <span class="fu">print</span>(<span class="at">depth =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p>Note how we used <code>&quot;..&quot;</code> to change folders up a level, as
 you can in a file system . We did that just so we can print the folder
 structure at the top level (and to illustrate that you can specify
@@ -491,28 +491,28 @@ relative paths :).</p>
 <p>You could also do this using the full path segments.
 <code>mkdir</code> will recursively make all path segments it needs in
 order to ensure that the target folder exists.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mkdir</span>(<span class="st">&quot;This week/Snowden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mv</span>(<span class="fu">matches</span>(<span class="st">&quot;snowden&quot;</span>, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">&quot;This week/Snowden&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="at">depth =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>    <span class="fu">mkdir</span>(<span class="st">&quot;This week/Snowden&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>    <span class="fu">mv</span>(<span class="fu">matches</span>(<span class="st">&quot;snowden&quot;</span>, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">&quot;This week/Snowden&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>    <span class="fu">print</span>(<span class="at">depth =</span> <span class="dv">2</span>)</span></code></pre></div>
 </div>
 <div id="renaming-folders-and-folder-contents" class="section level2">
 <h2>Renaming folders and folder contents</h2>
 <p>Folders themselves have names, which we can set with
 <code>setName()</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setName</span>(<span class="st">&quot;Demographics&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>    <span class="fu">setName</span>(<span class="st">&quot;Demographics&quot;</span>)</span></code></pre></div>
 <p>We can also set the names of the objects contained in a folder with
 <code>setNames()</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">&quot;Birth Year&quot;</span>, <span class="st">&quot;Gender&quot;</span>, <span class="st">&quot;Political Ideo. (3 category)&quot;</span>,</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Political Ideo. (7 category)&quot;</span>,  <span class="st">&quot;Political Ideo. (7 category; other)&quot;</span>,  </span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Race&quot;</span>, <span class="st">&quot;Education&quot;</span>, <span class="st">&quot;Marital Status&quot;</span>, <span class="st">&quot;Phone&quot;</span>, <span class="st">&quot;Family Income&quot;</span>, <span class="st">&quot;Region&quot;</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;State&quot;</span>, <span class="st">&quot;Weight&quot;</span>, <span class="st">&quot;Voter Registration (new)&quot;</span>, <span class="st">&quot;Is a voter?&quot;</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Voter Registration (old)&quot;</span>, <span class="st">&quot;Voter Registration&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;Demos&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>    <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">&quot;Birth Year&quot;</span>, <span class="st">&quot;Gender&quot;</span>, <span class="st">&quot;Political Ideo. (3 category)&quot;</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>    <span class="st">&quot;Political Ideo. (7 category)&quot;</span>,  <span class="st">&quot;Political Ideo. (7 category; other)&quot;</span>,  </span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>    <span class="st">&quot;Race&quot;</span>, <span class="st">&quot;Education&quot;</span>, <span class="st">&quot;Marital Status&quot;</span>, <span class="st">&quot;Phone&quot;</span>, <span class="st">&quot;Family Income&quot;</span>, <span class="st">&quot;Region&quot;</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>    <span class="st">&quot;State&quot;</span>, <span class="st">&quot;Weight&quot;</span>, <span class="st">&quot;Voter Registration (new)&quot;</span>, <span class="st">&quot;Is a voter?&quot;</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>    <span class="st">&quot;Voter Registration (old)&quot;</span>, <span class="st">&quot;Voter Registration&quot;</span>))</span></code></pre></div>
 </div>
 <div id="ordering-within-folders" class="section level2">
 <h2>Ordering within folders</h2>
@@ -522,9 +522,9 @@ ordered.</p>
 <code>setOrder</code> function. This lets you provide a specific order,
 but it requires you to specify all of the folder’s contents. Let’s use
 that function to put “Tracking questions” first:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setOrder</span>(<span class="fu">c</span>(<span class="st">&quot;Tracking questions&quot;</span>, <span class="st">&quot;This week&quot;</span>, <span class="st">&quot;Demographics&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>    <span class="fu">cd</span>(<span class="st">&quot;/&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>    <span class="fu">setOrder</span>(<span class="fu">c</span>(<span class="st">&quot;Tracking questions&quot;</span>, <span class="st">&quot;This week&quot;</span>, <span class="st">&quot;Demographics&quot;</span>))</span></code></pre></div>
 <!--
 We can do that a couple of ways. One is using `mv()`, giving it the "after" argument
 
@@ -545,8 +545,8 @@ folder(ds$var); can also mv to wherever that var is -->
 <div id="deleting-folders" class="section level2">
 <h2>Deleting folders</h2>
 <p>The cleanest way to delete a folder is with <code>rmdir()</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rmdir</span>(<span class="st">&quot;This week/Snowden&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>ds <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>    <span class="fu">rmdir</span>(<span class="st">&quot;This week/Snowden&quot;</span>)</span></code></pre></div>
 <p>This deletes the folder and all variables contained within it.</p>
 <p><a href="derive.html">Next: transforming and deriving</a></p>
 </div>

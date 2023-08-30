@@ -209,6 +209,8 @@ vectorOrList <- function(obj, type) {
 #' | crunch.require.confirmation  | R_CRUNCH_REQUIRE_CONFIRMATION  | TRUE          | Whether to require confirmation for destructive actions (like [`delete()`]) |
 #' | crunch.warn.hidden           | R_CRUNCH_WARN_HIDDEN           | TRUE          | Whether to warn when using a hidden variable                                |
 #' | crunch.warn.private          | R_CRUNCH_WARN_PRIVATE          | TRUE          | Whether to warn when using a private variable                               |
+#' | crunch.names.includes.hidden.private.variables | R_NAMES_INCLUDES_HIDDEN_PRIVATE_VARIABLES| TRUE | Whether to include hidden/private variables from names(ds) |
+#' | crunch.order.var.catalog     | R_CRUNCH_ORDER_VAR_CATALOG     | TRUE          | Whether to set the variable catalog in the order of the hierarchical order  |
 #' | crunch.delimiter             | R_CRUNCH_DELIMITER             | "/"           | What to use as a delimiter when printing folder paths                       |
 #' | crunch.check.updates         | R_CRUNCH_CHECK_UPDATES         | TRUE          | Whether to check for updates to the crunch package                          |
 #' | crunch.debug                 | R_CRUNCH_DEBUG                 | FALSE         | Whether to print verbose information for debugging                          |
@@ -230,16 +232,22 @@ vectorOrList <- function(obj, type) {
 #' @export
 # nolint end
 envOrOption <- function(opt, default = NULL, expect_lgl = FALSE, expect_num = FALSE) {
-    ## First look in CRUNCH_OPTIONS environment
+
+    # First look in CRUNCH_OPTIONS environment
     crunch_opt <- get_crunch_opt(opt)
     if (is_crunch_opt_default(crunch_opt)) {
         return(default)
+    } else if (is.function(crunch_opt)){
+        crunch_opt <- crunch_opt()
+        if (!is.null(crunch_opt)){
+            return(crunch_opt)
+        }
     } else if (!is.null(crunch_opt)) {
         attributes(crunch_opt) <- NULL
         return(crunch_opt)
     }
 
-    ## Next check in environment variables
+    # Next check in environment variables
     envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed = TRUE)))
     envvar <- Sys.getenv(envvar.name)
 
