@@ -1,4 +1,4 @@
-cb97a69a9c0617f95132904a81431ade *DESCRIPTION
+3bb9d2891569b9d1cb60bdedcfa63dbb *DESCRIPTION
 9daffaecdbb7199c176003734b418602 *NAMESPACE
 53aa46abf5909736bf2fc63dd6b41b20 *R/AllClasses.R
 fb7edf6ff3bd7aac555b33e5e069b804 *R/AllGenerics.R
@@ -8,7 +8,7 @@ fb7edf6ff3bd7aac555b33e5e069b804 *R/AllGenerics.R
 6b411fe73e1945796457ddb503f3822e *R/abstract-category.R
 114352b92fe1c4a208a259e6df7de59e *R/add-subvariable.R
 8c7a3c6a82ee74c559be1b8b4fbfb50e *R/add-variable.R
-7eee4854cac350d0e0b919cf360de852 *R/api.R
+51993cf80042ca09aeb7b48dcf384a56 *R/api.R
 1f8931583a731b1939ba0ee086a8c165 *R/append-dataset.R
 e69e0134c58c0e9b8a56dcd69a6381e0 *R/archive-and-publish.R
 7b05b2b3d1a8776449710bd7ddae1a93 *R/as-data-frame.R
@@ -180,7 +180,7 @@ ff6f70c41ad5f8650f976104fca61d87 *inst/doc/variables.R
 58ff583b09704c046dc2302ba7ce99fa *inst/example-datasets/pets.json
 06ad04ecf1a83c7ff62331f23ab624fc *inst/httptest/redact.R
 e58ea8b20f1fa8e0af8bf6ee4eb5f148 *inst/httptest/start-vignette.R
-65e3ab0b20ba105c1f6284748c398b19 *inst/mocks.tgz
+8043b13f5a36a88b36d6b53254375ed6 *inst/mocks.tgz
 ded2ecb1be42c00ef8a15011d332f70e *inst/rstudio/addins.dcf
 9a204f5905bd67b40736d596a066f67f *man/AbstractCategory.Rd
 40b1a090bc0296b78aabaed5199173af *man/Categories.Rd
@@ -310,7 +310,7 @@ d7640b37c859b00686421be239a79474 *man/getTeams.Rd
 b43985745ff6e02d3c440102890da0e1 *man/handleAPIresponse.Rd
 1820d94ac86638b78ca1d72d307017e4 *man/hasFunction.Rd
 21e507447d2c4d0066c24991a02c03bb *man/hide.Rd
-47245d549e56a8d408fdcc041b0c2ceb *man/http-methods.Rd
+143ea3671f82895c54cfc4c6c5da4c5a *man/http-methods.Rd
 acce7ad82f98777316972b1505d4d1a0 *man/index.table.Rd
 6e4b6dd2a23c46424c09feeaa77d250a *man/interactVariables.Rd
 ad6adc1006e7fad7d2e2f218401e6c3b *man/is-na-categories.Rd
@@ -482,7 +482,7 @@ e3bb07cea4c8303fc086fa3a13884fff *tests/testthat/teardown.R
 8e7a1e0c613ae924aaa078fec6cd76d6 *tests/testthat/test-add-array.R
 22588a598b44bd7f34f85bb3c7b33fa2 *tests/testthat/test-add-subvariable.R
 1b210ed691c4ffce2c6a32b29674bcf1 *tests/testthat/test-add-variable-definition.R
-7bb7114d550132ef482e7018773d07f0 *tests/testthat/test-add-variable.R
+f91c4a2ab681d634312b28563a38792e *tests/testthat/test-add-variable.R
 b453061cc70f598c28ac4efcd13405bc *tests/testthat/test-api.R
 de3faa3f665fa71610f1962d11e367c4 *tests/testthat/test-append-arrays.R
 29ee3973bef7542b02a91de635ea7af6 *tests/testthat/test-append-conflicts.R
