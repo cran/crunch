@@ -6,6 +6,21 @@
     },
     "value": {
         "progress": 100,
-        "message": "complete"
+        "message": "complete",
+        "result": {
+            "id": "import-batch:093bf8$44eab8c4-4dc7-4d4c-9ebe-139be635b2de",
+            "response": {
+                "id": 174102453488,
+                "source_id": "122ad7",
+                "target_columns": 23,
+                "target_rows": 0,
+                "status": "imported",
+                "source_columns": 23,
+                "source_rows": 1634,
+                "task_id": "import-batch:093bf8$44eab8c4-4dc7-4d4c-9ebe-139be635b2de",
+                "dataset_id": "093bf8"
+            },
+            "type": "response"
+        }
     }
 }

@@ -7,7 +7,7 @@ Description: The Crunch.io service <https://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.30.4
+Version: 1.31.0
 Authors@R: c(
     person("Greg", "Freedman Ellis", role = c("aut", "cre"), email = "greg@crunch.io"),
     person("Jonathan", "Keane", role="aut", email="jkeane@gmail.com"),
@@ -21,13 +21,13 @@ License: LGPL (>= 3)
 Depends: R (>= 3.0.0)
 Imports: abind, crayon, curl, grDevices, httr (>= 1.0.0), httpcache (>=
         0.1.4), jsonlite (>= 0.9.15), methods
-Suggests: base64enc, covr, crunchy, devtools, haven, httptest (>=
-        3.0.0), knitr, lintr, magrittr, mime, rmarkdown, rstudioapi,
-        spelling, styler, testthat (>= 2.0.0), withr
+Suggests: base64enc, covr, devtools, haven, httptest (>= 3.0.0), knitr,
+        lintr, magrittr, mime, rmarkdown, rstudioapi, spelling,
+        testthat (>= 2.0.0), withr
 VignetteBuilder: knitr
 Language: en-US
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 LazyData: true
 Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'R-to-variable.R' 'SO-survey.R' 'abstract-categories.R'
@@ -50,7 +50,7 @@ Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'dichotomize.R' 'dimension-transforms.R' 'drop-rows.R'
         'edit-lock.R' 'export-dataset.R' 'expressions.R'
         'fill-variable.R' 'filters.R' 'folders.R' 'fork-and-merge.R'
-        'formula.R' 'gadgets.R' 'geo.R' 'get-datasets.R' 'github.R'
+        'formula.R' 'geo.R' 'get-datasets.R' 'github.R'
         'hide-variables.R' 'insertions.R' 'interact.R' 'join-dataset.R'
         'json.R' 'length.R' 'make-array.R' 'members.R'
         'merge-crunch-data-frame.R' 'misc.R' 'multitables.R'
@@ -69,7 +69,7 @@ Collate: 'AllClasses.R' 'AllGenerics.R' 'variable-definition.R'
         'variable-type.R' 'variable-update.R' 'variable.R'
         'variables.R' 'versions.R' 'weight.R' 'zcl.R'
 NeedsCompilation: no
-Packaged: 2024-01-17 03:00:15 UTC; gregfreedmanellis
+Packaged: 2025-03-14 14:22:36 UTC; gregfreedmanellis
 Author: Greg Freedman Ellis [aut, cre],
   Jonathan Keane [aut],
   Mike Malecki [aut],
@@ -78,4 +78,4 @@ Author: Greg Freedman Ellis [aut, cre],
   Aljaž Sluga [aut]
 Maintainer: Greg Freedman Ellis <greg@crunch.io>
 Repository: CRAN
-Date/Publication: 2024-01-17 09:00:02 UTC
+Date/Publication: 2025-03-18 12:40:03 UTC

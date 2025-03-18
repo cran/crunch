@@ -24,13 +24,27 @@ forks <- function(dataset) {
 #' @param draft logical: Should the dataset be a draft, visible only to
 #' those with edit permissions? Default is `FALSE`.
 #' @param ... Additional dataset metadata to provide to the fork
+#' @param project A `ProjectFolder` object, string path that could be passed to [`cd()`]
+#' relative to the root project, or a URL for a `ProjectFolder`. If left empty,
+#' rcrunch will look in `envOrOption('crunch.default.project')` and error if nothing
+#' is found.
 #' @return The new fork, a `CrunchDataset`.
 #' @seealso [mergeFork()]
+#' @examples
+#' \dontrun{
+#' # Defaults to being placed in the same project folder as the original dataset
+#' ds_fork <- forkDataset(ds)
+#'
+#' # But you can specify a project by path, `ProjectFolder` object or URL
+#' ds_fork2 <- forkDataset(ds, project = "/Client1/forks/")
+#' ds_fork3 <- forkDataset(ds, project = projects()[["My forks"]])
+#' ds_fork4 <- forkDataset(ds, project = "https://app.crunch.io/api/projects/abc/")
+#' }
 #' @export
-forkDataset <- function(dataset, name = defaultForkName(dataset), draft = FALSE, ...) {
+forkDataset <- function(dataset, name = defaultForkName(dataset), draft = FALSE, ..., project = defaultCrunchProject()) {
     ## TODO: add owner field, default to self(me())
     fork_url <- crPOST(shojiURL(dataset, "catalogs", "forks"),
-        body = toJSON(wrapEntity(name = name, is_published = !draft, ...))
+        body = toJSON(wrapEntity(name = name, is_published = !draft, ..., project = resolveProjectURL(project)))
     )
     dropOnly(sessionURL("datasets"))
     invisible(loadDatasetFromURL(fork_url))
@@ -73,7 +87,7 @@ defaultForkName <- function(dataset) {
 #' @seealso [forkDataset()]
 #' @examples
 #' \dontrun{
-#' ds <- loadDataset("My survey")
+#' ds <- loadDataset("My survey", project = "Studies")
 #' fork <- forkDataset(ds)
 #' # Do stuff to fork
 #' ds <- mergeFork(ds, fork)

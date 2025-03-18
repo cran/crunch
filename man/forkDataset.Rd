@@ -4,7 +4,13 @@
 \alias{forkDataset}
 \title{Create a fork of a dataset}
 \usage{
-forkDataset(dataset, name = defaultForkName(dataset), draft = FALSE, ...)
+forkDataset(
+  dataset,
+  name = defaultForkName(dataset),
+  draft = FALSE,
+  ...,
+  project = defaultCrunchProject()
+)
 }
 \arguments{
 \item{dataset}{The \code{CrunchDataset} to fork}
@@ -16,6 +22,11 @@ for you}
 those with edit permissions? Default is \code{FALSE}.}
 
 \item{...}{Additional dataset metadata to provide to the fork}
+
+\item{project}{A \code{ProjectFolder} object, string path that could be passed to \code{\link[=cd]{cd()}}
+relative to the root project, or a URL for a \code{ProjectFolder}. If left empty,
+rcrunch will look in \code{envOrOption('crunch.default.project')} and error if nothing
+is found.}
 }
 \value{
 The new fork, a \code{CrunchDataset}.
@@ -34,6 +45,17 @@ This workflow allows you to edit a dataset and review changes before
 publishing them, so that you don't accidentally send your clients
 incorrect data. For more on this workflow, see
 \code{vignette("fork-and-merge", package = "crunch")}.
+}
+\examples{
+\dontrun{
+# Defaults to being placed in the same project folder as the original dataset
+ds_fork <- forkDataset(ds)
+
+# But you can specify a project by path, `ProjectFolder` object or URL
+ds_fork2 <- forkDataset(ds, project = "/Client1/forks/")
+ds_fork3 <- forkDataset(ds, project = projects()[["My forks"]])
+ds_fork4 <- forkDataset(ds, project = "https://app.crunch.io/api/projects/abc/")
+}
 }
 \seealso{
 \code{\link[=mergeFork]{mergeFork()}}

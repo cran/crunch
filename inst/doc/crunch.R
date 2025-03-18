@@ -1,25 +1,27 @@
-## ---- message=FALSE---------------------------------------------------------------------------------------------------
+## ----message=FALSE----------------------------------------------------------------------------------------------------
 library(crunch)
 
-## ---- results='hide', include = FALSE---------------------------------------------------------------------------------
-set_crunch_opts("crunch.api" = "https://app.crunch.io/api/")
+## ----results='hide', include = FALSE----------------------------------------------------------------------------------
+set_crunch_opts("crunch.api" = "https://team.crunch.io/api/")
 library(httptest)
+run_cleanup <- !dir.exists("crunch")
+httpcache::clearCache()
 start_vignette("crunch")
 
 ## ----usethis, eval=FALSE----------------------------------------------------------------------------------------------
-#  if (!require("usethis")) install.packages("usethis")
-#  # Note: After running this command, R may ask you one or two questions.
-#  # While you likely *do* want to update the dependency packages, you likely
-#  # *do not* want to install any package from source, so you can answer something
-#  # like "update all packages from CRAN" if it asks which packages to update,
-#  # and "No" if it asks you to install from source.
-#  usethis::edit_r_environ()
+# if (!require("usethis")) install.packages("usethis")
+# # Note: After running this command, R may ask you one or two questions.
+# # While you likely *do* want to update the dependency packages, you likely
+# # *do not* want to install any package from source, so you can answer something
+# # like "update all packages from CRAN" if it asks which packages to update,
+# # and "No" if it asks you to install from source.
+# usethis::edit_r_environ()
 
 ## ----reload_environ, eval=FALSE---------------------------------------------------------------------------------------
-#  readRenviron("~/.Renviron")
+# readRenviron("~/.Renviron")
 
 ## ----sitrep-code, eval=FALSE------------------------------------------------------------------------------------------
-#  crunch_sitrep()
+# crunch_sitrep()
 
 ## ----sitrep-display, echo=FALSE---------------------------------------------------------------------------------------
 message(paste0(
@@ -29,11 +31,14 @@ message(paste0(
     "            (found in environment variable `R_CRUNCH_API_KEY`)"
 ))
 
+## ----project----------------------------------------------------------------------------------------------------------
+my_project <- newProject("examples/rcrunch vignette data")
+
 ## ----dimensions-------------------------------------------------------------------------------------------------------
 dim(SO_survey)
 
 ## ----load dataset, message=FALSE--------------------------------------------------------------------------------------
-ds <- newDataset(SO_survey, name="Stack Overflow Developer Survey 2017")
+ds <- newDataset(SO_survey, name="Stack Overflow Developer Survey 2017", project=my_project)
 dim(ds)
 
 ## ----get dataset description------------------------------------------------------------------------------------------
@@ -59,7 +64,7 @@ descriptions(variables(ds)) <- SO_schema$Question
 description(ds$CompanySize)
 
 ## ----open variable, eval = FALSE--------------------------------------------------------------------------------------
-#  webApp(ds$CompanySize)
+# webApp(ds$CompanySize)
 
 ## ----open variable screen, echo = FALSE-------------------------------------------------------------------------------
 knitr::include_graphics("images/crunch-companySize-screen.png")
@@ -93,7 +98,7 @@ names(subvariables(ds$ImportantHiring)) <- sub("^.*\\? (.*)$", "\\1",
 subvariables(ds$ImportantHiring)
 
 ## ----View array, eval = FALSE-----------------------------------------------------------------------------------------
-#  webApp(ds$ImportantHiring)
+# webApp(ds$ImportantHiring)
 
 ## ----View array screen, echo = FALSE----------------------------------------------------------------------------------
 knitr::include_graphics("images/crunch-importantHiringCA.png")
@@ -120,6 +125,10 @@ subvariables(ds$WantWorkLanguageMR) <- subvariables(ds$WantWorkLanguageMR)[names
 ## ----echo = FALSE-----------------------------------------------------------------------------------------------------
 knitr::include_graphics("images/WantWorkMRReodered.png")
 
-## ---- include=FALSE---------------------------------------------------------------------------------------------------
+## ----include=FALSE----------------------------------------------------------------------------------------------------
 end_vignette()
+if (run_cleanup) {
+    with_consent(delete(ds))
+    with_consent(delete(my_project))
+}
 

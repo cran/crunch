@@ -220,7 +220,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
         })
 
         test_that("Show method for expresssions", {
-            skip("TODO: something intelligent with parentheses and order of operations (GH issue #99)")
+            skip("TODO: something smart with parentheses and order of operations (GH issue #99)")
             print(ds$birthyr * 3 + 5)
             print(3 * (ds$birthyr + 5))
         })
@@ -238,7 +238,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                 unclass(toJSON(expr@expression)),
                 paste0(
                     '{"function":"difftime","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/starttime/"},', #nolint
-                    '{"variable":"https://app.crunch.io/api/datasets/1/variables/starttime/"},null]}'
+                    '{"variable":"https://app.crunch.io/api/datasets/1/variables/starttime/"},null]}' # nolint
                 )
             )
 
@@ -876,7 +876,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
 
         ds <- forceVariableCatalog(ds) # force variable catalog so we can count requests
         uncached({
-            with_mock(`crunch::.crunchPageSize` = function(x) 5L, {
+            with_mocked_bindings(.crunchPageSize = function(x) 5L, {
                 with(temp.option(httpcache.log = ""), {
                     avlog <- capture.output(v35 <- as.vector(ds$v3 + 5))
                 })
@@ -986,7 +986,7 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
         })
 
         uncached({
-            with_mock(`crunch::.crunchPageSize` = function(x) 5L, {
+            with_mocked_bindings(.crunchPageSize = function(x) 5L, {
                 with(temp.option(httpcache.log = ""), {
                     avlog <- capture.output(v3.5 <- as.vector(ds$v3[ds$v4 %in% "B"]))
                 })

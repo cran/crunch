@@ -246,11 +246,6 @@ setGeneric("multitables<-", function(x, value) standardGeneric("multitables<-"))
 setGeneric("filters", function(x) standardGeneric("filters"))
 #' @rdname filter-catalog
 setGeneric("filters<-", function(x, value) standardGeneric("filters<-"))
-setGeneric("appliedFilters", function(x) standardGeneric("appliedFilters"))
-setGeneric(
-    "appliedFilters<-",
-    function(x, value) standardGeneric("appliedFilters<-")
-)
 setGeneric("activeFilter", function(x) standardGeneric("activeFilter"))
 setGeneric(
     "activeFilter<-",
@@ -493,4 +488,7 @@ fortify.CrunchDataFrame <- function(model, data, ...) model
 #' @export fortify.CrunchDataset
 fortify.CrunchDataset <- function(model, data, ...) model
 
-setGeneric("sendCrunchAutomationScript", function(x, ...) standardGeneric("sendCrunchAutomationScript"))
+setGeneric(
+    "sendCrunchAutomationScript",
+    function(x, ...) standardGeneric("sendCrunchAutomationScript")
+)

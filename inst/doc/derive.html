@@ -49,7 +49,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -60,7 +60,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -347,10 +347,32 @@ web client or use R. Circumstances may arise in which you are working in
 R and want to add or modify variables in a Crunch dataset, and the
 <code>crunch</code> package facilitates that. It provides an idiomatic R
 interface to manipulating a Dataset, doing so efficiently, without
-copying data off of the server to transform it. In addition, when you
-create variables that are derived from other variables, they retain
-their functional connection on the server, such that changes to the
-input variables automatically propagate to the derived variable.</p>
+copying data off of the server to transform it.</p>
+<div id="materialized-vs-derived-variables" class="section level2">
+<h2>Materialized vs Derived Variables</h2>
+<p>A powerful feature of crunch is that when you create variables
+derived from other variables, they retain their functional connection on
+the server, such that changes to the input variables automatically
+propagate to the derived variable. In contrast, materialized variables
+are saved as the data and so do not update when the underly data
+updates.</p>
+<p>The default is to create derived variables. However we’ve found that
+it is often preferable to work wit the more performant materialized
+variables and so there is a global default option that you can set to
+change the behavior. Also, most variable creation functions have a
+derived argument which you can set on a per-variable basis, or if you’re
+working with an expression directly, you can pass a <code>derived</code>
+argument to the <code>VariableDefinition()</code> function.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Using the `derive` argument in `VariableDefinition()`</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>ds<span class="sc">$</span>force_materialized_age <span class="ot">&lt;-</span> <span class="fu">VariableDefinition</span>(<span class="dv">2015</span> <span class="sc">-</span> ds<span class="sc">$</span>birthyr, <span class="at">derived =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># Using the `derive` argument in `deriveArray()`</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>ds<span class="sc">$</span>force_materialiazed_array <span class="ot">&lt;-</span> <span class="fu">deriveArray</span>(<span class="fu">list</span>(ds<span class="sc">$</span>v1, ds<span class="sc">$</span>v2), <span class="at">name =</span> <span class="st">&quot;v_arry&quot;</span>, <span class="at">derived =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co"># Could set the global default to FALSE (materialized)</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co"># set_crunch_opts(crunch.default.derived = FALSE)</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co"># (Note that the rest of this vignette assumes derived)</span></span></code></pre></div>
+</div>
 <div id="creating-derived-variables" class="section level2">
 <h2>Creating derived variables</h2>
 <p>In our sample dataset, we don’t have an “Age” variable, but we do
@@ -358,20 +380,20 @@ have “Birth Year” (<code>birthyr</code>). We can create an age variable
 simply by taking the current year and subtracting the “Birth Year”
 variable from it–just as you would do if you were working with a
 <code>data.frame</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>ds<span class="sc">$</span>age <span class="ot">&lt;-</span> <span class="dv">2015</span> <span class="sc">-</span> ds<span class="sc">$</span>birthyr</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>ds<span class="sc">$</span>age <span class="ot">&lt;-</span> <span class="dv">2015</span> <span class="sc">-</span> ds<span class="sc">$</span>birthyr</span></code></pre></div>
 <p>Now, we have an age variable, and it looks like we’d expect it would
 relative to <code>birthyr</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>age)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>age)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   22.00   38.00   48.50   49.62   59.75   90.00</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>birthyr)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>birthyr)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    1925    1955    1966    1965    1977    1993</code></pre>
 <p>Age is now a derived variable, functionally linked to
 <code>birthyr</code> on the server. Note that in order to create
 <code>age</code>, we didn’t pull any values off of the server; we just
 supplied the derivation expression.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">class</span>(<span class="dv">2015</span> <span class="sc">-</span> ds<span class="sc">$</span>birthyr)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">class</span>(<span class="dv">2015</span> <span class="sc">-</span> ds<span class="sc">$</span>birthyr)</span></code></pre></div>
 <pre><code>## [1] &quot;CrunchExpr&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;crunch&quot;</code></pre>
@@ -384,22 +406,22 @@ demonstration purposes, that we want to truncate the range of the
 less than 1945. We can once again write the R code we’d write if we were
 working with a <code>data.frame</code>, even though we’re working with a
 Crunch dataset:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>ds<span class="sc">$</span>birthyr[ds<span class="sc">$</span>birthyr <span class="sc">&lt;</span> <span class="dv">1945</span>] <span class="ot">&lt;-</span> <span class="dv">1945</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>ds<span class="sc">$</span>birthyr[ds<span class="sc">$</span>birthyr <span class="sc">&lt;</span> <span class="dv">1945</span>] <span class="ot">&lt;-</span> <span class="dv">1945</span></span></code></pre></div>
 <p>If we look at the summary again, we’ll see that our data have been
 updated, and the minimum Birth Year is now 1945.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>birthyr)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>birthyr)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    1945    1955    1966    1966    1977    1993</code></pre>
 <p>Not only that: since <code>age</code> is a function of
 <code>birthyr</code> on the server, its values also update now that
 we’ve modified <code>birthyr</code>. Max age is now 70, or 2015 -
 1945.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>age)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">summary</span>(ds<span class="sc">$</span>age)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   22.00   38.00   48.50   48.98   59.75   70.00</code></pre>
 <p>Once again, we’ve done this operation by turning idiomatic R
 expressions into Crunch expression syntax.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">class</span>(ds<span class="sc">$</span>birthyr <span class="sc">&lt;</span> <span class="dv">1945</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">class</span>(ds<span class="sc">$</span>birthyr <span class="sc">&lt;</span> <span class="dv">1945</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;CrunchLogicalExpr&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;crunch&quot;</code></pre>

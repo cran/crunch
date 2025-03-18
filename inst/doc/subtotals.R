@@ -1,18 +1,20 @@
-## ---- message=FALSE---------------------------------------------------------------------------------------------------
+## ----message=FALSE----------------------------------------------------------------------------------------------------
 library(crunch)
 
-## ---- results='hide', include = FALSE---------------------------------------------------------------------------------
-set_crunch_opts("crunch.api" = "https://app.crunch.io/api/")
+## ----results='hide', include = FALSE----------------------------------------------------------------------------------
+set_crunch_opts("crunch.api" = "https://team.crunch.io/api/")
 options(width=120)
 library(httptest)
-if (!dir.exists("subtotals")) {
 
-    if ("example vignette ds - subtotal" %in% listDatasets()) {
-        ds <- loadDataset("example vignette ds - subtotal")
-        with_consent(deleteDataset("example vignette ds - subtotal"))
+remake_fixtures <- !dir.exists("subtotals")
+if (remake_fixtures) {
+    if ("rcrunch subtotal vignette" %in% names(datasets(cd(projects(), "examples/rcrunch vignette data")))) {
+        ds <- loadDataset("example vignette ds - subtotal", project = "examples/rcrunch vignette data")
+        with_consent(delete(ds))
     }
     
-    ds <- newExampleDataset()
+    my_project <- newProject("examples/rcrunch vignette data")
+    ds <- newExampleDataset(project = my_project)
     name(ds) <- "example vignette ds - subtotal"
     lvls <- c("Love", "Like", "Neutral", "Dislike", "Hate")
     ds$like_dogs <- factor(rep(lvls, c(4, 4, 8, 2, 2)), lvls)
@@ -20,8 +22,10 @@ if (!dir.exists("subtotals")) {
     
     httpcache::clearCache()
 }
+httpcache::clearCache()
 start_vignette("subtotals")
-ds <- loadDataset("example vignette ds - subtotal")
+
+ds <- loadDataset("example vignette ds - subtotal", project = "examples/rcrunch vignette data")
 
 ## ----no subtotals-----------------------------------------------------------------------------------------------------
 subtotals(ds$q1)
@@ -112,6 +116,12 @@ cube <- crtabs(~q1, data = ds)
 transforms(cube)$q1$insertions <- list(Heading("Mammals", position = "top"), Heading("Other", after = "Dog"))
 cube
 
-## ---- include=FALSE---------------------------------------------------------------------------------------------------
+## ----include=FALSE----------------------------------------------------------------------------------------------------
 end_vignette()
+if (remake_fixtures) {
+    with_consent({
+        delete(ds)
+        delete(my_project)
+    })
+}
 

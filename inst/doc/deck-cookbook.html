@@ -49,7 +49,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -60,7 +60,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -937,7 +937,7 @@ in a way that you can copy and paste into your code.</p>
 <span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>    <span class="at">viz_specs =</span> <span class="fu">list</span>(</span>
 <span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>        <span class="at">default =</span> <span class="fu">list</span>(</span>
 <span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>            <span class="at">format =</span> <span class="fu">list</span>(</span>
-<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a>                <span class="at">decimal_places =</span> <span class="fu">list</span>(<span class="at">percentages =</span> 0L, <span class="at">other =</span> 2L),</span>
+<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a>                <span class="at">decimal_places =</span> <span class="fu">list</span>(<span class="at">percentages =</span> <span class="dv">0</span><span class="dt">L</span>, <span class="at">other =</span> <span class="dv">2</span><span class="dt">L</span>),</span>
 <span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a>                <span class="at">show_empty =</span> <span class="cn">FALSE</span></span>
 <span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a>            )</span>
 <span id="cb18-13"><a href="#cb18-13" tabindex="-1"></a>        )</span>
