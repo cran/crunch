@@ -1,4 +1,4 @@
-233ad4ba1c857272a0957b6513df0e7a *DESCRIPTION
+562bd9b0cbfd3c0fd7eb970aef09de9a *DESCRIPTION
 c33e6a436507d2542a1d02047474c672 *NAMESPACE
 53aa46abf5909736bf2fc63dd6b41b20 *R/AllClasses.R
 bc96f877552bace6dbada89ac692798d *R/AllGenerics.R
@@ -58,7 +58,7 @@ f21563d538728348121ceb601d44e5a3 *R/delete.R
 129b7be038953b33b960a9b3cecf29a4 *R/dimension-transforms.R
 8a3649cd573bb921458a8d50390659a9 *R/drop-rows.R
 86c8aeb70bace0908d3fb7c5b8e399e9 *R/edit-lock.R
-22750a317246518d98c0ae2f10b586a9 *R/export-dataset.R
+6824d4283042e5099c2ad79409cd6062 *R/export-dataset.R
 0c1be597f7533489b8afd8e935d0ab52 *R/expressions.R
 0031db4bda5a91dbe012fa5cc0abab3b *R/fill-variable.R
 7b47dc65ebed0722a7a6d78a10f3399e *R/filters.R
@@ -99,7 +99,7 @@ c469c107b53ac7c82bb0d0172ff24879 *R/shoji-entity.R
 95fbdb8c2a03f498c4fb7f121830eb37 *R/shoji-order-slots.R
 bc5ea3652566af1d0a4c3043524b3de4 *R/shoji-order.R
 fdc21d8e5555d334a8b581f712be22a4 *R/shoji.R
-f5cc67253eb7cdd0ea5ca49934110a41 *R/show.R
+28961a061bf537b69bc63585aa2b5704 *R/show.R
 d8a73cb7bd3f64d0c20fd69391507b06 *R/slides.R
 7e57478fc22c38a5e89539498f7bda2b *R/sliding-categories.R
 fd5638724fbb6f68fba0f8f0e7f3d8e2 *R/subtotals-and-headings.R
@@ -479,7 +479,7 @@ e3bb07cea4c8303fc086fa3a13884fff *tests/testthat/teardown.R
 22588a598b44bd7f34f85bb3c7b33fa2 *tests/testthat/test-add-subvariable.R
 1b210ed691c4ffce2c6a32b29674bcf1 *tests/testthat/test-add-variable-definition.R
 f91c4a2ab681d634312b28563a38792e *tests/testthat/test-add-variable.R
-b453061cc70f598c28ac4efcd13405bc *tests/testthat/test-api.R
+bbb0efb7f4ad00e0cd0ee553db108a5b *tests/testthat/test-api.R
 de3faa3f665fa71610f1962d11e367c4 *tests/testthat/test-append-arrays.R
 29ee3973bef7542b02a91de635ea7af6 *tests/testthat/test-append-conflicts.R
 73dea402346356410fe03faef37d6f46 *tests/testthat/test-append-debug.R
@@ -487,7 +487,7 @@ def7d61b9f7ea1e0a0bb85990b4f70f0 *tests/testthat/test-append-sparse.R
 1fb88e096e899dcfbaa6c39e746b253d *tests/testthat/test-append-subset.R
 ba78b067de595cc4e14a73e293fe4d52 *tests/testthat/test-append-subvariables.R
 286d3b3dd9320b8f67aa516395573b63 *tests/testthat/test-appending.R
-df3eca5c7a246a3a7885401c31b5f3d5 *tests/testthat/test-as-data-frame.R
+43882251fe733b979e6851fc312822c4 *tests/testthat/test-as-data-frame.R
 098a796738465e0565f9e2b3a691e922 *tests/testthat/test-auth.R
 b075a5ba97b4074ff5ea8bf07d8b8a2e *tests/testthat/test-automation.R
 9e4e03c7f33f1a18bd01e896d44342ee *tests/testthat/test-batches.R
@@ -538,7 +538,7 @@ e635b61d14c2725a247cb8f27cf58c7d *tests/testthat/test-drop-rows.R
 146f584712bf81ce8ab6a952ba4752d9 *tests/testthat/test-edit-lock.R
 ec55004c592bd2f602efb3fcd8262990 *tests/testthat/test-encoding.R
 a64213f70d8aeda43249285fb2ef59fa *tests/testthat/test-exclusion-filter.R
-dd838dbcb7b6d1fb74cfb9afea9f3044 *tests/testthat/test-export-dataset.R
+e3330674326f8f59885b0d90d576f82c *tests/testthat/test-export-dataset.R
 062ce579ff92c9c1240d3afc812a4263 *tests/testthat/test-expression-errors.R
 7f500f3d511de173229cff728e724a63 *tests/testthat/test-expressions.R
 c58e57758bf95f983a22bf7da30c5a2f *tests/testthat/test-fill-variable.R
