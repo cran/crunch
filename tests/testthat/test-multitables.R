@@ -54,16 +54,16 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             expect_identical(is.public(mults[[2]]), FALSE)
             expect_identical(is.public(mults[[3]]), TRUE)
             ## Note that this PATCHes the entity, not the catalog
-            expect_PATCH(
-                is.public(mults)[3] <- FALSE,
-                "https://app.crunch.io/api/datasets/1/multitables/4de322/",
-                '{"is_public":false}'
+            expect_POST(
+                is.public(mults)[2] <- TRUE,
+                "https://app.crunch.io/api/datasets/1/multitables/f33123/promote/"
             )
-            with_PATCH(
-                NULL,
-                is.public(mults)[3] <- FALSE
+            expect_error(
+                is.public(mults)[3] <- FALSE,
+                "It is no longer possible to demote"
             )
             expect_no_request(is.public(mults)[3] <- TRUE)
+            expect_no_request(is.public(mults)[2] <- FALSE)
         })
 
         test_that("Multitable delete requires consent", {
@@ -104,10 +104,9 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
                 "https://app.crunch.io/api/datasets/1/multitables/ed30c4/",
                 '{"name":"Another name"}'
             )
-            expect_PATCH(
+            expect_POST(
                 is.public(mults[[1]]) <- TRUE,
-                "https://app.crunch.io/api/datasets/1/multitables/ed30c4/",
-                '{"is_public":true}'
+                "https://app.crunch.io/api/datasets/1/multitables/ed30c4/promote/"
             )
             expect_no_request(is.public(mults[[1]]) <- FALSE)
         })
@@ -632,16 +631,12 @@ if (tolower(Sys.info()[["sysname"]]) != "windows") {
             expect_false(is.public(mult))
             is.public(mult) <- TRUE
             expect_true(is.public(refresh(mult)))
-            is.public(mult) <- FALSE
-            expect_false(is.public(refresh(mult)))
         })
 
         test_that("Can make the multitable public/personal on the catalog", {
             expect_false(is.public(multitables(ds))[1])
             is.public(multitables(ds))[1] <- TRUE
             expect_true(is.public(refresh(multitables(ds)))[1])
-            is.public(multitables(ds))[1] <- FALSE
-            expect_false(is.public(refresh(multitables(ds)))[1])
         })
 
         test_that("Can edit the multitable name", {

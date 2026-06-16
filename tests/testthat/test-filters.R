@@ -64,10 +64,9 @@ with_mock_crunch({
 
     test_that("Filter entity is.public", {
         expect_false(is.public(filters(ds)[["Occasional Political Interest"]]))
-        expect_PATCH(
+        expect_POST(
             is.public(filters(ds)[["Occasional Political Interest"]]) <- TRUE,
-            "https://app.crunch.io/api/datasets/1/filters/filter1/",
-            '{"is_public":true}'
+            "https://app.crunch.io/api/datasets/1/filters/filter1/promote/"
         )
         expect_no_request(is.public(filters(ds)[["Occasional Political Interest"]]) <- FALSE)
     })
@@ -213,20 +212,10 @@ with_test_authentication({
         )
     })
 
-    test_that("We can make it public/private", {
+    test_that("We can make it public", {
         expect_false(is.public(filters(ds)[["Test filter"]]))
         is.public(filters(ds)[["Test filter"]]) <- TRUE
         expect_true(is.public(filters(ds)[["Test filter"]]))
-        is.public(filters(ds)[["Test filter"]]) <- FALSE
-        expect_false(is.public(filters(ds)[["Test filter"]]))
-    })
-
-    test_that("Setter/getter by index", {
-        expect_false(is.public(filters(ds)[[1]]))
-        is.public(filters(ds)[[1]]) <- TRUE
-        expect_true(is.public(filters(ds)[[1]]))
-        is.public(filters(ds)[[1]]) <- FALSE
-        expect_false(is.public(filters(ds)[[1]]))
     })
 
     test_that("Can update a filter's expression by name", {

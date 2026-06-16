@@ -48,9 +48,7 @@ with_test_authentication({
             expect_null(exclusion(ds))
 
             exclusion(ds) <- ds$v4 == "C"
-            ## Test that the filter is set correctly. Objects not identical
-            ## because JSON objects are unordered.
-            expect_json_equivalent(zcl(exclusion(ds)), zcl(ds$v4 == "C"))
+            expect_zcl_equivalent(exclusion(ds), ds$v4 == "C")
             expect_prints(
                 exclusion(ds),
                 'Crunch logical expression: v4 == "C"'
@@ -339,9 +337,11 @@ with_test_authentication({
         test_that("No problem reverting to before exclusion var made", {
             ds <- restoreVersion(ds, 1)
 
-            expect_valid_apidocs_import(ds)
-            expect_null(ds$keep)
-            expect_null(exclusion(ds))
+            ## The exclusion filter no longer applies cleanly
+            ## (because the variable it depends on does not exist in the
+            ## restored version). Rather than error, however, the
+            ## restricted frame now returns 0 rows.
+            expect_valid_apidocs_import(ds, broken_exclusion=TRUE)
         })
     })
 })
